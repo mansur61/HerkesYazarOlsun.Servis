@@ -27,7 +27,7 @@ namespace HerkesYazarOlsun.Servis
         {
             SetAppSettingsVariable();
            
-            services.AddDbContext<HerkesyazarolsunContext>();
+            services.AddDbContext<HerkesYazaOlsunContext>();
             services.AddHttpContextAccessor();
 
           //  services.AddSingleton<IUserAccessor, HttpUserAccessor>();

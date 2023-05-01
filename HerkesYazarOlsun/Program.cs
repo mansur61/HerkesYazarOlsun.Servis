@@ -1,3 +1,5 @@
+using HerkesYazarOlsun.BLL.Ioc;
+using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -12,15 +14,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.IoCDataAccessLayerRegister();
+builder.Services.IoCBusinessLogicLayerRegister();
+
+
+InstanceFactory.Provider = builder.Services.BuildServiceProvider();
+
 DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb2") ;
 
-builder.Services.AddDbContext<HerkesyazarolsunContext>(options =>
+/*
+builder.Services.AddDbContext<HerkesYazaOlsunContext>(options =>
 {
     options.UseNpgsql(DbSettings.HerkesYazarOlsunDbContext
        // ,x => x.MigrationsAssembly("HerkesYazarOlsun.DataLayer")
     );
 });
-
+*/
+builder.Services.AddDbContext<HerkesYazaOlsunContext>();
 
 var app = builder.Build();
 

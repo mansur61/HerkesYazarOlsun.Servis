@@ -1,5 +1,7 @@
 ﻿
 
+using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Concrete;
 using Microsoft.Extensions.DependencyInjection;
 namespace HerkesYazarOlsun.BLL.Ioc
 {
@@ -14,7 +16,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
         /// <param name="service">The service.</param>
         public static void IoCBusinessLogicLayerRegister(this IServiceCollection service)
         {
-           // service.AddTransient<IEteminatService, EteminatBll>();
+            service.AddTransient<IKisilerService, KisilerBll>();
         }
 
         public static T GetService<T>(IServiceProvider serviceProvider)

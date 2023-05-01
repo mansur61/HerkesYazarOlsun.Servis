@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
     [DbContext(typeof(HerkesYazaOlsunContext))]
-    [Migration("20230424194046_init")]
-    partial class init
+    [Migration("20230501080010_testtbale")]
+    partial class testtbale
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,41 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("KISILER");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.TEST", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<string>("AD")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("TEST");
                 });
 #pragma warning restore 612, 618
         }
