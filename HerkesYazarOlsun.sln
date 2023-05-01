@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HerkesYazarOlsun.Servis", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HerkesYazarOlsun.BLL", "HerkesYazarOlsun.BLL\HerkesYazarOlsun.BLL.csproj", "{3ADFB2B5-9B5D-4FBF-81E9-A8631E3C3684}"
 	ProjectSection(ProjectDependencies) = postProject
+		{6E57B367-A6B5-4B01-8778-2CEC8B205758} = {6E57B367-A6B5-4B01-8778-2CEC8B205758}
 		{9DCEB205-EC96-4096-99D5-D428BBF52D02} = {9DCEB205-EC96-4096-99D5-D428BBF52D02}
 	EndProjectSection
 EndProject

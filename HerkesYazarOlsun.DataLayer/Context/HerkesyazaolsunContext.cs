@@ -1,32 +1,41 @@
 ﻿
+using Dapper;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Dynamic;
 
 namespace HerkesYazarOlsun.DataLayer.Context
 {
-    public class HerkesyazarolsunContextFactory : IDesignTimeDbContextFactory<HerkesyazarolsunContext>
+    public class HerkesYazaOlsunContextFactory : IDesignTimeDbContextFactory<HerkesYazaOlsunContext>
     {
-        public HerkesyazarolsunContext CreateDbContext(string[] args)
+        public HerkesYazaOlsunContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<HerkesyazarolsunContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<HerkesYazaOlsunContext>();
             string baglanti = DbSettings.HerkesYazarOlsunDbContext;
             optionsBuilder.UseNpgsql(baglanti);
 
-            return new HerkesyazarolsunContext(optionsBuilder.Options);
+            //return new HerkesYazaOlsunContext(optionsBuilder.Options);
+            return new HerkesYazaOlsunContext();
         }
     }
-    public class HerkesyazarolsunContext : DbContext //Base2DbContext 
+
+    public class HerkesYazaOlsunContext :  Base2DbContext //DbContext  
     {
-
+      
         public virtual DbSet<KISILER> KISILER { get; set; }
+        public virtual DbSet<TEST> TEST { get; set; }
 
-        public HerkesyazarolsunContext(DbContextOptions<HerkesyazarolsunContext> options): base(options)
-        {
-            
-        }
-       
+        //public HerkesYazaOlsunContext(DbContextOptions<HerkesYazaOlsunContext> options): base(options)
+        //{
+
+        //}
+
+        //public HerkesYazaOlsunContext()
+        //{
+        //}
+
 
         /// <summary>
         /// ilgili db'ye bağlanma araçlarını sunar
@@ -34,10 +43,8 @@ namespace HerkesYazarOlsun.DataLayer.Context
         /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string baglanti = 
-            //"Host=localhost;Port=5432;Database=HERKESYAZAROLSUN;User Id=postgres;Password=12345;Integrated Security=true;Pooling=true;";
-            //optionsBuilder.UseNpgsql(baglanti);
-            DbSettings.HerkesYazarOlsunDbContext;
+            string baglanti = "Host=localhost;Port=5432;Database=HERKESYAZAROLSUN;User Id=postgres;Password=12345;Integrated Security=true;Pooling=true;";
+            // var con = DbSettings.HerkesYazarOlsunDbContext;
             optionsBuilder.UseNpgsql(baglanti);
 
         }
@@ -51,7 +58,26 @@ namespace HerkesYazarOlsun.DataLayer.Context
             base.OnModelCreating(modelBuilder);
         }
 
-
-      
+        public override IList<T> NpSqlQueryDapper<T>(string sql, object[] parameters = null)
+        {
+            try
+            {
+                var connection = Database.GetDbConnection();
+                dynamic temp = new ExpandoObject();
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        var _parameter = (Npgsql.NpgsqlParameter)parameter;
+                        ((IDictionary<string, object>)temp)[_parameter.ParameterName] = _parameter.Value;
+                    }
+                }
+                return connection.Query<T>(sql, (object)temp).ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<T>();
+            }
+        }
     }
 }
