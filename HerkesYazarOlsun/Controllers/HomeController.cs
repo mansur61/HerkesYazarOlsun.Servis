@@ -1,3 +1,7 @@
+using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Concrete;
+using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Servis.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +18,16 @@ namespace HerkesYazarOlsun.Controllers
     };
 
         private readonly ILogger<HomeController> _logger;
-        private readonly HerkesyazarolsunContext _context;
+        private readonly HerkesYazaOlsunContext _context;
+       
 
-        public HomeController(ILogger<HomeController> logger, HerkesyazarolsunContext _context)
+        public HomeController(ILogger<HomeController> logger, HerkesYazaOlsunContext _context)
         {
             _logger = logger;
             this._context = _context;
+            
+
+
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -51,7 +59,10 @@ namespace HerkesYazarOlsun.Controllers
         [Route("Getir")]
         public IActionResult Getir()
         {
-            return Ok(this._context.KISILER.ToList());
+            IKisilerService kisilerBll = InstanceFactory.GetInstance<IKisilerService>();
+            var getKisiler = kisilerBll.GetKullanicilar();
+            //this._context.KISILER.ToList()
+            return Ok(getKisiler);
         }
 
     }

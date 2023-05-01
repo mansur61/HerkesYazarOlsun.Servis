@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
-    [DbContext(typeof(HerkesyazarolsunContext))]
+    [DbContext(typeof(HerkesYazaOlsunContext))]
     [Migration("20230424194046_init")]
     partial class init
     {

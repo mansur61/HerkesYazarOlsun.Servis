@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
-    [DbContext(typeof(HerkesyazarolsunContext))]
-    partial class HerkesyazarolsunContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(HerkesYazaOlsunContext))]
+    partial class HerkesYazaOlsunContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

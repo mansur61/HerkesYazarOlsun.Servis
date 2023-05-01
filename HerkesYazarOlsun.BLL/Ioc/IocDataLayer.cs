@@ -1,4 +1,6 @@
 ﻿
+using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HerkesYazarOlsun.BLL.Ioc
@@ -8,10 +10,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
         public static void IoCDataAccessLayerRegister(this IServiceCollection service)
         {
            
-           // service.AddTransient<IByBelgeKilitDal, ByBelgeKilitDal>();
-    
-       
-
+            service.AddTransient<IKisilerDal, KisilerDal>();
         }
     }
 }

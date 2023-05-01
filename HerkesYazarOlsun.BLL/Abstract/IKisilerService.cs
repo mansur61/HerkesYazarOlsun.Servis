@@ -1,8 +1,10 @@
 ﻿
+using HerkesYazarOlsun.Model.Entity;
+
 namespace HerkesYazarOlsun.BLL.Abstract
 {
-    public class IKisilerService
+    public interface IKisilerService
     {
-       // List<KISILER> GetKullanicilar();
+        List<KISILER> GetKullanicilar();
     }
 }
