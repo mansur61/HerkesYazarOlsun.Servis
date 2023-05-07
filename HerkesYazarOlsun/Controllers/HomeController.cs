@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class HomeController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
