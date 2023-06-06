@@ -7,5 +7,9 @@ namespace HerkesYazarOlsun.DataLayer.Context
     {
         public abstract IList<T> NpSqlQueryDapper<T>(string sql, object[] parameters = null);
 
+        public static implicit operator Base2DbContext(HerkesYazaOlsunContext v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
