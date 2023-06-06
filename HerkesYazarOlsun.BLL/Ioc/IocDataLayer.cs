@@ -11,6 +11,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
         {
            
             service.AddTransient<IKisilerDal, KisilerDal>();
+            service.AddTransient<IBooksDal, BooksDal>();
         }
     }
 }
