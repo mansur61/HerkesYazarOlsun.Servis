@@ -1,0 +1,33 @@
+﻿using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.Model.Entity;
+
+namespace HerkesYazarOlsun.BLL.Concrete
+{
+    public class BooksBll : IBooksService
+    {
+        private readonly IBooksDal _booksDal;
+        public BooksBll(IBooksDal booksDal)
+        {
+            _booksDal = booksDal;
+        }
+
+        public Books? GetBooks(long id)
+        {
+            return _booksDal.GetAllQueryable(p => p.ID == id).FirstOrDefault();
+
+        }
+
+        public List<Books> GetBooksList()
+        {
+            return _booksDal.GetAll();
+        }
+        public Books PostSaveBook(Books book)
+        {
+            return _booksDal.Add(book, 0);
+        }
+
+       
+
+    }
+}

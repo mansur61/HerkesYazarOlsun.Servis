@@ -21,11 +21,20 @@ namespace HerkesYazarOlsun.DataLayer.Context
         }
     }
 
-    public class HerkesYazaOlsunContext :  Base2DbContext //DbContext  
+    public class HerkesYazaOlsunContext : DbContext  // Base2DbContext
     {
       
         public virtual DbSet<KISILER> KISILER { get; set; }
         public virtual DbSet<TEST> TEST { get; set; }
+
+        public virtual DbSet<KITAP> KITAP { get; set; }
+        public virtual DbSet<KITAPSAYFALARI> KITAPSAYFALARI { get; set; }
+
+        public virtual DbSet<Books> Books { get; set; }
+        public virtual DbSet<BooksPages> BooksPages { get; set; }
+
+        public virtual DbSet<Category> Category { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         //public HerkesYazaOlsunContext(DbContextOptions<HerkesYazaOlsunContext> options): base(options)
         //{
@@ -58,26 +67,26 @@ namespace HerkesYazarOlsun.DataLayer.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        public override IList<T> NpSqlQueryDapper<T>(string sql, object[] parameters = null)
-        {
-            try
-            {
-                var connection = Database.GetDbConnection();
-                dynamic temp = new ExpandoObject();
-                if (parameters != null)
-                {
-                    foreach (var parameter in parameters)
-                    {
-                        var _parameter = (Npgsql.NpgsqlParameter)parameter;
-                        ((IDictionary<string, object>)temp)[_parameter.ParameterName] = _parameter.Value;
-                    }
-                }
-                return connection.Query<T>(sql, (object)temp).ToList();
-            }
-            catch (Exception ex)
-            {
-                return new List<T>();
-            }
-        }
+        //public override IList<T> NpSqlQueryDapper<T>(string sql, object[] parameters = null)
+        //{
+        //    try
+        //    {
+        //        var connection = Database.GetDbConnection();
+        //        dynamic temp = new ExpandoObject();
+        //        if (parameters != null)
+        //        {
+        //            foreach (var parameter in parameters)
+        //            {
+        //                var _parameter = (Npgsql.NpgsqlParameter)parameter;
+        //                ((IDictionary<string, object>)temp)[_parameter.ParameterName] = _parameter.Value;
+        //            }
+        //        }
+        //        return connection.Query<T>(sql, (object)temp).ToList();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new List<T>();
+        //    }
+        //}
     }
 }

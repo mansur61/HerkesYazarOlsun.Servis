@@ -17,6 +17,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
         public static void IoCBusinessLogicLayerRegister(this IServiceCollection service)
         {
             service.AddTransient<IKisilerService, KisilerBll>();
+            service.AddTransient<IBooksService, BooksBll>();
         }
 
         public static T GetService<T>(IServiceProvider serviceProvider)
