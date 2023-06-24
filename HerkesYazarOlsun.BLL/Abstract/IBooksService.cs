@@ -8,6 +8,8 @@ namespace HerkesYazarOlsun.BLL.Abstract
         List<Books> GetBooksList();
         Books GetBooks(long id);
 
-        Books PostSaveBook(Books);
+        Books PostSaveBook(Books books);
+       
+        
     }
 }

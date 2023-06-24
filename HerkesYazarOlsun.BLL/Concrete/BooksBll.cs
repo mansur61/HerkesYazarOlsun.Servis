@@ -27,8 +27,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
             return _booksDal.Add(book, 0);
         }
 
-
-        
+       
 
     }
 }

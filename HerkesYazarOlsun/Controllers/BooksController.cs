@@ -33,7 +33,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             return getBookList;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("PostSaveBook")]
         public Books PostSaveBook(Books book)
         {
@@ -41,5 +41,6 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return getBook;
         }
+
     }
 }
