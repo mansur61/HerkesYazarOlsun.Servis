@@ -1,5 +1,4 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,15 +9,16 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksController : ControllerBase
     {
         private IBooksService booksService;
-        public BooksController(IBooksService _booksService) {
+        public BooksController(IBooksService _booksService)
+        {
             booksService = _booksService;
         }
 
         [HttpGet]
-        [Route("GetBook")]
-        public Books GetBook(long id)
+        [Route("GetBooks")]
+        public Books GetBooks(long id)
         {
-            //IBooksService _booksService = InstanceFactory.GetInstance<IBooksService>();
+
             var getBook = booksService.GetBooks(id);
 
             return getBook;

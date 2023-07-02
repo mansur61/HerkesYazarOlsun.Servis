@@ -18,6 +18,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
         {
             service.AddTransient<IKisilerService, KisilerBll>();
             service.AddTransient<IBooksService, BooksBll>();
+            service.AddTransient< IBooksPagesService, BooksPagesBll>();
         }
 
         public static T GetService<T>(IServiceProvider serviceProvider)

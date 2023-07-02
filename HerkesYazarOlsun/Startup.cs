@@ -26,7 +26,7 @@ namespace HerkesYazarOlsun.Servis
         public void ConfigureServices(IServiceCollection services)
         {
             SetAppSettingsVariable();
-           
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             services.AddDbContext<HerkesYazaOlsunContext>();
             services.AddHttpContextAccessor();
 
@@ -41,7 +41,7 @@ namespace HerkesYazarOlsun.Servis
             services.IoCBusinessLogicLayerRegister();
 
             InstanceFactory.Provider = services.BuildServiceProvider();
-
+            
 
             //services.AddControllersWithViews(ConfigureMvcOptions).
             //    // Newtonsoft.Json is added for compatibility reasons

@@ -22,6 +22,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         {
             if (_dbContext == null)
             {
+               
                 _dbContext = new HerkesYazaOlsunContext();
             }
 

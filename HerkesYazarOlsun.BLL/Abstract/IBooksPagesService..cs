@@ -7,7 +7,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
     {
         List<BooksPages> GetBooksPagesList();
         BooksPages? GetBooksPages(long id);
-
+        List<BooksPages> GetPagesByBooks(long bookID);
         BooksPages PostSaveBooksPages(BooksPages booksPages);
        
         
