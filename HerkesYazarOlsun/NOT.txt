@@ -1,0 +1,3 @@
+Startup.cs ve PorgramYedek.cs dosyalarý kullanýlmamaktadýr.
+
+Proje .net 7 freamworklü olduðundan Program.cs dosyasýndan ayaða kalkmaktadýr.

@@ -9,8 +9,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksPagesController : ControllerBase
     {
         private IBooksPagesService _booksPagesService;
-        public BooksPagesController(IBooksPagesService _BooksPagesService) {
-            _booksPagesService = _BooksPagesService;
+        public BooksPagesController(IBooksPagesService booksPagesService) {
+            _booksPagesService = booksPagesService;
         }
 
         [HttpGet]
@@ -21,6 +21,16 @@ namespace HerkesYazarOlsun.Servis.Controllers
             var getBookPages = _booksPagesService.GetBooksPages(id);
 
             return getBookPages;
+        }
+
+        [HttpGet]
+        [Route("GetPagesByBooks")]
+        public List<BooksPages>? GetPagesByBooks(long bookID)
+        {
+
+            var getBookPagesList = _booksPagesService.GetPagesByBooks(bookID);
+
+            return getBookPagesList;
         }
 
         [HttpGet]

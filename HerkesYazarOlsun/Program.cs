@@ -20,16 +20,9 @@ builder.Services.IoCBusinessLogicLayerRegister();
 
 InstanceFactory.Provider = builder.Services.BuildServiceProvider();
 
-DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb2") ;
+DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb2");
 
-/*
-builder.Services.AddDbContext<HerkesYazaOlsunContext>(options =>
-{
-    options.UseNpgsql(DbSettings.HerkesYazarOlsunDbContext
-       // ,x => x.MigrationsAssembly("HerkesYazarOlsun.DataLayer")
-    );
-});
-*/
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContext<HerkesYazaOlsunContext>();
 
 var app = builder.Build();
@@ -40,10 +33,28 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.Use((context, next) =>
+{
+    if (context.Request.Path.Value.StartsWith("//"))
+    {
+        context.Request.Path = new PathString(context.Request.Path.Value.Replace("//", "/"));
+    }
+    return next();
+});
+
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
+
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.MapControllers();
 
