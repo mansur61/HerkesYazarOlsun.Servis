@@ -16,19 +16,15 @@ namespace HerkesYazarOlsun.DataLayer.Context
             string baglanti = DbSettings.HerkesYazarOlsunDbContext;
             optionsBuilder.UseNpgsql(baglanti);
 
-            //return new HerkesYazaOlsunContext(optionsBuilder.Options);
+           //return new HerkesYazaOlsunContext(optionsBuilder.Options);
             return new HerkesYazaOlsunContext();
         }
     }
 
-    public class HerkesYazaOlsunContext : Base2DbContext // DbContext
+    public class HerkesYazaOlsunContext : BaseNpSqlDbContext // DbContext
     {
-      
-        public virtual DbSet<KISILER> KISILER { get; set; }
-        public virtual DbSet<TEST> TEST { get; set; }
 
-        public virtual DbSet<KITAP> KITAP { get; set; }
-        public virtual DbSet<KITAPSAYFALARI> KITAPSAYFALARI { get; set; }
+        public virtual DbSet<FAVORILER> FAVORILER { get; set; }
 
         public virtual DbSet<Books> Books { get; set; }
         public virtual DbSet<BooksPages> BooksPages { get; set; }
@@ -36,9 +32,9 @@ namespace HerkesYazarOlsun.DataLayer.Context
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
-        
 
-        //public HerkesYazaOlsunContext(DbContextOptions<HerkesYazaOlsunContext> options): base(options)
+
+        //public HerkesYazaOlsunContext(DbContextOptions<HerkesYazaOlsunContext> options) : base(options)
         //{
 
         //}
@@ -90,5 +86,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
                 return new List<T>();
             }
         }
+    
+    
     }
 }

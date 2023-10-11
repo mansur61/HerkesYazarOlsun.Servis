@@ -4,15 +4,15 @@ using HerkesYazarOlsun.Model.Entity;
 
 namespace HerkesYazarOlsun.BLL.Concrete
 {
-    public class KisilerBll : IKisilerService
+    public class UsersBll : IUsersBll
     {
-        private readonly IKisilerDal _kisilerDal;
-        public KisilerBll(IKisilerDal kisilerDal)
+        private readonly IUsersDal _kisilerDal;
+        public UsersBll(IUsersDal kisilerDal)
         {
             _kisilerDal = kisilerDal;
         }
 
-        public List<KISILER> GetKullanicilar()
+        public List<Users> GetKullanicilar()
         {
             return _kisilerDal.GetAll();
         }

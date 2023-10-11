@@ -11,7 +11,7 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
 {
     public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity>
    where TEntity : class, IEntity, new()
-   where TContext : Base2DbContext, new()
+   where TContext : BaseNpSqlDbContext, new()
     {
         private TContext ctx;
         public TContext _ctx

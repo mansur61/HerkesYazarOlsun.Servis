@@ -3,8 +3,8 @@ using HerkesYazarOlsun.Model.Entity;
 
 namespace HerkesYazarOlsun.BLL.Abstract
 {
-    public interface IKisilerService
+    public interface IUsersBll
     {
-        List<KISILER> GetKullanicilar();
+        List<Users> GetKullanicilar();
     }
 }

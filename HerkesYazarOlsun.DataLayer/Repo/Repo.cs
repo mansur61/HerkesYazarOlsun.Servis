@@ -15,7 +15,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
 {
     public class Repo<T> : IRepo<T> where T : NewBaseEntity
     {
-        private Base2DbContext _dbContext;
+        private BaseNpSqlDbContext _dbContext;
         private DbSet<T> _dbSet;
 
         public Repo()

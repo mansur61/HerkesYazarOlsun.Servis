@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class KisilerDal : Repo<KISILER>, IKisilerDal
+    public class UsersDal : Repo<Users>, IUsersDal
     {
     }
 }
