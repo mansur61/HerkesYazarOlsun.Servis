@@ -42,5 +42,14 @@ namespace HerkesYazarOlsun.Servis.Controllers
             return getBook;
         }
 
+        [HttpPost]
+        [Route("UpdateBook")]
+        public Books UpdateBook(Books book)
+        {
+            var getBook = booksService.UpdateBook(book);
+
+            return getBook;
+        }
+
     }
 }
