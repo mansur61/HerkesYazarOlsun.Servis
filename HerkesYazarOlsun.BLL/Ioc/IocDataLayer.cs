@@ -10,7 +10,8 @@ namespace HerkesYazarOlsun.BLL.Ioc
         public static void IoCDataAccessLayerRegister(this IServiceCollection service)
         {
            
-            service.AddTransient<IKisilerDal, KisilerDal>();
+            service.AddTransient<IUsersDal, UsersDal>();
+            service.AddTransient<IFavorilerDal, FavorilerDal>();
             service.AddTransient<IBooksDal, BooksDal>();
             service.AddTransient<IBooksPagesDal, BooksPagesDal>();
         }

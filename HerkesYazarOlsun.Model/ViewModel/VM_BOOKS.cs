@@ -17,5 +17,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string KITAPSAYFAFOTO { get; set; }
         public string SAYFAYAZI { get; set; }
         public long CategoriId { get; set; }
+
+        public List<VM_BOOKS_PAGES> BooksPageList { get; set; }
     }
 }

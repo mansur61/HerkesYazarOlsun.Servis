@@ -7,7 +7,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
     {
         List<Books> GetBooksList();
         Books GetBooks(long id);
-
+        Books UpdateBook(Books book);
         Books PostSaveBook(Books books);
        
         

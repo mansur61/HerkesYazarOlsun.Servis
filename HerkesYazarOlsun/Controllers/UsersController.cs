@@ -1,21 +1,17 @@
 using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BLL.Concrete;
 using HerkesYazarOlsun.BusinessLayer.Factory;
-using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
-using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.Servis.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KisiController : ControllerBase
+    public class UsersController : ControllerBase
     {
       
-        private readonly ILogger<KisiController> _logger;
+        private readonly ILogger<UsersController> _logger;
 
-        public KisiController(ILogger<KisiController> logger)
+        public UsersController(ILogger<UsersController> logger)
         {
             _logger = logger;
         }
@@ -25,7 +21,7 @@ namespace HerkesYazarOlsun.Controllers
         [Route("GetKisiByTC")]
         public IActionResult GetKisiByTC(long id)
         {
-            IKisilerService kisilerBll = InstanceFactory.GetInstance<IKisilerService>();
+            IUsersBll kisilerBll = InstanceFactory.GetInstance<IUsersBll>(); 
             var getKisiler = kisilerBll.GetKullanicilar();
              var getKisi = getKisiler.Where(p=>p.ID == id).FirstOrDefault();
             return Ok(getKisi);

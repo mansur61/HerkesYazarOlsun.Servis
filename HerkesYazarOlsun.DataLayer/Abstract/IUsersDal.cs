@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.DataLayer.Abstract
 {
-    public interface IKisilerDal : IRepo<KISILER>
+    public interface IUsersDal : IRepo<Users>
     {
     }
 }
