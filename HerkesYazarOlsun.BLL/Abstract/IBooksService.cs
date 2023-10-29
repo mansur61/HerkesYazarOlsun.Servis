@@ -9,7 +9,9 @@ namespace HerkesYazarOlsun.BLL.Abstract
         Books GetBooks(long id);
         Books UpdateBook(Books book);
         Books PostSaveBook(Books books);
-       
-        
+
+        FAVORILER PostFavoriSaveBook(FAVORILER fav);
+
+
     }
 }

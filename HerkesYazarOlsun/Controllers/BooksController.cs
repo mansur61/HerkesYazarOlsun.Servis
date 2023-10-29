@@ -42,6 +42,16 @@ namespace HerkesYazarOlsun.Servis.Controllers
             return getBook;
         }
 
+
+        [HttpPost]
+        [Route("PostFavoriSaveBook")]
+        public FAVORILER PostFavoriSaveBook(FAVORILER fav)
+        {
+            var getFav = booksService.PostFavoriSaveBook(fav);
+
+            return getFav;
+        }
+
         [HttpPost]
         [Route("UpdateBook")]
         public Books UpdateBook(Books book)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HerkesYazarOlsun.Model.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace HerkesYazarOlsun.Model.ViewModel
     {
         public long ID { get; set; }
         public string Name { get; set; }
+
+        public string Tip { get; set; }
         public string ONSOZ { get; set; }
         public string ONKAPAKFOTO { get; set; }
         public string ARKAKAPAKFOTO { get; set; }
@@ -17,7 +20,8 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string KITAPSAYFAFOTO { get; set; }
         public string SAYFAYAZI { get; set; }
         public long CategoriId { get; set; }
-
+        public List<Books> BooksList { get; set; }
         public List<VM_BOOKS_PAGES> BooksPageList { get; set; }
     }
+
 }
