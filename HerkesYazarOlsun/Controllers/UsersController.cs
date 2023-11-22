@@ -1,5 +1,6 @@
 using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Controllers
@@ -25,6 +26,15 @@ namespace HerkesYazarOlsun.Controllers
             var getKisiler = kisilerBll.GetKullanicilar();
              var getKisi = getKisiler.Where(p=>p.ID == id).FirstOrDefault();
             return Ok(getKisi);
+        }
+
+        [HttpPost]
+        [Route("GetKisiler")]
+        public IActionResult GetKisiler(VM_ARAMA_INPUT arama)
+        {
+            IUsersBll kisilerBll = InstanceFactory.GetInstance<IUsersBll>();
+            var getKisiler = kisilerBll.GetKullanicilar();  
+            return Ok(getKisiler);
         }
 
     }

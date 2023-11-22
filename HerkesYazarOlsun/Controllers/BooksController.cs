@@ -1,5 +1,6 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Servis.Controllers
@@ -27,6 +28,15 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [HttpGet]
         [Route("GetBooksList")]
         public List<Books> GetBooksList()
+        {
+            var getBookList = booksService.GetBooksList();
+
+            return getBookList;
+        }
+
+        [HttpPost]
+        [Route("TumKitaplar")]
+        public List<Books> TumKitaplar(VM_ARAMA_INPUT arama)
         {
             var getBookList = booksService.GetBooksList();
 
