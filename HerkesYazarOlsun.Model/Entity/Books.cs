@@ -16,7 +16,7 @@ namespace HerkesYazarOlsun.Model.Entity
         public string ARKAKAPAKFOTO { get; set; }
         public string ARKAKAPAKYAZISI { get; set; }
         public bool TAMAMLANDIMI { get; set; }
-
+        public long YazarId { get; set; }
         public bool YAYINDAMI { get; set; }
         public long CategoriId { get; set; }
     }

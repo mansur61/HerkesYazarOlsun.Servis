@@ -14,11 +14,13 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public int sliderdaGosterilecekKayit { get; set; }
         public int kalan { get; set; }
         public int bolum { get; set; }
-        public int sliderSayisi { get; set; }
+        //public int sliderSayisi { get; set; }
 
         public long YAZAR_ID { get; set; }
         public string Name { get; set; }
-        public string sliderSayiDivTagName { get; set; }
+        
+
+        public VM_PAGINATION_BUTTON vM_PAGINATION_BUTTONS { get; set; }
         public  int Start { get; set; }
         public int End { get; set; }
         public string Tip { get; set; }

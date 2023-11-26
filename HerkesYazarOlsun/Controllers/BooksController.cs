@@ -2,6 +2,7 @@
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
@@ -38,7 +39,15 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("TumKitaplar")]
         public List<Books> TumKitaplar(VM_ARAMA_INPUT arama)
         {
-            var getBookList = booksService.GetBooksList();
+            List < Books > getBookList = new List < Books >();
+            if (!string.IsNullOrEmpty(arama.KITAP_ADI))
+            {
+                getBookList = getBookList.Where(p => p.Name.Contains(arama.KITAP_ADI!)).ToList();
+            }
+            else
+            {
+                getBookList = booksService.GetBooksList();
+            }
 
             return getBookList;
         }

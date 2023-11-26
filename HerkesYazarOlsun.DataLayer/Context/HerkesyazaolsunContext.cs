@@ -25,7 +25,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
     {
 
         public virtual DbSet<FAVORILER> FAVORILER { get; set; }
-
+        public virtual DbSet<FAVORI_YAZARLAR> FAVORI_YAZARLAR { get; set; }
         public virtual DbSet<Books> Books { get; set; }
         public virtual DbSet<BooksPages> BooksPages { get; set; }
 

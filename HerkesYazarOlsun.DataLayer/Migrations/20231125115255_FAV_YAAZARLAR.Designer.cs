@@ -3,6 +3,7 @@ using System;
 using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
     [DbContext(typeof(HerkesYazaOlsunContext))]
-    partial class HerkesYazaOlsunContextModelSnapshot : ModelSnapshot
+    [Migration("20231125115255_FAV_YAAZARLAR")]
+    partial class FAV_YAAZARLAR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,9 +79,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<bool>("YAYINDAMI")
                         .HasColumnType("boolean");
-
-                    b.Property<long>("YazarId")
-                        .HasColumnType("bigint");
 
                     b.HasKey("ID");
 

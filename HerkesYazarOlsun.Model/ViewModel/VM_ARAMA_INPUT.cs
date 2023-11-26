@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HerkesYazarOlsun.Model.ViewModel
+﻿namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_ARAMA_INPUT
     {
-        public string YAZAR_ADI { get; set; }
+        public string? YAZAR_ADI { get; set; }
         public int listelenecek_kayit_sayisi { get; set; }
-        public string KITAP_ADI { get; set; }
+        public string? KITAP_ADI { get; set; }
+        public bool? BitenKitaplar { get; set; }
+        public bool? FavoriKitaplar { get; set; }
+        public bool? YayinlananKitaplar { get; set; }
+        public int? tarihCeck { get; set; }
+        public long? kategoriId { get; set; }
+        public long? yazarIId { get; set; }
+        public long? siralama { get; set; }
+        
+        public bool? FavoriYazarlar { get; set; }
+        public bool? DevamEdenKitaplar { get; set; }
     }
 }
