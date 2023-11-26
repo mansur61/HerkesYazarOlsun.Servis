@@ -7,9 +7,11 @@ namespace HerkesYazarOlsun.BLL.Concrete
     public class BooksBll : IBooksService
     {
         private readonly IBooksDal _booksDal;
-        public BooksBll(IBooksDal booksDal)
+        private readonly IFavorilerDal _favoriDal;
+        public BooksBll(IBooksDal booksDal, IFavorilerDal favoriDal)
         {
             _booksDal = booksDal;
+            _favoriDal = favoriDal;
         }
 
         public Books? GetBooks(long id)
@@ -25,6 +27,11 @@ namespace HerkesYazarOlsun.BLL.Concrete
         public Books PostSaveBook(Books book)
         {
             return _booksDal.Add(book, 0);
+        }
+
+        public FAVORILER PostFavoriSaveBook(FAVORILER fav)
+        {
+            return _favoriDal.Add(fav, 0);
         }
 
         public Books UpdateBook(Books book)

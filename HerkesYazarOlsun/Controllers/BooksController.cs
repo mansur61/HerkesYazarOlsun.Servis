@@ -1,6 +1,8 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
@@ -34,12 +36,39 @@ namespace HerkesYazarOlsun.Servis.Controllers
         }
 
         [HttpPost]
+        [Route("TumKitaplar")]
+        public List<Books> TumKitaplar(VM_ARAMA_INPUT arama)
+        {
+            List < Books > getBookList = new List < Books >();
+            if (!string.IsNullOrEmpty(arama.KITAP_ADI))
+            {
+                getBookList = getBookList.Where(p => p.Name.Contains(arama.KITAP_ADI!)).ToList();
+            }
+            else
+            {
+                getBookList = booksService.GetBooksList();
+            }
+
+            return getBookList;
+        }
+
+        [HttpPost]
         [Route("PostSaveBook")]
         public Books PostSaveBook(Books book)
         {
             var getBook = booksService.PostSaveBook(book);
 
             return getBook;
+        }
+
+
+        [HttpPost]
+        [Route("PostFavoriSaveBook")]
+        public FAVORILER PostFavoriSaveBook(FAVORILER fav)
+        {
+            var getFav = booksService.PostFavoriSaveBook(fav);
+
+            return getFav;
         }
 
         [HttpPost]
