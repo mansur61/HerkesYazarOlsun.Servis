@@ -12,7 +12,11 @@ namespace HerkesYazarOlsun.BLL.Ioc
            
             service.AddTransient<IUsersDal, UsersDal>();
             service.AddTransient<IFavYazarDal, FavYazarDal>();
-            service.AddTransient<IFavorilerDal, FavorilerDal>();
+            //service.AddTransient<IFavorilerDal, FavorilerDal>();
+            service.AddTransient<IWriterStarsDal, WriterStarsDal>();
+            service.AddTransient<IBooksStarsDal, BooksStarsDal>();
+            service.AddTransient<IWriterFollowDal, WriterFollowDal>();
+            service.AddTransient<IFavBookDal, FavBookDal>();
             service.AddTransient<IBooksDal, BooksDal>();
             service.AddTransient<IBooksPagesDal, BooksPagesDal>();
         }

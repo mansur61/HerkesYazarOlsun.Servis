@@ -1,5 +1,6 @@
 ﻿
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.ViewModel;
 
 namespace HerkesYazarOlsun.BLL.Abstract
 {
@@ -10,7 +11,10 @@ namespace HerkesYazarOlsun.BLL.Abstract
         Books UpdateBook(Books book);
         Books PostSaveBook(Books books);
 
-        FAVORILER PostFavoriSaveBook(FAVORILER fav);
+        //FAVORILER PostFavoriSaveBook(FAVORILER fav);
+        FavoriBooks PostFavoriSaveBook(FavoriBooks fav);
+
+        VM_Stars GetMaxStarBooksById(long id);
 
 
     }

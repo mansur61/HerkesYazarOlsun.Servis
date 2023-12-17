@@ -1,5 +1,10 @@
-﻿using HerkesYazarOlsun.BLL.Abstract;
+﻿using FluentValidation;
+using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Validation;
+using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,6 +16,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksController : ControllerBase
     {
         private IBooksService booksService;
+       
         public BooksController(IBooksService _booksService)
         {
             booksService = _booksService;
@@ -28,28 +34,104 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetBooksList")]
-        public List<Books> GetBooksList()
+        public List<VM_BOOKS> GetBooksList()
         {
             var getBookList = booksService.GetBooksList();
 
-            return getBookList;
+            var vmBookList = ObjectMapper.MapList(getBookList, new List<VM_BOOKS>());
+            foreach (var item in vmBookList)
+            {
+                item.Stars = GetMaxStarBooksById(item.ID);
+            }
+
+            return vmBookList;
         }
 
         [HttpPost]
-        [Route("TumKitaplar")]
-        public List<Books> TumKitaplar(VM_ARAMA_INPUT arama)
+        [Route("PostBooksStars")]
+        public ServiceResult<BooksStars> PostBooksStars(BooksStars star)
         {
-            List < Books > getBookList = new List < Books >();
-            if (!string.IsNullOrEmpty(arama.KITAP_ADI))
+            ServiceResult<BooksStars> result = new ServiceResult<BooksStars>(state: MessageResultState.SUCCESS);
+            IBooksStarsDal yazarDal = InstanceFactory.GetInstance<IBooksStarsDal>();
+
+           BooksStarsValidator validationRules = new BooksStarsValidator();
+            var sonuc = validationRules.Validate(star);
+
+            if (!sonuc!.IsValid)
             {
-                getBookList = getBookList.Where(p => p.Name.Contains(arama.KITAP_ADI!)).ToList();
-            }
-            else
-            {
-                getBookList = booksService.GetBooksList();
+                //result.State = MessageResultState.ERROR;
+                foreach (var item in sonuc.Errors)
+                {
+                    result.Message += item.ErrorMessage + ",";
+                }
+
+                try
+                {
+                    yazarDal.Update(star);
+                    result.State = MessageResultState.WARNING;
+                }
+                catch (Exception)
+                {
+                    result.Message = "";
+                    result.State = MessageResultState.ERROR;
+                }
+
+                return result;
             }
 
-            return getBookList;
+
+            star = yazarDal.Add(star);
+
+            result.Result = star;
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("GetMaxStarBooksById")]
+        public VM_Stars GetMaxStarBooksById(long id)
+        {
+            return booksService.GetMaxStarBooksById(id);
+        }
+
+
+        [HttpPost]
+        [Route("TumKitaplar")]
+        public List<VM_BOOKS> TumKitaplar(VM_ARAMA_INPUT arama)
+        {
+            List < Books > bookList = bookList = booksService.GetBooksList(); //new List < Books >();
+            if (!string.IsNullOrEmpty(arama.KITAP_ADI))
+            {
+                bookList = bookList.Where(p => p.Name.Contains(arama.KITAP_ADI!)).ToList();
+            }
+
+            if (arama.yazarIId.HasValue)
+            {
+                bookList = bookList.Where(p => p.YazarId == arama.yazarIId.Value).ToList();
+            }
+
+            if (arama.BitenKitaplar.HasValue)
+            {
+                bookList = bookList.Where(p => p.TAMAMLANDIMI == arama.BitenKitaplar.Value).ToList();
+            }
+
+            if (arama.DevamEdenKitaplar.HasValue)
+            {
+                bookList = bookList.Where(p => p.TAMAMLANDIMI == !arama.DevamEdenKitaplar.Value).ToList();
+            }
+
+            if (arama.YayinlananKitaplar.HasValue)
+            {
+                bookList = bookList.Where(p => p.YAYINDAMI == arama.YayinlananKitaplar.Value).ToList();
+            }
+
+            var vmBookList = ObjectMapper.MapList(bookList,new  List<VM_BOOKS>());
+            foreach (var item in vmBookList)
+            {
+                item.Stars = GetMaxStarBooksById(item.ID);
+            }
+
+            return vmBookList;
         }
 
         [HttpPost]
@@ -62,14 +144,17 @@ namespace HerkesYazarOlsun.Servis.Controllers
         }
 
 
-        [HttpPost]
-        [Route("PostFavoriSaveBook")]
-        public FAVORILER PostFavoriSaveBook(FAVORILER fav)
-        {
-            var getFav = booksService.PostFavoriSaveBook(fav);
 
-            return getFav;
+        [HttpPost]
+        [Route("PostFavoriBookSave")]
+        public ServiceResult<FavoriBooks> PostFavoriBookSave(FavoriBooks fav)
+        {
+            ServiceResult<FavoriBooks> result = new ServiceResult<FavoriBooks>(state: MessageResultState.SUCCESS);
+            var getFav = booksService.PostFavoriSaveBook(fav);
+            result.Result = getFav;
+            return result;
         }
+
 
         [HttpPost]
         [Route("UpdateBook")]

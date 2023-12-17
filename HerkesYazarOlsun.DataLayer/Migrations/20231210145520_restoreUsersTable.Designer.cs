@@ -3,6 +3,7 @@ using System;
 using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
     [DbContext(typeof(HerkesYazaOlsunContext))]
-    partial class HerkesYazaOlsunContextModelSnapshot : ModelSnapshot
+    [Migration("20231210145520_restoreUsersTable")]
+    partial class restoreUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,28 +130,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.ToTable("BooksPages");
                 });
 
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksStars", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
-
-                    b.Property<int>("BookaId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LoginUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StarPuani")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("BooksStars");
-                });
-
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Category", b =>
                 {
                     b.Property<long>("ID")
@@ -243,43 +224,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.ToTable("FAVORI_YAZARLAR");
                 });
 
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriBooks", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
-
-                    b.Property<long>("BOOKS_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("IS_DELETED")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IS_MODIFIED")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("USER_CREATED_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("USER_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("USER_MODIFIED_ID")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("FavoriBooks");
-                });
-
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>
                 {
                     b.Property<long>("ID")
@@ -333,50 +277,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.WriterFollow", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
-
-                    b.Property<int>("LoginUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("YazarId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("isFollow")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("WriterFollow");
-                });
-
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.WriterStars", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
-
-                    b.Property<int>("LoginUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StarPuani")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("YazarId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("WriterStars");
                 });
 #pragma warning restore 612, 618
         }
