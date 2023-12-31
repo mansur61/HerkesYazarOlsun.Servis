@@ -20,7 +20,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string Name { get; set; }    
         public VM_PAGINATION_BUTTON vM_PAGINATION_BUTTONS { get; set; }
         public VM_Stars  Stars{ get; set; }
-                
+        public DateTime? CREATE_AT { get; set; }
         public  int Start { get; set; }
         public int End { get; set; }
         public string Tip { get; set; }

@@ -14,7 +14,7 @@ namespace HerkesYazarOlsun.BLL.Validation
     {
         public WriterStarsValidator()
         {
-            RuleFor(x => x).Must(BaskaTelNoVarmi).WithMessage("Güncelleme Yapıldı");
+            //RuleFor(x => x).Must(BaskaTelNoVarmi).WithMessage("Güncelleme Yapıldı");
         }
 
         private bool BaskaTelNoVarmi(WriterStars star)

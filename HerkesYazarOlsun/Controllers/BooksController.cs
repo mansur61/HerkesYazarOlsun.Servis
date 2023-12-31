@@ -3,6 +3,7 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -52,37 +53,156 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public ServiceResult<BooksStars> PostBooksStars(BooksStars star)
         {
             ServiceResult<BooksStars> result = new ServiceResult<BooksStars>(state: MessageResultState.SUCCESS);
-            IBooksStarsDal yazarDal = InstanceFactory.GetInstance<IBooksStarsDal>();
+            IBooksStarsDal bookStarDal = InstanceFactory.GetInstance<IBooksStarsDal>();
 
-           BooksStarsValidator validationRules = new BooksStarsValidator();
+            BooksStarsValidator validationRules = new BooksStarsValidator();
             var sonuc = validationRules.Validate(star);
 
             if (!sonuc!.IsValid)
             {
-                //result.State = MessageResultState.ERROR;
                 foreach (var item in sonuc.Errors)
                 {
                     result.Message += item.ErrorMessage + ",";
                 }
 
-                try
-                {
-                    yazarDal.Update(star);
-                    result.State = MessageResultState.WARNING;
-                }
-                catch (Exception)
-                {
-                    result.Message = "";
-                    result.State = MessageResultState.ERROR;
-                }
-
+                result.State = MessageResultState.ERROR;
                 return result;
             }
 
 
-            star = yazarDal.Add(star);
+            try
+            {
+                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                {
+                    var mevcutKayit = ctx.BooksStars.Where(p => p.LoginUserId == star.LoginUserId && p.BookaId == star.BookaId).FirstOrDefault();
+                    if (mevcutKayit == null)
+                    {
+                        star = bookStarDal.Add(star);
+                    }
+                    else
+                    {
+                        mevcutKayit!.StarPuani = star.StarPuani;
+
+                        ctx.BooksStars.Update(mevcutKayit);
+                        ctx.SaveChanges();
+                    }
+
+                   
+                }
+
+                result.State = MessageResultState.SUCCESS;
+                return result;
+                
+            }
+            catch (Exception)
+            {
+                result.Message = "Kitap yıldız ekleme başarısız";
+                result.State = MessageResultState.ERROR;
+               
+            }
 
             result.Result = star;
+            return result;
+        }
+
+        [HttpPost]
+        [Route("PostBooksDegerlendirme")]
+        public ServiceResult PostBooksDegerlendirme(VM_BOOKS_DEGERLENDIRME degerlendirme)
+        {
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
+            IBooksDegerlendirmeDal booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>();
+
+            BookDegerlendirmeValidator validationRules = new BookDegerlendirmeValidator();
+            var sonuc = validationRules.Validate(degerlendirme);
+
+            if (!sonuc!.IsValid)
+            {
+                foreach (var item in sonuc.Errors)
+                {
+                    result.Message += item.ErrorMessage + ",";
+                }
+                result.State = MessageResultState.ERROR;
+                return result;
+            }
+
+            BooksDegerlendirme booksDegerlendirme = ObjectMapper.Map(degerlendirme, new BooksDegerlendirme());
+            try
+            {
+                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                {
+                    var mevcutKayit = ctx.BooksDegerlendirme.Where(p => p.LoginUserId == degerlendirme.LoginUserId && p.BookId == degerlendirme.BookId).FirstOrDefault();
+                    if(mevcutKayit == null)
+                    {
+                        booksDegerlendirmeDal.Add(booksDegerlendirme);
+                    }
+                    else
+                    {
+                        mevcutKayit!.StarPuani = degerlendirme.StarPuani;
+                        ctx.BooksDegerlendirme.Update(mevcutKayit);
+                        ctx.SaveChanges();
+                    }
+                   
+                }
+
+                result.State = MessageResultState.SUCCESS;
+                return result;
+            }
+            catch (Exception)
+            {
+                result.Message = "";
+                result.State = MessageResultState.ERROR;
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("PostBooksComments")]
+        public ServiceResult PostBooksComments(VM_BOOKS_COMMENT mesajlar)
+        {
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
+            IBooksCommentDal booksCommentDal = InstanceFactory.GetInstance<IBooksCommentDal>();
+
+            BooksCommentValidator validationRules = new BooksCommentValidator();
+            var sonuc = validationRules.Validate(mesajlar);
+
+            if (!sonuc!.IsValid)
+            {
+                foreach (var item in sonuc.Errors)
+                {
+                    result.Message += item.ErrorMessage + ",";
+                }
+                result.State = MessageResultState.ERROR;
+                return result;
+            }
+
+            BooksComment booksDegerlendirme = ObjectMapper.Map(mesajlar, new BooksComment());
+            try
+            {
+                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                {
+                    var mevcutKayit = ctx.BooksComment.Where(p => p.LoginUserId == mesajlar.LoginUserId && p.BookId == mesajlar.BookId).FirstOrDefault();
+                    if (mevcutKayit == null)
+                    {
+                        booksCommentDal.Add(booksDegerlendirme,0);
+                    }
+                    else
+                    {
+                        ctx.BooksComment.Update(mevcutKayit);
+                        ctx.SaveChanges();
+                    }
+
+                }
+
+                result.State = MessageResultState.SUCCESS;
+                return result;
+            }
+            catch (Exception)
+            {
+                result.Message = "";
+                result.State = MessageResultState.ERROR;
+            }
+
             return result;
         }
 
@@ -92,6 +212,28 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public VM_Stars GetMaxStarBooksById(long id)
         {
             return booksService.GetMaxStarBooksById(id);
+        }
+
+        [HttpGet]
+        [Route("GetDegerlendirmelerBooksById")]
+        public List<VM_BOOKS_DEGERLENDIRME> GetDegerlendirmelerBooksById(long kitapId)
+        {
+            IBooksDegerlendirmeDal booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>();
+            var bookDgrlnLst = booksDegerlendirmeDal.GetList(p => p.BookId == kitapId).ToList();
+            List<VM_BOOKS_DEGERLENDIRME> vmDegerlendirmeList = ObjectMapper.MapList(bookDgrlnLst, new List<VM_BOOKS_DEGERLENDIRME>());
+
+            return vmDegerlendirmeList;
+        }
+
+        [HttpGet]
+        [Route("GetCommenstBooksById")]
+        public List<VM_BOOKS_COMMENT> GetCommenstBooksById(long kitapId)
+        {
+            IBooksCommentDal booksCommentDal = InstanceFactory.GetInstance<IBooksCommentDal>();
+            var bookCmmtLst = booksCommentDal.GetAllQueryable(p => p.BookId == kitapId).ToList();
+            List<VM_BOOKS_COMMENT> vmCmmteList = ObjectMapper.MapList(bookCmmtLst, new List<VM_BOOKS_COMMENT>());
+
+            return vmCmmteList;
         }
 
 

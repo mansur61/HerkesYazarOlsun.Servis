@@ -3,6 +3,7 @@ using System;
 using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
     [DbContext(typeof(HerkesYazaOlsunContext))]
-    partial class HerkesYazaOlsunContextModelSnapshot : ModelSnapshot
+    [Migration("20231230103813_addedtablolar")]
+    partial class addedtablolar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -387,10 +390,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("KartNo")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("KartTarihi")
                         .IsRequired()
                         .HasColumnType("text");
@@ -510,9 +509,8 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
 
-                    b.Property<string>("SponsorAdi")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<long>("SponsorAdi")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ID");
 

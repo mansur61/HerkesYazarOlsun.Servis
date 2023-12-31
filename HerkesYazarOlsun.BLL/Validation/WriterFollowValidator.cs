@@ -14,11 +14,10 @@ namespace HerkesYazarOlsun.BLL.Validation
     {
         public WriterFollowValidator()
         {
-            //"İlgili Yazar Sadece 1 kez takip edilebilir/edilemez. İsteğiniz güncelleme olarak algılanmıştır ve uygulanmıştır. Takip isteğiniz geri alınmıştır"
-            RuleFor(x => x).Must(BaskaTelNoVarmi).WithMessage("");
+           // RuleFor(x => x).Must(AyniKayitVarmi).WithMessage("");
         }
 
-        private bool BaskaTelNoVarmi(WriterFollow user)
+        private bool AyniKayitVarmi(WriterFollow user)
         {
             IWriterFollowDal yazarDal = InstanceFactory.GetInstance<IWriterFollowDal>();
             var sonuc = yazarDal.GetList(p => p.LoginUserId == user.LoginUserId && p.YazarId == user.YazarId).ToList();

@@ -4,6 +4,8 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
+using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -177,6 +179,17 @@ namespace HerkesYazarOlsun.Controllers
             return favYazar;
         }
 
+        [HttpGet]
+        [Route("GetWriterFollowById")]
+        public VM_WriterFollow GetWriterFollowById(long yazar_id)
+        {
+            IWriterFollowDal yazarDal = InstanceFactory.GetInstance<IWriterFollowDal>();
+            var follow = yazarDal.Get(p=>p.YazarId == yazar_id);    
+            var fllwYazar = ObjectMapper.Map(follow, new VM_WriterFollow());
+            
+            return fllwYazar;
+        }
+
 
         [HttpPost]
         [Route("PostWriterStars")]
@@ -196,21 +209,38 @@ namespace HerkesYazarOlsun.Controllers
                     result.Message += item.ErrorMessage + ",";
                 }
 
-                try
-                {
-                    yazarDal.Update(star);
-                    result.State = MessageResultState.WARNING;
-                }
-                catch (Exception)
-                {
-                    result.Message = "";
-                    result.State = MessageResultState.ERROR;
-                }
-
+                result.State = MessageResultState.ERROR;
                 return result;
             }
 
-            star = yazarDal.Add(star);
+            try
+            {
+                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                {
+                    var mevcutKayit = ctx.WriterStars.Where(p => p.LoginUserId == star.LoginUserId && p.YazarId == star.YazarId).FirstOrDefault();
+                    if (mevcutKayit == null)
+                    {
+                        star = yazarDal.Add(star);
+                    }
+                    else
+                    {
+                        mevcutKayit!.StarPuani = star.StarPuani;
+                        ctx.WriterStars.Update(mevcutKayit);
+                        ctx.SaveChanges();
+                    }
+
+                }
+
+                result.State = MessageResultState.SUCCESS;
+                return result;
+            }
+            catch (Exception)
+            {
+                result.Message = "";
+                result.State = MessageResultState.ERROR;
+            }
+
+            
 
 
             result.Result = star;
@@ -229,38 +259,53 @@ namespace HerkesYazarOlsun.Controllers
             if (!sonuc!.IsValid)
             {
                 //result.State = MessageResultState.ERROR;
-                //foreach (var item in sonuc.Errors)
-                //{
-                //    result.Message += item.ErrorMessage + ",";
-                //}
+                foreach (var item in sonuc.Errors)
+                {
+                    result.Message += item.ErrorMessage + ",";
+                }
 
-                try
-                {
-                    if(follow.isFollow == 1)
-                    {
-                        follow.isFollow = 0;
-                        result.Message = "Takipten Çýkýldý.";
-                    }
-                    else
-                    {
-                        follow.isFollow = 1;
-                        result.Message = "Takipten Ediliyor.";
-                    }
-                    
-                    yazarDal.Update(follow);
-                    result.State = MessageResultState.WARNING;
-                }
-                catch (Exception)
-                {
-                    result.Message = "";
-                    result.State = MessageResultState.ERROR;
-                }
-                
+                result.State = MessageResultState.ERROR;
                 return result;
             }
 
-           
-            follow = yazarDal.Add(follow);
+            try
+            {
+                
+                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                {
+                    var mevcutKayit = ctx.WriterFollow.Where(p => p.LoginUserId == follow.LoginUserId && p.YazarId == follow.YazarId).FirstOrDefault();
+                    if (mevcutKayit == null)
+                    {
+                        follow = yazarDal.Add(follow);
+                    }
+                    else
+                    {
+                        if (follow.isFollow == 1)
+                        {
+                            mevcutKayit.isFollow = 1;
+                            result.Message = "Takipten Ediliyor.";
+                        }
+                        else
+                        {
+                            mevcutKayit.isFollow = 0;
+                           result.Message = "Takipten Çýkýldý.";
+                        }
+
+                        //yazarDal.Update(follow);
+                        ctx.WriterFollow.Update(mevcutKayit);
+                        ctx.SaveChanges();
+                    }
+
+                }
+
+            }
+            catch (Exception)
+            {
+                result.Message = "";
+                result.State = MessageResultState.ERROR;
+            }
+
+            
 
             result.Result = follow;
             return result;

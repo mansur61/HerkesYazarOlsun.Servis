@@ -47,19 +47,28 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
             int yildiz1 = bookStar.GetList(p => p.StarPuani == 1 && p.BookaId == id).Count();
             _yildizlar.Add(yildiz1);
+            vM_BooksSatars.BirStarToplam = yildiz1;
             keyValuePairs.Add("yildiz1", yildiz1);
+           
             int yildiz2 = bookStar.GetList(p => p.StarPuani == 2 && p.BookaId == id).Count();
             _yildizlar.Add(yildiz2);
             keyValuePairs.Add("yildiz2", yildiz2);
+            vM_BooksSatars.IkiStarToplam = yildiz2;
+
             int yildiz3 = bookStar.GetList(p => p.StarPuani == 3 && p.BookaId == id).Count();
             _yildizlar.Add(yildiz3);
             keyValuePairs.Add("yildiz3", yildiz3);
+            vM_BooksSatars.UcStarToplam = yildiz3;
+
             int yildiz4 = bookStar.GetList(p => p.StarPuani == 4 && p.BookaId == id).Count();
             _yildizlar.Add(yildiz4);
             keyValuePairs.Add("yildiz4", yildiz4);
+            vM_BooksSatars.DortStarToplam = yildiz4;
+
             int yildiz5 = bookStar.GetList(p => p.StarPuani == 5 && p.BookaId == id).Count();
             _yildizlar.Add(yildiz5);
             keyValuePairs.Add("yildiz5", yildiz5);
+            vM_BooksSatars.BesStarToplam = yildiz5;
 
             var max = _yildizlar.Max();
 
