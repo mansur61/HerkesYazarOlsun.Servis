@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
@@ -9,13 +10,14 @@ namespace HerkesYazarOlsun.BLL.Concrete
     public class BooksBll : IBooksService
     {
         private readonly IBooksDal _booksDal;
-        //private readonly IFavorilerDal _favoriDal;
+        private readonly IUserAccessor userAccessor;
         private readonly IFavBookDal _favoriBookDal;
-        public BooksBll(IBooksDal booksDal, IFavBookDal favoriBookDal)
+        public BooksBll(IBooksDal booksDal, IFavBookDal favoriBookDal, IUserAccessor userAccessor)
         {
             _booksDal = booksDal;
            // _favoriDal = favoriDal;
             _favoriBookDal = favoriBookDal;
+            this.userAccessor = userAccessor;
         }
 
         public Books? GetBooks(long id)
@@ -85,7 +87,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public Books UpdateBook(Books book)
         {
-            return _booksDal.Update(book, 0);
+            return _booksDal.Guncelle(book, userAccessor.MAIL);
         }
     }
 }

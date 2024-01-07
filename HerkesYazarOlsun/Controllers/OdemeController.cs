@@ -1,5 +1,6 @@
 
 using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
@@ -7,6 +8,7 @@ using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Servis.Controllers;
 using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,13 +16,13 @@ namespace HerkesYazarOlsun.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OdemeController : ControllerBase
+    public class OdemeController : BaseApiController
     {
         private IKartlarDal kartlarDal;
         private IOdemeDal odemeDal;
         private IOdemeSponsorlariDal odemeSpnsDal;
 
-        public OdemeController(IKartlarDal _kartlarDal, IOdemeDal odemeDal, IOdemeSponsorlariDal odemeSpnsDal)
+        public OdemeController(IKartlarDal _kartlarDal, IOdemeDal odemeDal, IOdemeSponsorlariDal odemeSpnsDal, IUserAccessor userAccessor):base(userAccessor)
         {
             kartlarDal = _kartlarDal;
             this.odemeDal = odemeDal;
@@ -40,12 +42,12 @@ namespace HerkesYazarOlsun.Controllers
             {
                 //Ödeme alt yapýsýna gider. (iyizico vs.) Baþarýlý ise Ödeme tablosuna kayýt atar. isOdeme durumu belilerlenir.
                 odeme.isOdeme = true; //örnek olarak ödeme baþarýlý olsun..
-                Odeme odemeEntity = odemeDal.Add(odeme, kart.tck);
+                Odeme odemeEntity = odemeDal.Ekle(odeme, MAIL);
 
                 kartEntity.Tutar = (long)Convert.ToInt32(kart.Tutar);
                 kartEntity.OdemeId = odemeEntity.ID;
                 kartEntity.KartTarihi = kart.KartTarihiAy.ToString() + "/" +kart.KartTarihiYil.ToString();
-                kartEntity =  kartlarDal.Add(kartEntity, kart.tck);
+                kartEntity =  kartlarDal.Ekle(kartEntity, MAIL);
 
                 result.State = MessageResultState.SUCCESS;
                 return result;

@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,11 +7,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksPagesController : ControllerBase
+    public class BooksPagesController : BaseApiController
     {
         private IBooksPagesService _booksPagesService;
-        public BooksPagesController(IBooksPagesService booksPagesService) {
+       
+        public BooksPagesController(IBooksPagesService booksPagesService, IUserAccessor userAccessor):base(userAccessor) {
             _booksPagesService = booksPagesService;
+           
         }
 
         [HttpGet]

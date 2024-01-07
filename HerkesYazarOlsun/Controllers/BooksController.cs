@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
@@ -14,11 +15,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class BooksController : BaseApiController
     {
         private IBooksService booksService;
        
-        public BooksController(IBooksService _booksService)
+        public BooksController(IBooksService _booksService, IUserAccessor userAccessor) :base(userAccessor)
         {
             booksService = _booksService;
         }
@@ -184,7 +185,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     var mevcutKayit = ctx.BooksComment.Where(p => p.LoginUserId == mesajlar.LoginUserId && p.BookId == mesajlar.BookId).FirstOrDefault();
                     if (mevcutKayit == null)
                     {
-                        booksCommentDal.Add(booksDegerlendirme,0);
+                        booksCommentDal.Ekle(booksDegerlendirme,MAIL);
                     }
                     else
                     {

@@ -1,6 +1,7 @@
 
 
 using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
@@ -9,21 +10,25 @@ using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Servis.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace HerkesYazarOlsun.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
 
         private readonly ILogger<UsersController> _logger;
         private IUsersService userService;
-        public UsersController(ILogger<UsersController> logger, IUsersService _userService)
+        private IUsersDal kisilerDal;
+        public UsersController(ILogger<UsersController> logger, IUsersService _userService, IUsersDal kisilerDal, IUserAccessor userAccessor):base(userAccessor)
         {
             _logger = logger;
             userService = _userService;
+            this.kisilerDal = kisilerDal;
         }
 
 
@@ -55,7 +60,7 @@ namespace HerkesYazarOlsun.Controllers
                 if (kayit != null)
                 {
                     kayit.isEmail = 1;
-                    kayit = kisilerDal.Update(kayit, 0);
+                    kayit = kisilerDal.Guncelle(kayit, MAIL);
                 }
                 else
                 {
@@ -108,7 +113,7 @@ namespace HerkesYazarOlsun.Controllers
                 }
                 else
                 {
-                    user = kisilerDal.Add(user, 0);
+                    user = kisilerDal.Ekle(user, MAIL);
                     result.Message = "Kayýt Alýndý";
                 }
 
@@ -148,6 +153,44 @@ namespace HerkesYazarOlsun.Controllers
             return getKisi;
         }
 
+        [HttpGet]
+        [Route("GetKisiByMail")]
+        public ServiceResult<Users> GetKisiByMail(string mail)
+        {
+            ServiceResult<Users> result = new ServiceResult<Users>(state:MessageResultState.SUCCESS);
+
+            IUsersDal kisilerDal = InstanceFactory.GetInstance<IUsersDal>();
+            var getKisi = kisilerDal.GetAllQueryable(p => p.EMAIL == mail).SingleOrDefault();
+
+            if(getKisi != null)
+            {
+                EmailValidator validationRules = new EmailValidator();
+                var sonuc = validationRules.Validate(getKisi);
+                if (sonuc!.IsValid)
+                {
+                    result.State = MessageResultState.ERROR;
+                    foreach (var item in sonuc.Errors)
+                    {
+                        result.Message += item.ErrorMessage + ",";
+                    }
+
+                    return result;
+                }
+                
+            }
+            else
+            {
+                
+                result.Message = "Mail adresi yok,kayýt yaptýrýnýz.";
+                result.State = MessageResultState.ERROR;
+               
+            }
+
+            result.Result = getKisi;
+            return result;
+
+        }
+
         [HttpPost]
         [Route("GetKisiler")]
         public List<VM_USERS> GetKisiler(VM_ARAMA_INPUT arama)
@@ -175,7 +218,7 @@ namespace HerkesYazarOlsun.Controllers
         {
             IFavYazarDal yazarDal = InstanceFactory.GetInstance<IFavYazarDal>();
             var favYazar = ObjectMapper.Map(fav, new FAVORI_YAZARLAR());
-            favYazar = yazarDal.Add(favYazar, fav.tck);
+            favYazar = yazarDal.Ekle(favYazar, MAIL);
             return favYazar;
         }
 
@@ -188,6 +231,14 @@ namespace HerkesYazarOlsun.Controllers
             var fllwYazar = ObjectMapper.Map(follow, new VM_WriterFollow());
             
             return fllwYazar;
+        }
+
+        [HttpGet]
+        [Route("GetUsersByLoginId")]
+        public Users? GetUserByLoginId(long loginId)
+        {
+            var sonuc = kisilerDal.GetAllQueryable(p => p.ID == loginId).SingleOrDefault();
+            return sonuc;
         }
 
 

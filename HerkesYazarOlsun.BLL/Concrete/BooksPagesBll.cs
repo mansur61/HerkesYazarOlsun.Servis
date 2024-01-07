@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 
@@ -7,9 +8,11 @@ namespace HerkesYazarOlsun.BLL.Concrete
     public class BooksPagesBll : IBooksPagesService
     {
         private readonly IBooksPagesDal _booksPagesDal;
-        public BooksPagesBll(IBooksPagesDal BooksPagesDal)
+        private IUserAccessor _userAccessor;
+        public BooksPagesBll(IBooksPagesDal BooksPagesDal, IUserAccessor userAccessor)
         {
             _booksPagesDal = BooksPagesDal;
+            _userAccessor = userAccessor;
         }
 
         public BooksPages? GetBooksPages(long id)
@@ -30,7 +33,8 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public BooksPages PostSaveBooksPages(BooksPages book)
         {
-            return _booksPagesDal.Add(book, 0);
+          
+            return _booksPagesDal.Ekle(book, _userAccessor.MAIL);
         }
 
        

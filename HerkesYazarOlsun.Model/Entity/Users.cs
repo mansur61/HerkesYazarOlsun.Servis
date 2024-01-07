@@ -9,7 +9,6 @@ namespace HerkesYazarOlsun.Model.Entity
     public class Users : NewBaseEntity
     {
         public string? NAME { get; set; }
-        //username olarak kullanıldı
         public string? SURNAME { get; set; }
         public string? USERNAME { get; set; }
         public string? EMAIL { get; set; }

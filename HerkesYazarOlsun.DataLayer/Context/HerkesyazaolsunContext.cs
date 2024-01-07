@@ -28,6 +28,11 @@ namespace HerkesYazarOlsun.DataLayer.Context
         public virtual DbSet<BooksDegerlendirme> BooksDegerlendirme { get; set; }
         public virtual DbSet<Odeme> Odeme { get; set; }
 
+        public virtual DbSet<Bildirimler> Bildirimler { get; set; }
+        public virtual DbSet<UsersDetails> UsersDetails { get; set; }
+        public virtual DbSet<Profil> Profil { get; set; }
+        public virtual DbSet<Ayarlar> Ayarlar { get; set; }
+
         public virtual DbSet<OdemeSponsorlari> OdemeSponsorlari { get; set; }
         public virtual DbSet<Sponsorlar> Sponsorlar { get; set; }
         public virtual DbSet<Kartlar> Kartlar { get; set; }

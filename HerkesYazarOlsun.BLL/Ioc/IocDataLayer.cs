@@ -15,6 +15,12 @@ namespace HerkesYazarOlsun.BLL.Ioc
             service.AddTransient<IFavYazarDal, FavYazarDal>();
             service.AddTransient<IKartlarDal, KartlarDal>();
             service.AddTransient<IOdemeDal, OdemeDal>();
+
+            service.AddTransient<IBildirimlerDal, BildirimlerDal>();
+            service.AddTransient<IUsersDetailsDal, UsersDetailsDal>();
+            service.AddTransient<IProfilDal, ProfilDal>();
+            service.AddTransient<IAyarlarDal, AyarlarDal>();
+
             service.AddTransient<IOdemeSponsorlariDal, OdemeSponsorlariDal>();
             service.AddTransient<ISponsorlarDal, SponsorlarDal>();
             service.AddTransient<IBooksDegerlendirmeDal, BooksDegerlendirmeDal>();

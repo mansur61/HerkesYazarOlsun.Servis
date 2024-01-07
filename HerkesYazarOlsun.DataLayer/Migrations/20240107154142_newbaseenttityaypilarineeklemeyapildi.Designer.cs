@@ -3,6 +3,7 @@ using System;
 using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
     [DbContext(typeof(HerkesYazaOlsunContext))]
-    partial class HerkesYazaOlsunContextModelSnapshot : ModelSnapshot
+    [Migration("20240107154142_newbaseenttityaypilarineeklemeyapildi")]
+    partial class newbaseenttityaypilarineeklemeyapildi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,9 +62,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
 
                     b.Property<long>("UserDetailID")
                         .HasColumnType("bigint");
@@ -114,9 +114,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -178,9 +175,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
-
                     b.Property<bool>("YAYINDAMI")
                         .HasColumnType("boolean");
 
@@ -238,9 +232,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -325,9 +316,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
-
                     b.HasKey("ID");
 
                     b.ToTable("BooksPages");
@@ -410,9 +398,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
-
                     b.HasKey("ID");
 
                     b.ToTable("FAVORILER");
@@ -449,9 +434,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
 
                     b.Property<int>("YazarId")
                         .HasColumnType("integer");
@@ -495,9 +477,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -560,9 +539,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
-
                     b.HasKey("ID");
 
                     b.ToTable("Kartlar");
@@ -602,9 +578,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
 
                     b.Property<bool>("isOdeme")
                         .HasColumnType("boolean");
@@ -666,9 +639,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
-
                     b.HasKey("ID");
 
                     b.ToTable("OdemeSponsorlari");
@@ -723,9 +693,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -796,9 +763,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
-
                     b.Property<int>("isEmail")
                         .HasColumnType("integer");
 
@@ -862,9 +826,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
 
                     b.Property<string>("WebSite")
                         .HasColumnType("text");
