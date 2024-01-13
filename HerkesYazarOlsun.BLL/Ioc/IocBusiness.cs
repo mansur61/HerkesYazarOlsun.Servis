@@ -1,6 +1,7 @@
 ﻿
 
 using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Concrete;
 using Microsoft.Extensions.DependencyInjection;
 namespace HerkesYazarOlsun.BLL.Ioc
@@ -17,6 +18,8 @@ namespace HerkesYazarOlsun.BLL.Ioc
         public static void IoCBusinessLogicLayerRegister(this IServiceCollection service)
         {
             service.AddTransient<IUsersService, UsersBll>();
+            service.AddTransient<IUserAccessor, HttpUserAccessor>();
+            
             service.AddTransient<IBooksService, BooksBll>();
             service.AddTransient< IBooksPagesService, BooksPagesBll>();
         }

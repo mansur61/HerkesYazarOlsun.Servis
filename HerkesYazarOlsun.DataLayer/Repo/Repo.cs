@@ -94,6 +94,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             var _dbSet = _dbContext.Set<T>();
             entity.MODIFIED_AT = DateTime.Now;
             entity.USER_MODIFIED_MAIL = mail;
+            entity.USER_MODIFIED_ID = 0;
             entity.IS_MODIFIED = 1;
             //entity = _dbSet.Attach(entity);
             var updateEntity = _dbContext.Entry(entity);

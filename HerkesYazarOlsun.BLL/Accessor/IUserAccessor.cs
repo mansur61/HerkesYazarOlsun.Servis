@@ -8,17 +8,16 @@ namespace HerkesYazarOlsun.BLL.Accessor
 
         long YETKILITCNO { get; }
 
-        long USER_BIRIM_ID { get; }
+        long TEl_NO { get; }
 
         string MAIL { get; }
 
         string ADISOYADI { get; }
-
-        long? BIRIMID { get; }
+      
         int? UYGULAMA_ID { get; }
 
         string IP { get; }
 
-        long? BIRIMSEVIYE { get; }
+        
     }
 }
