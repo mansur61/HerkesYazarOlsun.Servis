@@ -12,7 +12,7 @@ namespace HerkesYazarOlsun.Model.Entity
         public DateTime? CREATE_AT { get; set; }
 
         public long? USER_CREATED_ID { get; set; }
-        public string? OLUSTURAN_EMAİL { get; set; }
+        public string? OLUSTURAN_EMAIL { get; set; }
 
         public long IS_MODIFIED { get; set; }
 

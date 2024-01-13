@@ -18,6 +18,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
            // _favoriDal = favoriDal;
             _favoriBookDal = favoriBookDal;
             this.userAccessor = userAccessor;
+           
         }
 
         public Books? GetBooks(long id)
@@ -31,8 +32,8 @@ namespace HerkesYazarOlsun.BLL.Concrete
             return _booksDal.GetAll();
         }
         public Books PostSaveBook(Books book)
-        {
-            return _booksDal.Add(book, 0);
+        {            
+            return _booksDal.Ekle(book, userAccessor.MAIL);
         }
 
         public FavoriBooks PostFavoriSaveBook(FavoriBooks fav)

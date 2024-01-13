@@ -186,11 +186,12 @@ namespace HerkesYazarOlsun.Controllers
                
             }
 
-            result.Result = getKisi;
+            result.Result = getKisi!;
             return result;
 
         }
 
+        //Zamanla inner join yapýsýna geç. pl/sql de
         [HttpPost]
         [Route("GetKisiler")]
         public List<VM_USERS> GetKisiler(VM_ARAMA_INPUT arama)
@@ -200,7 +201,7 @@ namespace HerkesYazarOlsun.Controllers
             var getKisiler = kisilerBll.GetKullanicilar();
             if (!string.IsNullOrEmpty(arama.YAZAR_ADI))
             {
-                getKisiler = getKisiler.Where(p => p.NAME.Contains(arama.YAZAR_ADI!)).ToList();
+                getKisiler = getKisiler.Where(p => p.NAME!.Contains(arama.YAZAR_ADI!)).ToList();
             }
 
             var vmUserList = ObjectMapper.MapList(getKisiler, new List<VM_USERS>());
@@ -241,6 +242,51 @@ namespace HerkesYazarOlsun.Controllers
             return sonuc;
         }
 
+        [HttpPost]
+        [Route("SaveOrUpdateAccountLogin")]
+        public ServiceResult SaveOrUpdateAccountLogin(VM_LOGIN vmLogni)
+        {
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
+
+            IAccountLoginDal accLoginDal = InstanceFactory.GetInstance<IAccountLoginDal>();
+
+            var bak = MAIL;
+            var accountLogin = ObjectMapper.Map(vmLogni, new AccountLogin());
+            try
+            {
+                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                {
+                    var mevcutKayit = ctx.AccountLogin.Where(p => p.LoginUserId == vmLogni.LoginUserId).FirstOrDefault();
+                    if (mevcutKayit == null)
+                    {
+                        accountLogin.OLUSTURAN_EMAIL = vmLogni.email;
+                         accountLogin = accLoginDal.Ekle(accountLogin,MAIL);
+                    }
+                    else
+                    {
+                        mevcutKayit.OLUSTURAN_EMAIL = vmLogni.email;
+                        mevcutKayit.benihatirla = vmLogni.benihatirla;
+                        mevcutKayit.RememberLogin = vmLogni.RememberLogin;
+                        mevcutKayit.LoginUserId = vmLogni.LoginUserId;
+                        mevcutKayit.email = vmLogni.email;
+                        ctx.AccountLogin.Update(mevcutKayit);
+                        ctx.SaveChanges();
+                    }
+
+                }
+
+                result.State = MessageResultState.SUCCESS;
+                return result;
+            }
+            catch (Exception)
+            {
+                result.Message = "";
+                result.State = MessageResultState.ERROR;
+            }
+
+            result.Result = accountLogin;
+            return result;
+        }
 
         [HttpPost]
         [Route("PostWriterStars")]

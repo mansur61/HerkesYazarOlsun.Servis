@@ -1,5 +1,4 @@
-﻿using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BusinessLayer.Factory;
+﻿using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using Microsoft.AspNetCore.Http;
 
@@ -9,7 +8,7 @@ namespace HerkesYazarOlsun.BLL.Accessor
     {
         public readonly IHttpContextAccessor accessor;
 
-        public HttpUserAccessor(IHttpContextAccessor accessor)
+        public HttpUserAccessor(IHttpContextAccessor accessor) 
         {
             this.accessor = accessor;
         }
@@ -38,7 +37,7 @@ namespace HerkesYazarOlsun.BLL.Accessor
             }
         }
 
-        public long TEl_NO
+        public long TEL_NO
         {
             get
             {

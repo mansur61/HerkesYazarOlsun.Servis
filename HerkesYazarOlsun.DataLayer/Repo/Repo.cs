@@ -127,7 +127,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
 
         public T Ekle(T entity, string mail)
         {
-            entity.OLUSTURAN_EMAİL = mail;
+            entity.OLUSTURAN_EMAIL = mail;
             entity.CREATE_AT = DateTime.Now;
             entity.MODIFIED_AT = DateTime.Now;
             var addEntity = _dbContext.Entry(entity);

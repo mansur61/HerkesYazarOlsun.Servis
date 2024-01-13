@@ -8,7 +8,7 @@ namespace HerkesYazarOlsun.BLL.Accessor
 
         long YETKILITCNO { get; }
 
-        long TEl_NO { get; }
+        long TEL_NO { get; }
 
         string MAIL { get; }
 
