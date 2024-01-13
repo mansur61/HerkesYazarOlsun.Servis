@@ -15,7 +15,9 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         IQueryable<T> GetAllQueryable();
         T Get(long id);
         T Add(T entity, long tcNo);
+        T Ekle(T entity, string mail);
         T Update(T entity, long tcNo);
+        T Guncelle(T entity, string mail);
         void Delete(int id, long tcNo);
         void Delete(T entity, long tcNo);
         long GetSequneceNextVal(string sequneceName);

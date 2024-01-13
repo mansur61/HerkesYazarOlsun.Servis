@@ -85,10 +85,49 @@ namespace HerkesYazarOlsun.DataLayer.Repo
 
             return entity;
         }
+        public T Guncelle(T entity, string mail)
+        {
+            if (_dbContext.Entry(entity).State == EntityState.Detached)
+            {
+                HandleDetached(entity);
+            }
+            var _dbSet = _dbContext.Set<T>();
+            entity.MODIFIED_AT = DateTime.Now;
+            entity.USER_MODIFIED_MAIL = mail;
+            entity.USER_MODIFIED_ID = 0;
+            entity.IS_MODIFIED = 1;
+            //entity = _dbSet.Attach(entity);
+            var updateEntity = _dbContext.Entry(entity);
+            updateEntity.State = EntityState.Modified;
+            _dbContext.SaveChanges();
 
+
+            //entity.MODIFIED_AT = DateTime.Now;
+            //entity.USER_MODIFIED_ID = tcNo;
+            //entity.IS_MODIFIED = 1;
+            //entity = _dbSet.Attach(entity);
+            //_dbContext.Entry(entity).State = EntityState.Modified;
+            //Save();
+
+            return entity;
+        }
+
+
+        
         public T Add(T entity, long tcNo)
         {
             entity.USER_CREATED_ID = tcNo;
+            entity.CREATE_AT = DateTime.Now;
+            entity.MODIFIED_AT = DateTime.Now;
+            var addEntity = _dbContext.Entry(entity);
+            addEntity.State = EntityState.Added;
+            _dbContext.SaveChanges();
+            return entity;
+        }
+
+        public T Ekle(T entity, string mail)
+        {
+            entity.OLUSTURAN_EMAIL = mail;
             entity.CREATE_AT = DateTime.Now;
             entity.MODIFIED_AT = DateTime.Now;
             var addEntity = _dbContext.Entry(entity);

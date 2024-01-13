@@ -1,7 +1,9 @@
 ﻿
 
 using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Concrete;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 namespace HerkesYazarOlsun.BLL.Ioc
 {
@@ -16,7 +18,9 @@ namespace HerkesYazarOlsun.BLL.Ioc
         /// <param name="service">The service.</param>
         public static void IoCBusinessLogicLayerRegister(this IServiceCollection service)
         {
-            service.AddTransient<IUsersBll, UsersBll>();
+            service.AddTransient<IUsersService, UsersBll>();
+            service.AddTransient<IUserAccessor, HttpUserAccessor>();
+            service.AddTransient<IHttpContextAccessor, HttpContextAccessor>();         
             service.AddTransient<IBooksService, BooksBll>();
             service.AddTransient< IBooksPagesService, BooksPagesBll>();
         }

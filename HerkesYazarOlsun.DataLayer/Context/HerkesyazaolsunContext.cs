@@ -25,6 +25,23 @@ namespace HerkesYazarOlsun.DataLayer.Context
     {
 
         public virtual DbSet<FAVORILER> FAVORILER { get; set; }
+        public virtual DbSet<BooksDegerlendirme> BooksDegerlendirme { get; set; }
+        public virtual DbSet<Odeme> Odeme { get; set; }
+        public virtual DbSet<AccountLogin> AccountLogin { get; set; }
+        
+        public virtual DbSet<Bildirimler> Bildirimler { get; set; }
+        public virtual DbSet<UsersDetails> UsersDetails { get; set; }
+        public virtual DbSet<Profil> Profil { get; set; }
+        public virtual DbSet<Ayarlar> Ayarlar { get; set; }
+
+        public virtual DbSet<OdemeSponsorlari> OdemeSponsorlari { get; set; }
+        public virtual DbSet<Sponsorlar> Sponsorlar { get; set; }
+        public virtual DbSet<Kartlar> Kartlar { get; set; }
+        public virtual DbSet<BooksComment> BooksComment { get; set; }
+        public virtual DbSet<FavoriBooks> FavoriBooks { get; set; }
+        public virtual DbSet<BooksStars> BooksStars { get; set; }
+        public virtual DbSet<WriterStars> WriterStars { get; set; }
+        public virtual DbSet<WriterFollow> WriterFollow { get; set; }
         public virtual DbSet<FAVORI_YAZARLAR> FAVORI_YAZARLAR { get; set; }
         public virtual DbSet<Books> Books { get; set; }
         public virtual DbSet<BooksPages> BooksPages { get; set; }

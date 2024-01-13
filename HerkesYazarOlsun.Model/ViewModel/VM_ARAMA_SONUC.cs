@@ -22,7 +22,6 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public long BooksId { get; set; }
 
         public string SURNAME { get; set; }
-
         public string EMAIL { get; set; }
         public string TCKNO { get; set; }
 

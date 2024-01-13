@@ -22,6 +22,168 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.AccountLogin", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<bool?>("AllowRefresh")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ExpiresUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool?>("IsPersistent")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("RememberLogin")
+                        .HasColumnType("boolean");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.Property<string>("benihatirla")
+                        .HasColumnType("text");
+
+                    b.Property<string>("email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sifre")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("AccountLogin");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Ayarlar", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<long>("BildirimID")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long>("ProfileID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long>("UserDetailID")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("isDegisiklik")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Ayarlar");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Bildirimler", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsKitapYayin")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsKitapYorum")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsTakip")
+                        .HasColumnType("boolean");
+
+                    b.Property<long?>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Bildirimler");
+                });
+
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Books", b =>
                 {
                     b.Property<long>("ID")
@@ -57,6 +219,9 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
                     b.Property<string>("ONKAPAKFOTO")
                         .IsRequired()
                         .HasColumnType("text");
@@ -68,11 +233,14 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<bool>("TAMAMLANDIMI")
                         .HasColumnType("boolean");
 
-                    b.Property<long>("USER_CREATED_ID")
+                    b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
 
                     b.Property<bool>("YAYINDAMI")
                         .HasColumnType("boolean");
@@ -83,6 +251,99 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksComment", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<string>("ACIKLAMA")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("BookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EMAIL")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NAME")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("BooksComment");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksDegerlendirme", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<string>("ACIKLAMA")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("BookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("EMAIL")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("KONU")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NAME")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("StarPuani")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("BooksDegerlendirme");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksPages", b =>
@@ -108,6 +369,9 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("MODIFIED_AT")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
                     b.Property<string>("PageFoto")
                         .IsRequired()
                         .HasColumnType("text");
@@ -116,15 +380,40 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long>("USER_CREATED_ID")
+                    b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
                     b.HasKey("ID");
 
                     b.ToTable("BooksPages");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksStars", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<int>("BookaId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LoginUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StarPuani")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("BooksStars");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Category", b =>
@@ -170,7 +459,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("MODIFIED_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("USER_CREATED_ID")
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<long>("USER_ID")
@@ -178,6 +470,9 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -207,11 +502,17 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("MODIFIED_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("USER_CREATED_ID")
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
 
                     b.Property<int>("YazarId")
                         .HasColumnType("integer");
@@ -219,6 +520,294 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("FAVORI_YAZARLAR");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriBooks", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<long>("BOOKS_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("FavoriBooks");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Kartlar", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("Cvv")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("KartNo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("KartTarihi")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("KartTarihiAy")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("KartTarihiYil")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("KartUzerindekiIsim")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long>("OdemeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Tutar")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Kartlar");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Odeme", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("KitapId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("isOdeme")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Odeme");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.OdemeSponsorlari", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("KitapId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Mail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Mesaj")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NameSurname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long>("SponsorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Tel")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("OdemeSponsorlari");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Profil", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MimeType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilArkaplanRenkKodu")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilArkaplanResmi")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilResimBase64")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilResimName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilResimURl")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Profil");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Sponsorlar", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<string>("SponsorAdi")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Sponsorlar");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>
@@ -233,7 +822,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("EMAIL")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("IS_DELETED")
@@ -246,30 +834,149 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NAME")
-                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
                         .HasColumnType("text");
 
                     b.Property<string>("PASSWORD")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SURNAME")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("TCKNO")
-                        .IsRequired()
+                    b.Property<string>("TELNO")
                         .HasColumnType("text");
 
-                    b.Property<long>("USER_CREATED_ID")
+                    b.Property<string>("USERNAME")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<long>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.Property<int>("isEmail")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("isTelno")
+                        .HasColumnType("integer");
+
                     b.HasKey("ID");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.UsersDetails", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DogumTarihi")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FacebookLink")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HAKKINDA")
+                        .HasColumnType("text");
+
+                    b.Property<long>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("InstagramLink")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LinkedinLink")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("TEL")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("TwitterLink")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.Property<string>("WebSite")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("UsersDetails");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.WriterFollow", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<int>("LoginUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("YazarId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("isFollow")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("WriterFollow");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.WriterStars", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<int>("LoginUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StarPuani")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("YazarId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("WriterStars");
                 });
 #pragma warning restore 612, 618
         }

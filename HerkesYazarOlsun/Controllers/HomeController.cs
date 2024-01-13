@@ -23,7 +23,7 @@ namespace HerkesYazarOlsun.Controllers
         [Route("Getir")]
         public IActionResult Getir()
         {
-            IUsersBll kisilerBll = InstanceFactory.GetInstance<IUsersBll>();
+            IUsersService kisilerBll = InstanceFactory.GetInstance<IUsersService>();
             var getKisiler = kisilerBll.GetKullanicilar();  
             return Ok(getKisiler);
         }

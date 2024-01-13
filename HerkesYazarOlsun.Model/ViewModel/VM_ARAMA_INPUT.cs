@@ -12,7 +12,7 @@
         public long? kategoriId { get; set; }
         public long? yazarIId { get; set; }
         public long? siralama { get; set; }
-        
+        public string? profilKitapTuru { get; set; }
         public bool? FavoriYazarlar { get; set; }
         public bool? DevamEdenKitaplar { get; set; }
     }

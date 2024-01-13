@@ -1,4 +1,5 @@
 
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
@@ -13,6 +14,12 @@ namespace HerkesYazarOlsun.Controllers
     [ApiController]
     public class AramaController : ControllerBase
     {
+        private IBooksService booksService;
+
+        public AramaController(IBooksService _booksService)
+        {
+            booksService = _booksService;
+        }
 
         [HttpPost]
         [Route("TumAramalar")]
@@ -38,10 +45,27 @@ namespace HerkesYazarOlsun.Controllers
                 }
                 
             }
+
             if (arama.yazarIId.HasValue)
             {
                 bookList = bookList.Where(p => p.YazarId == arama.yazarIId.Value).ToList();
             }
+
+            if (arama.BitenKitaplar.HasValue)
+            {
+                bookList = bookList.Where(p => p.TAMAMLANDIMI == arama.BitenKitaplar.Value).ToList();
+            }
+
+            if (arama.DevamEdenKitaplar.HasValue)
+            {
+                bookList = bookList.Where(p => p.TAMAMLANDIMI == arama.DevamEdenKitaplar.Value).ToList();
+            }
+
+            if (arama.YayinlananKitaplar.HasValue)
+            {
+                bookList = bookList.Where(p => p.TAMAMLANDIMI == arama.YayinlananKitaplar.Value).ToList();
+            }
+
             if (!string.IsNullOrEmpty(arama.YAZAR_ADI))
             {
                 List<long> yazarIdler = new List<long>();
@@ -84,6 +108,14 @@ namespace HerkesYazarOlsun.Controllers
             VM_ARAMA_SONUC sonuc = new VM_ARAMA_SONUC();
             sonuc.vmBook = new VM_BOOKS(); 
             sonuc.vmBook.BooksList = bookList;
+
+            var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
+            foreach (var item in vmBookList)
+            {
+                item.Stars = booksService.GetMaxStarBooksById(item.ID);
+            }
+            sonuc.vmBook.VMBooksList = new List<VM_BOOKS>();
+            sonuc.vmBook.VMBooksList = vmBookList;
             return sonuc;
         }
 
