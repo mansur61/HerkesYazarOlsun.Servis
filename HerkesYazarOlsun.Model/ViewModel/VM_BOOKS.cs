@@ -16,8 +16,12 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string profilKitapTuru { get; set; }
         public long YAZAR_ID { get; set; }
         public long YazarId { get; set; }
+        public long LoginUserId { get; set; }
+        public string Name { get; set; }
+        public string FDileName { get; set; }
+        public bool isWordPDF { get; set; }
+        public int pdfVeyaWord { get; set; }
         
-        public string Name { get; set; }    
         public VM_PAGINATION_BUTTON vM_PAGINATION_BUTTONS { get; set; }
         public VM_Stars  Stars{ get; set; }
         public DateTime? CREATE_AT { get; set; }
