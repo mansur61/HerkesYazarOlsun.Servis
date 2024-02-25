@@ -19,8 +19,11 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public long LoginUserId { get; set; }
         public string Name { get; set; }
         public string FDileName { get; set; }
+
+        public string kitapSliderYometimAdi { get; set; }
         public bool isWordPDF { get; set; }
         public int pdfVeyaWord { get; set; }
+        public bool? isPdfVeyaWordTamalama { get; set; }
         
         public VM_PAGINATION_BUTTON vM_PAGINATION_BUTTONS { get; set; }
         public VM_Stars  Stars{ get; set; }
@@ -34,6 +37,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string ARKAKAPAKYAZISI { get; set; }
         public string KITAPSAYFAFOTO { get; set; }
         public string SAYFAYAZI { get; set; }
+        public string SAYFAYAZIBASE64 { get; set; }
         public long CategoriId { get; set; }
         public List<Books> BooksList { get; set; }
         public List<VM_BOOKS> VMBooksList { get; set; }
