@@ -2,6 +2,7 @@
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.ViewModel;
 
 namespace HerkesYazarOlsun.BLL.Concrete
 {
@@ -37,7 +38,22 @@ namespace HerkesYazarOlsun.BLL.Concrete
             return _booksPagesDal.Ekle(book, _userAccessor.MAIL);
         }
 
-       
+        public BooksPages? PostUpdateBooksPages(VM_BOOKS_PAGES bookPageSayfa)
+        {
+            var guncellenecekSayfa =  GetBooksPages(bookPageSayfa.ID);
+            if(guncellenecekSayfa != null)
+            {
+                guncellenecekSayfa!.PageWrite = bookPageSayfa.PageWrite;
+                return _booksPagesDal.Guncelle(guncellenecekSayfa, _userAccessor.MAIL);
+            }
+            else
+            {
+                return null;
+            }
+        } 
+
+
+        
 
     }
 }

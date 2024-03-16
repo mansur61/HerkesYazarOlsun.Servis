@@ -1,6 +1,8 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
+using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Servis.Controllers
@@ -52,6 +54,19 @@ namespace HerkesYazarOlsun.Servis.Controllers
             var getBookPages = _booksPagesService.PostSaveBooksPages(book);
 
             return getBookPages;
+        }
+
+        [HttpPost]
+        [Route("PostUpdateBooksPages")]
+        public ServiceResult PostUpdateBooksPages(VM_BOOKS_PAGES pages)
+        {
+            ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
+            var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
+            if(guncellenecekSayfa == null)
+            {
+                sonuc.State = MessageResultState.ERROR;
+            }
+            return sonuc;
         }
     }
 }

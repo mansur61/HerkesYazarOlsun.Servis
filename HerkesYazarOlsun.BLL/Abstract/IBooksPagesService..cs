@@ -1,5 +1,6 @@
 ﻿
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.ViewModel;
 
 namespace HerkesYazarOlsun.BLL.Abstract
 {
@@ -9,7 +10,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
         BooksPages? GetBooksPages(long id);
         List<BooksPages> GetPagesByBooks(long bookID);
         BooksPages PostSaveBooksPages(BooksPages booksPages);
-       
-        
+        BooksPages? PostUpdateBooksPages(VM_BOOKS_PAGES bookPageSayfa);
+
     }
 }
