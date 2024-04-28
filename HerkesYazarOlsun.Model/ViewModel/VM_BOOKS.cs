@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string ARKAKAPAKYAZISI { get; set; }
         public string KITAPSAYFAFOTO { get; set; }
         public string SAYFAYAZI { get; set; }
+        public List<IFormFile>? dosyalar { get; set; }
         public string SAYFAYAZIBASE64 { get; set; }
         public long CategoriId { get; set; }
         public List<Books> BooksList { get; set; }
