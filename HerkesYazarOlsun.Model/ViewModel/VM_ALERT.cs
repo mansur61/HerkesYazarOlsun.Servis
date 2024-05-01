@@ -10,7 +10,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
     public class VM_ALERT
     {
         public string AlertBaslik { get; set; }
-        public string Tip { get; set; }
+        public int IlgiiSayfaSayisi { get; set; }
 
         public string AlertAltBaslik { get; set; }
 
