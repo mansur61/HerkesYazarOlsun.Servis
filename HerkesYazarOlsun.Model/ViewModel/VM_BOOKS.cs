@@ -17,6 +17,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string profilKitapTuru { get; set; }
         public long YAZAR_ID { get; set; }
         public long YazarId { get; set; }
+        public int IlgiiSayfaSayisi { get; set; }
         public long LoginUserId { get; set; }
         public string Name { get; set; }
         public string FDileName { get; set; }
