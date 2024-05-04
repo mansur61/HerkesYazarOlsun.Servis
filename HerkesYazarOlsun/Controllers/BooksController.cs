@@ -308,5 +308,23 @@ namespace HerkesYazarOlsun.Servis.Controllers
             return getBook;
         }
 
+        [HttpPost]
+        [Route("DeleteBook")]
+        public void DeleteBook(Books book)
+        {
+            int kitapId = Convert.ToInt32(book.ID);   
+            //booksService.DeleteBook(kitapId);
+
+            using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+            {
+                var kitap = ctx.Books.Where(p => p.ID == kitapId).FirstOrDefault();
+                if (kitap != null)
+                {
+                    ctx.Books.Remove(kitap); // Kitabı sil
+                    ctx.SaveChanges(); // Değişiklikleri kaydet
+                }
+            }
+        }
+
     }
 }

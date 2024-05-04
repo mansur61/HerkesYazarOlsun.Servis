@@ -9,6 +9,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
         List<Books> GetBooksList();
         Books GetBooks(long id);
         Books UpdateBook(Books book);
+        void DeleteBook(int bookId);
         Books PostSaveBook(Books books);
 
         //FAVORILER PostFavoriSaveBook(FAVORILER fav);

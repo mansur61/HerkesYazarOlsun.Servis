@@ -26,7 +26,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public bool isWordPDF { get; set; }
         public int pdfVeyaWord { get; set; }
         public bool? isPdfVeyaWordTamalama { get; set; }
-        
+        public bool? isTamalama { get; set; }
         public VM_PAGINATION_BUTTON vM_PAGINATION_BUTTONS { get; set; }
         public VM_Stars  Stars{ get; set; }
         public DateTime? CREATE_AT { get; set; }
