@@ -5,11 +5,13 @@ using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
+using HerkesYazarOlsun.DataLayer.Migrations;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
@@ -18,10 +20,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksController : BaseApiController
     {
         private IBooksService booksService;
-       
-        public BooksController(IBooksService _booksService, IUserAccessor userAccessor) :base(userAccessor)
+        private IBooksPagesService booksPagesService;
+        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, IUserAccessor userAccessor) :base(userAccessor)
         {
             booksService = _booksService;
+            booksPagesService = _booksPagesService;
         }
 
         [HttpGet]
@@ -301,11 +304,36 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("UpdateBook")]
-        public Books UpdateBook(Books book)
+        public ServiceResult<Books> UpdateBook(Books book)
         {
-            var getBook = booksService.UpdateBook(book);
+            //var getBook = GetBooks(book.ID);
+            ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
+            int sayfaCount = booksPagesService.GetPagesByBooks(book.ID)!.Count();
+            if (sayfaCount < 50)
+            {
+                result.Message = "Kitap en az 50 ve üzeri sayfadan fazla olmalıdır.";
+                result.State = MessageResultState.ERROR;
+            }
+            else
+            {
+                book = booksService.UpdateBook(book);
+                if(book != null && book.TAMAMLANDIMI)
+                {
+                    result.Message = "Kitap Tamamlandı. İlgili kitaba yönlendiriliyorsunuz..";
+                    result.State = MessageResultState.SUCCESS;
+                }
+                else
+                {
+                    result.State = MessageResultState.WARNING;
+                    result.Message = "Kitap Tamamlanamadı";
+                    
+                }
+               
+            }
+           
+            result.Result = book;
 
-            return getBook;
+            return result;
         }
 
         [HttpPost]
