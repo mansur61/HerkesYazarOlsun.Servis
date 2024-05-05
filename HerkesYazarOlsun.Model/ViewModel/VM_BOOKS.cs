@@ -35,6 +35,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string Tip { get; set; }
         public string ONSOZ { get; set; }
         public string ONKAPAKFOTO { get; set; }
+        public string AktarilanDosya { get; set; }
         public string ARKAKAPAKFOTO { get; set; }
         public string ARKAKAPAKYAZISI { get; set; }
         public string KITAPSAYFAFOTO { get; set; }
@@ -43,6 +44,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string SAYFAYAZIBASE64 { get; set; }
         public long CategoriId { get; set; }
         public List<Books> BooksList { get; set; }
+        public Books BookModel { get; set; }
         public List<VM_BOOKS> VMBooksList { get; set; }
         public List<VM_BOOKS_PAGES> BooksPageList { get; set; }
     }

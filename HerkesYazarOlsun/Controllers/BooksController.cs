@@ -282,11 +282,29 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("PostSaveBook")]
-        public Books PostSaveBook(Books book)
+        public ServiceResult<Books> PostSaveBook(Books book)
         {
-            var getBook = booksService.PostSaveBook(book);
+            ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
+            VM_BOOKS vmBooks = new VM_BOOKS();
+            vmBooks.BookModel = book;
 
-            return getBook;
+            BooksAddValidator validationRules = new BooksAddValidator();
+            var sonuc = validationRules.Validate(vmBooks);
+
+            if (!sonuc!.IsValid)
+            {
+                foreach (var item in sonuc.Errors)
+                {
+                    result.Message += item.ErrorMessage + ",";
+                }
+                result.State = MessageResultState.WARNING;
+                return result;
+            }
+            
+
+            var getBook = booksService.PostSaveBook(book);
+            result.Result = getBook;
+            return result;
         }
 
 
