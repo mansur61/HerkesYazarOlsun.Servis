@@ -15,7 +15,14 @@ namespace HerkesYazarOlsun.BLL.Validation
     {
         public AyarlarValidator()
         {
-           // RuleFor(x => x.User.EMAIL).EmailAddress().WithMessage("Geçerli Mail adresi giriniz");
+            //RuleFor(x => x.User.EMAIL).Empty().EmailAddress().WithMessage("Geçerli Mail adresi giriniz");
+            RuleFor(x => x.User.EMAIL)
+            .Empty()
+            .When(x => string.IsNullOrEmpty(x.User.EMAIL), ApplyConditionTo.CurrentValidator)
+            .WithMessage("Geçerli Mail adresi giriniz")
+            .EmailAddress()
+            .When(x => !string.IsNullOrEmpty(x.User.EMAIL), ApplyConditionTo.CurrentValidator)
+            .WithMessage("Geçerli Mail adresi giriniz");
         }
 
         private bool AyniLoginUserNoVarmi(VM_AYARLAR ayr)
