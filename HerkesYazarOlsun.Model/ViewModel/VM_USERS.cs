@@ -9,6 +9,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_USERS
     {
+        public Profil? Profile { get; set; }
         public long ID { get; set; }
         public string? NAME { get; set; }
         public string? SURNAME { get; set; }
