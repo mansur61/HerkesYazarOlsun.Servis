@@ -1,6 +1,9 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
+using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
+using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Servis.Controllers
@@ -47,11 +50,46 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("PostSaveBooksPages")]
-        public BooksPages PostSaveBooksPages(BooksPages book)
+        public ServiceResult<BooksPages> PostSaveBooksPages(VM_BOOKS_PAGES bookPages)
         {
-            var getBookPages = _booksPagesService.PostSaveBooksPages(book);
 
-            return getBookPages;
+            ServiceResult<BooksPages> result = new ServiceResult<BooksPages>(state: MessageResultState.SUCCESS);
+
+            if (!bookPages.isWordPDF) // bu durumu ve validasyoları kitap ekleme durumnu pdf veya word değilse yap
+            {
+                BooksPagesAddValidator validationRules = new BooksPagesAddValidator();
+                var sonuc = validationRules.Validate(bookPages);
+
+                if (!sonuc!.IsValid)
+                {
+                    foreach (var item in sonuc.Errors)
+                    {
+                        result.Message += item.ErrorMessage + ",";
+                    }
+                    result.State = MessageResultState.WARNING;
+                    return result;
+                }
+            }
+            
+            var book = ObjectMapper.Map(bookPages, new BooksPages());
+            var getBookPages = _booksPagesService.PostSaveBooksPages(book);
+            result.Result = getBookPages;
+
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("PostUpdateBooksPages")]
+        public ServiceResult PostUpdateBooksPages(VM_BOOKS_PAGES pages)
+        {
+            ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
+            var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
+            if(guncellenecekSayfa == null)
+            {
+                sonuc.State = MessageResultState.ERROR;
+            }
+            return sonuc;
         }
     }
 }

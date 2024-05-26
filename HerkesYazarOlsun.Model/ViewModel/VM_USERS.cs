@@ -9,6 +9,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_USERS
     {
+        public Profil? Profile { get; set; }
         public long ID { get; set; }
         public string? NAME { get; set; }
         public string? SURNAME { get; set; }
@@ -18,7 +19,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string? TELNO { get; set; }
         public VM_PAGINATION_BUTTON? vM_PAGINATION_BUTTONS { get; set; }
         public VM_Stars Stars { get; set; }
-
+        public string yazarSliderYometimAdi { get; set; }
         public VM_WriterFollow vMWriterFollow { get; set; }
         public string? PASSWORD { get; set; }
         public int isEmail { get; set; }

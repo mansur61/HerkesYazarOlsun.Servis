@@ -90,5 +90,10 @@ namespace HerkesYazarOlsun.BLL.Concrete
         {
             return _booksDal.Guncelle(book, userAccessor.MAIL);
         }
+        public void DeleteBook(int bookId)
+        {
+             _booksDal.Sil(bookId, userAccessor.MAIL);
+        }
+        
     }
 }

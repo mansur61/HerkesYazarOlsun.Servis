@@ -18,7 +18,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         T Ekle(T entity, string mail);
         T Update(T entity, long tcNo);
         T Guncelle(T entity, string mail);
-        void Delete(int id, long tcNo);
+        void Sil(int id, string mail);
         void Delete(T entity, long tcNo);
         long GetSequneceNextVal(string sequneceName);
     }

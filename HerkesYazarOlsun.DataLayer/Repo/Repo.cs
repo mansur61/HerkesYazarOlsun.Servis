@@ -54,7 +54,18 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             }
         }
 
-        public void Delete(int id, long tcNo)
+        public void Sil(int id, string mail)
+        {
+            var entity = Get(id);
+            if (entity != null)
+            {                
+                entity.IS_DELETED = 1;
+                entity.MODIFIED_AT = DateTime.Now;
+                Guncelle(entity, mail);
+            }
+        }
+
+        public void Sil(int id, long tcNo)
         {
             var entity = Get(id);
             Delete(entity, tcNo);
@@ -76,13 +87,6 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             _dbContext.SaveChanges();
 
 
-            //entity.MODIFIED_AT = DateTime.Now;
-            //entity.USER_MODIFIED_ID = tcNo;
-            //entity.IS_MODIFIED = 1;
-            //entity = _dbSet.Attach(entity);
-            //_dbContext.Entry(entity).State = EntityState.Modified;
-            //Save();
-
             return entity;
         }
         public T Guncelle(T entity, string mail)
@@ -100,14 +104,6 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             var updateEntity = _dbContext.Entry(entity);
             updateEntity.State = EntityState.Modified;
             _dbContext.SaveChanges();
-
-
-            //entity.MODIFIED_AT = DateTime.Now;
-            //entity.USER_MODIFIED_ID = tcNo;
-            //entity.IS_MODIFIED = 1;
-            //entity = _dbSet.Attach(entity);
-            //_dbContext.Entry(entity).State = EntityState.Modified;
-            //Save();
 
             return entity;
         }
@@ -213,6 +209,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             }
         }
 
+      
         #endregion
     }
 }

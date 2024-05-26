@@ -89,7 +89,7 @@ namespace HerkesYazarOlsun.Controllers
                         ctx.SaveChanges();                       
                     }
                     //profil
-                    var prflKayit = ctx.Profil.Where(p => p.ID == ayarlar.LoginUserId).FirstOrDefault();
+                    var prflKayit = ctx.Profil.Where(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
                     if (prflKayit == null)
                     {
                         prflKayit =  prfDal.Ekle(ayarlar.Profile, MAIL);
@@ -102,7 +102,7 @@ namespace HerkesYazarOlsun.Controllers
                     }
 
                     //bildirimler
-                    var bldrmlrKayit = ctx.Bildirimler.Where(p => p.ID == ayarlar.LoginUserId).FirstOrDefault();
+                    var bldrmlrKayit = ctx.Bildirimler.Where(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
                     if (bldrmlrKayit == null)
                     {
                         bldrmlrKayit = bildrmlerDal.Ekle(ayarlar.Bildirim, MAIL);

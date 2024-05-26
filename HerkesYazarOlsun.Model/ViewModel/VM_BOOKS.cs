@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,16 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string profilKitapTuru { get; set; }
         public long YAZAR_ID { get; set; }
         public long YazarId { get; set; }
-        
-        public string Name { get; set; }    
+        public int IlgiiSayfaSayisi { get; set; }
+        public long LoginUserId { get; set; }
+        public string Name { get; set; }
+        public string FDileName { get; set; }
+
+        public string kitapSliderYometimAdi { get; set; }
+        public bool isWordPDF { get; set; }
+        public int pdfVeyaWord { get; set; }
+        public bool? isPdfVeyaWordTamalama { get; set; }
+        public bool? isTamalama { get; set; }
         public VM_PAGINATION_BUTTON vM_PAGINATION_BUTTONS { get; set; }
         public VM_Stars  Stars{ get; set; }
         public DateTime? CREATE_AT { get; set; }
@@ -26,12 +35,16 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string Tip { get; set; }
         public string ONSOZ { get; set; }
         public string ONKAPAKFOTO { get; set; }
+        public string AktarilanDosya { get; set; }
         public string ARKAKAPAKFOTO { get; set; }
         public string ARKAKAPAKYAZISI { get; set; }
         public string KITAPSAYFAFOTO { get; set; }
         public string SAYFAYAZI { get; set; }
+        public List<IFormFile>? dosyalar { get; set; }
+        public string SAYFAYAZIBASE64 { get; set; }
         public long CategoriId { get; set; }
         public List<Books> BooksList { get; set; }
+        public Books BookModel { get; set; }
         public List<VM_BOOKS> VMBooksList { get; set; }
         public List<VM_BOOKS_PAGES> BooksPageList { get; set; }
     }
