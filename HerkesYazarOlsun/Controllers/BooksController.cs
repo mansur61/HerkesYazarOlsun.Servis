@@ -42,13 +42,19 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public List<VM_BOOKS> GetBooksList()
         {
             var getBookList = booksService.GetBooksList();
+            var lst = new  List<VM_BOOKS_COMMENT>();
 
             var vmBookList = ObjectMapper.MapList(getBookList, new List<VM_BOOKS>());
             foreach (var item in vmBookList)
             {
                 item.Stars = GetMaxStarBooksById(item.ID);
-            }
+                var comments = GetCommenstBooksById(item.ID);
+                item.bookComments = comments;
+                // Assign the comment count to the book
+                item.CommentCount = comments.Count;
 
+            }
+           
             return vmBookList;
         }
 
