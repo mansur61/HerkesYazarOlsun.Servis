@@ -325,12 +325,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
             return result;
         }
 
-
         [HttpPost]
         [Route("UpdateBook")]
         public ServiceResult<Books> UpdateBook(Books book)
         {
-            //var getBook = GetBooks(book.ID);
+            
             ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
             int sayfaCount = booksPagesService.GetPagesByBooks(book.ID)!.Count();
             if (sayfaCount < 50)
@@ -357,6 +356,43 @@ namespace HerkesYazarOlsun.Servis.Controllers
            
             result.Result = book;
 
+            return result;
+        }
+
+        [HttpPost]
+        [Route("CheckBook")]
+        public ServiceResult<Books> CheckBook(Books book)
+        {
+
+            ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
+            var bookPages = booksPagesService.GetPagesByBooks(book.ID);
+            int sayfaCount = bookPages!.Count();
+
+            var vmBooks = ObjectMapper.Map(book, new VM_BOOKS());            
+
+            var VM_BOOKS_PAGES = ObjectMapper.MapList(bookPages, new List<VM_BOOKS_PAGES>());
+            vmBooks.BooksPageList = VM_BOOKS_PAGES;
+
+            CheckBooksValidator validationRules = new CheckBooksValidator();
+            var sonuc2 = validationRules.Validate(vmBooks);
+
+            if (!sonuc2!.IsValid)
+            {
+                var uniqueErrors = new HashSet<string>();  
+
+                foreach (var item in sonuc2.Errors)
+                {
+                    if (uniqueErrors.Add(item.ErrorMessage))  
+                    {
+                        result.Message += item.ErrorMessage + ",";
+                    }
+                }
+
+                result.State = MessageResultState.WARNING;
+                return result;
+            }
+
+            result.Result = book;
             return result;
         }
 

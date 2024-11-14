@@ -3,6 +3,7 @@
     public class VM_ARAMA_INPUT
     {
         public string? YAZAR_ADI { get; set; }
+        public string? Tip { get; set; }
         public int listelenecek_kayit_sayisi { get; set; }
         public string? KITAP_ADI { get; set; }
         public bool? BitenKitaplar { get; set; }
