@@ -20,11 +20,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksController : BaseApiController
     {
         private IBooksService booksService;
+        private ICategoryService _categoryService;
         private IBooksPagesService booksPagesService;
-        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, IUserAccessor userAccessor) :base(userAccessor)
+        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, IUserAccessor userAccessor, ICategoryService categoryService) : base(userAccessor)
         {
             booksService = _booksService;
             booksPagesService = _booksPagesService;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -36,7 +38,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return getBook;
         }
-
+       
         [HttpGet]
         [Route("GetBooksList")]
         public List<VM_BOOKS> GetBooksList()
@@ -52,7 +54,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 item.bookComments = comments;
                 // Assign the comment count to the book
                 item.CommentCount = comments.Count;
-
+                var categoryModel = _categoryService.GetCategoryById(item.ID);
+                item.CategoryName = categoryModel != null ? categoryModel.Name : "";
             }
            
             return vmBookList;
@@ -281,6 +284,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
             foreach (var item in vmBookList)
             {
                 item.Stars = GetMaxStarBooksById(item.ID);
+                var categoryModel = _categoryService.GetCategoryById(item.ID);
+                item.CategoryName = categoryModel != null ? categoryModel.Name : "";
             }
 
             return vmBookList;

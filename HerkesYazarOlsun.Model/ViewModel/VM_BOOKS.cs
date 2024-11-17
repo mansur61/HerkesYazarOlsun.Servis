@@ -12,6 +12,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public int CommentCount { get; set; }
         public string Name { get; set; }
         public string ONSOZ { get; set; }
+        public string CategoryName { get; set; }
         public string ONKAPAKFOTO { get; set; }
         public string ARKAKAPAKFOTO { get; set; }
         public string ARKAKAPAKYAZISI { get; set; }
