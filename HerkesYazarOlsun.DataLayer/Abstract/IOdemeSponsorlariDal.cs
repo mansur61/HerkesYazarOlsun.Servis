@@ -1,11 +1,5 @@
 ﻿using HerkesYazarOlsun.DataLayer.Repo;
-using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using HerkesYazarOlsun.Model.Entity; 
 namespace HerkesYazarOlsun.DataLayer.Abstract
 {
     public interface IOdemeSponsorlariDal : IRepo<OdemeSponsorlari>
