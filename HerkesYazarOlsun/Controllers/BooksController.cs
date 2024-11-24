@@ -20,11 +20,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksController : BaseApiController
     {
         private IBooksService booksService;
+        private ICategoryService _categoryService;
         private IBooksPagesService booksPagesService;
-        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, IUserAccessor userAccessor) :base(userAccessor)
+        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, IUserAccessor userAccessor, ICategoryService categoryService) : base(userAccessor)
         {
             booksService = _booksService;
             booksPagesService = _booksPagesService;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -36,7 +38,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return getBook;
         }
-
+       
         [HttpGet]
         [Route("GetBooksList")]
         public List<VM_BOOKS> GetBooksList()
@@ -52,7 +54,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 item.bookComments = comments;
                 // Assign the comment count to the book
                 item.CommentCount = comments.Count;
-
+                var categoryModel = _categoryService.GetCategoryById(item.ID);
+                item.CategoryName = categoryModel != null ? categoryModel.Name : "";
             }
            
             return vmBookList;
@@ -281,6 +284,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
             foreach (var item in vmBookList)
             {
                 item.Stars = GetMaxStarBooksById(item.ID);
+                var categoryModel = _categoryService.GetCategoryById(item.ID);
+                item.CategoryName = categoryModel != null ? categoryModel.Name : "";
             }
 
             return vmBookList;
@@ -325,12 +330,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
             return result;
         }
 
-
         [HttpPost]
         [Route("UpdateBook")]
         public ServiceResult<Books> UpdateBook(Books book)
         {
-            //var getBook = GetBooks(book.ID);
+            
             ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
             int sayfaCount = booksPagesService.GetPagesByBooks(book.ID)!.Count();
             if (sayfaCount < 50)
@@ -357,6 +361,43 @@ namespace HerkesYazarOlsun.Servis.Controllers
            
             result.Result = book;
 
+            return result;
+        }
+
+        [HttpPost]
+        [Route("CheckBook")]
+        public ServiceResult<Books> CheckBook(Books book)
+        {
+
+            ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
+            var bookPages = booksPagesService.GetPagesByBooks(book.ID);
+            int sayfaCount = bookPages!.Count();
+
+            var vmBooks = ObjectMapper.Map(book, new VM_BOOKS());            
+
+            var VM_BOOKS_PAGES = ObjectMapper.MapList(bookPages, new List<VM_BOOKS_PAGES>());
+            vmBooks.BooksPageList = VM_BOOKS_PAGES;
+
+            CheckBooksValidator validationRules = new CheckBooksValidator();
+            var sonuc2 = validationRules.Validate(vmBooks);
+
+            if (!sonuc2!.IsValid)
+            {
+                var uniqueErrors = new HashSet<string>();  
+
+                foreach (var item in sonuc2.Errors)
+                {
+                    if (uniqueErrors.Add(item.ErrorMessage))  
+                    {
+                        result.Message += item.ErrorMessage + ",";
+                    }
+                }
+
+                result.State = MessageResultState.WARNING;
+                return result;
+            }
+
+            result.Result = book;
             return result;
         }
 

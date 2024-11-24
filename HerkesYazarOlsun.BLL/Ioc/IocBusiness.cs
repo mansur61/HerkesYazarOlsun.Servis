@@ -19,6 +19,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
         public static void IoCBusinessLogicLayerRegister(this IServiceCollection service)
         {
             service.AddTransient<IUsersService, UsersBll>();
+            service.AddTransient<ICategoryService, CategoryBll>();
             service.AddTransient<IUserAccessor, HttpUserAccessor>();
             service.AddTransient<IHttpContextAccessor, HttpContextAccessor>();         
             service.AddTransient<IBooksService, BooksBll>();

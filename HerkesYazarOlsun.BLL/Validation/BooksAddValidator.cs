@@ -1,20 +1,19 @@
 ﻿using FluentValidation;
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BusinessLayer.Factory;
-using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Enums;
+using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.BLL.Validation
 {
     public class BooksAddValidator : AbstractValidator<VM_BOOKS>
     {
+        private IBooksService _bookservice;
         public BooksAddValidator()
         {
+            _bookservice = InstanceFactory.GetInstance<IBooksService>();
 
             RuleFor(x => x.ARKAKAPAKFOTO).Empty().WithMessage("Arka Kapak Fotoğrafı boş olamaz");
             RuleFor(x => x.ONKAPAKFOTO).Empty().WithMessage("Ön Kapak Fotoğrafı boş olamaz");
@@ -25,7 +24,7 @@ namespace HerkesYazarOlsun.BLL.Validation
             //RuleFor(x => x.YazarId == 0).Empty().WithMessage("Yazar Bilgisi Alınamadı");
 
             RuleFor(x => x.CategoriId).Empty().WithMessage("Kitap  kategorisi boş olamaz");
-           
+             
         }
 
     }
