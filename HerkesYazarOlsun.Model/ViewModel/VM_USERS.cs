@@ -18,12 +18,12 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string? EMAIL { get; set; }
         public string? TELNO { get; set; }
         public VM_PAGINATION_BUTTON? vM_PAGINATION_BUTTONS { get; set; }
-        public VM_Stars Stars { get; set; }
-        public string yazarSliderYometimAdi { get; set; }
-        public VM_WriterFollow vMWriterFollow { get; set; }
+        public VM_Stars? Stars { get; set; }
+        public string? yazarSliderYometimAdi { get; set; }
+        public VM_WriterFollow? vMWriterFollow { get; set; }
         public string? PASSWORD { get; set; }
         public int isEmail { get; set; }
-        public string Tip { get; set; }
+        public string? Tip { get; set; }
         public int isTelno { get; set; }
         public int kalan { get; set; }
         public int sliderdaGosterilecekKayit { get; set; }

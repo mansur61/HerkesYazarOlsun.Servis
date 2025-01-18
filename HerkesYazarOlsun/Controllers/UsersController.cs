@@ -4,15 +4,13 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
-using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
+using HerkesYazarOlsun.DataLayer.Abstract; 
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Servis.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using Microsoft.AspNetCore.Mvc; 
 
 namespace HerkesYazarOlsun.Controllers
 {
@@ -104,7 +102,7 @@ namespace HerkesYazarOlsun.Controllers
 
             try
             {
-                var kayit = kisilerDal.GetAllQueryable(p => p.SURNAME == kisi.SURNAME).SingleOrDefault();
+                var kayit = kisilerDal.GetAllQueryable(p => p.EMAIL == kisi.EMAIL).SingleOrDefault();
                 if (kayit != null)
                 {
                     result.State = MessageResultState.WARNING;
@@ -113,7 +111,7 @@ namespace HerkesYazarOlsun.Controllers
                 }
                 else
                 {
-                    user = kisilerDal.Ekle(user, MAIL);
+                    user = kisilerDal.Ekle(user, kisi.EMAIL ?? "");
                     result.Message = "Kayýt Alýndý";
                 }
 

@@ -12,6 +12,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
 
         public string? kime { get; set; }
         public string? sifre { get; set; }
+        public string? password { get; set; }
         public string? username { get; set; }
         public string? dosyaYolu { get; set; }
         public string? gondericii_mail { get; set; }

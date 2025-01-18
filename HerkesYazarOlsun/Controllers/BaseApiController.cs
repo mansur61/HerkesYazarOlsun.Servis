@@ -18,7 +18,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         public long YETKILITCNO { get; set; }
         public long TELNO { get; set; }
-        public string MAIL { get; set; }
+        public string? MAIL { get; set; }
 
         public BaseApiController(IUserAccessor userAccessor)
         {
