@@ -195,15 +195,16 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
                 {
                     var mevcutKayit = ctx.BooksComment.Where(p => p.LoginUserId == mesajlar.LoginUserId && p.BookId == mesajlar.BookId).FirstOrDefault();
-                    if (mevcutKayit == null)
-                    {
-                        booksCommentDal.Ekle(booksDegerlendirme,MAIL);
-                    }
-                    else
-                    {
-                        ctx.BooksComment.Update(mevcutKayit);
-                        ctx.SaveChanges();
-                    }
+                    booksCommentDal.Ekle(booksDegerlendirme, MAIL ?? mesajlar.EMAIL ?? "");
+                    //if (mevcutKayit == null)
+                    //{
+                    //    booksCommentDal.Ekle(booksDegerlendirme,MAIL);
+                    //}
+                    //else
+                    //{
+                    //    ctx.BooksComment.Update(mevcutKayit);
+                    //    ctx.SaveChanges();
+                    //}
 
                 }
 

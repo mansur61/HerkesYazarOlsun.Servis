@@ -58,7 +58,7 @@ namespace HerkesYazarOlsun.Controllers
                 if (kayit != null)
                 {
                     kayit.isEmail = 1;
-                    kayit = kisilerDal.Guncelle(kayit, MAIL);
+                    kayit = kisilerDal.Guncelle(kayit, MAIL ?? kisi.EMAIL ?? "");
                 }
                 else
                 {
@@ -164,7 +164,7 @@ namespace HerkesYazarOlsun.Controllers
             {
                 EmailValidator validationRules = new EmailValidator();
                 var sonuc = validationRules.Validate(getKisi);
-                if (sonuc!.IsValid)
+                if (!sonuc!.IsValid)
                 {
                     result.State = MessageResultState.ERROR;
                     foreach (var item in sonuc.Errors)
