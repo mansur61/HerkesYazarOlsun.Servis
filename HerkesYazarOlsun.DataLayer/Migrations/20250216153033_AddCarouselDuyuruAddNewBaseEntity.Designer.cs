@@ -3,6 +3,7 @@ using System;
 using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
     [DbContext(typeof(HerkesYazaOlsunContext))]
-    partial class HerkesYazaOlsunContextModelSnapshot : ModelSnapshot
+    [Migration("20250216153033_AddCarouselDuyuruAddNewBaseEntity")]
+    partial class AddCarouselDuyuruAddNewBaseEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -439,6 +442,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ICON")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("IS_DELETED")
@@ -454,6 +458,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("URL")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("USER_CREATED_ID")

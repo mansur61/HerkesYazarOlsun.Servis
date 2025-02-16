@@ -20,7 +20,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
             service.AddTransient<IUsersDetailsDal, UsersDetailsDal>();
             service.AddTransient<IProfilDal, ProfilDal>();
             service.AddTransient<IAyarlarDal, AyarlarDal>();
-
+            service.AddTransient<ICarouselDuyuruDal, CarouselDuyuruDal>();
             service.AddTransient<IOdemeSponsorlariDal, OdemeSponsorlariDal>();
             service.AddTransient<ISponsorlarDal, SponsorlarDal>();
             service.AddTransient<IBooksDegerlendirmeDal, BooksDegerlendirmeDal>();

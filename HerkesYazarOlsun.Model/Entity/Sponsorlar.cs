@@ -12,6 +12,8 @@ namespace HerkesYazarOlsun.Model.Entity
     public class Sponsorlar : BaseEntity
     {
         public string SponsorAdi { get; set; }
+        public string URL { get; set; }
+        public string ICON { get; set; }
     }
    
 }
