@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿ 
+using System.ComponentModel.DataAnnotations.Schema; 
 
 namespace HerkesYazarOlsun.Model.Entity
 {
@@ -13,7 +9,9 @@ namespace HerkesYazarOlsun.Model.Entity
         public string ICERIK { get; set; }
         public string? URL { get; set; }
         public string? ICON { get; set; } 
-        public DateTime? ICERIK_TARIHI { get; set; } 
+        public DateTime? ICERIK_TARIHI { get; set; }
+
+        public string? RENK { get; set; }
     }
 
 

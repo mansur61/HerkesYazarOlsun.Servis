@@ -1,4 +1,4 @@
-﻿ 
+﻿
 namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_CAROUSEL_DUYURU
@@ -9,6 +9,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public DateTime? ICERIK_TARIHI { get; set; }
         public long ID { get; set; }
 
+        public string? RENK { get; set; }
         public DateTime? CREATE_AT { get; set; }
 
         public long? USER_CREATED_ID { get; set; }
