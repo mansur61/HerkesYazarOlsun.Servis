@@ -1,0 +1,39 @@
+﻿using HerkesYazarOlsun.BLL.Accessor;
+using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils; 
+using Microsoft.AspNetCore.Mvc;
+
+namespace HerkesYazarOlsun.Servis.Controllers
+{ 
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TaleplerController : BaseApiController
+    {
+        ITaleplerDal _taleplerDal;
+        public TaleplerController(IUserAccessor userAccessor, ITaleplerDal taleplerDal) : base(userAccessor)
+        {
+            _taleplerDal = taleplerDal;
+        }
+
+        [HttpPost]
+        [Route("TalepKaydet")]
+        public ServiceResult TalepKaydet(TALEPLER talepler)
+        {
+            ServiceResult resut = new ServiceResult(state:MessageResultState.SUCCESS);
+            try
+            {
+                var talep = _taleplerDal.Add(talepler);
+                resut.Result = talep;
+                resut.Message = "Talebiniz Alınmıştır.";
+            }
+            catch (Exception)
+            {
+                resut.State = MessageResultState.ERROR;
+            }
+
+            return resut;
+        }
+
+    }
+}
