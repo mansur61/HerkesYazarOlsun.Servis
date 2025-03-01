@@ -20,9 +20,11 @@ namespace HerkesYazarOlsun.BLL.Validation
         private const int pageLenght = 1800;
         private const int pageWordLenght = 200;
         private const int kitapSiirIseWordLenght = 50;
+
+
         public CheckBooksValidator()
         {
-
+            var validationMessages = new List<string>();
             _booksPagesService = InstanceFactory.GetInstance<IBooksPagesService>();
             _bookservice = InstanceFactory.GetInstance<IBooksService>();
             _categoryService = InstanceFactory.GetInstance<ICategoryService>();
@@ -30,59 +32,32 @@ namespace HerkesYazarOlsun.BLL.Validation
             RuleForEach(x => x.BooksPageList)
             .ChildRules(page =>
             {
+                // Sayfa boş olamaz kontrolü
                 page.RuleFor(x => x.PageWrite)
-                    .NotEmpty().WithMessage("Kitap Sayfa Kısmı boş olamaz");
+                    .NotEmpty()
+                    .WithMessage("Kitap Sayfa Kısmı boş olamaz");
 
+                // Sayfa minimum kelime kontrolü
                 page.RuleFor(x => x.PageWrite)
-                   .Must((parent, context) =>
-                   {
-                       Books book = _bookservice.GetBooks(parent.BooksId);                        
-                       int maxLength = book.CategoriId == (int)BookCategory.Siir
-                           ? kitapSiirIseWordLenght
-                           : pageLenght;
+                    .Must((parent, context) =>
+                    {
+                        var book = _bookservice.GetBooks(parent.BooksId);
+                        int minWordCount = book.CategoriId == (int)BookCategory.Siir
+                            ? kitapSiirIseWordLenght
+                            : pageLenght;
 
-                       return context?.Length <= maxLength;
-                   })
-                   .WithMessage(context =>
-                   {
-                       
-                       Books book = _bookservice.GetBooks(context.BooksId);
-                       int maxLength = book.CategoriId == (int)BookCategory.Siir
-                           ? kitapSiirIseWordLenght
-                           : pageLenght;
+                        int wordCount = context?.Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length ?? 0;
+                        return wordCount >= minWordCount;
+                    })
+                    .WithMessage((parent, context) =>
+                    {
+                        var book = _bookservice.GetBooks(parent.BooksId);
+                        int minWordCount = book.CategoriId == (int)BookCategory.Siir
+                            ? kitapSiirIseWordLenght
+                            : pageLenght;
 
-                       return $"Kitabın ilgili sayfasının içeriği en fazla {maxLength} karakter olabilir.";
-                   });
-
-                page.RuleFor(x => x.PageWrite)
-                   .Must((parent, context) =>
-                   {
-                       Books book = _bookservice.GetBooks(parent.BooksId);
-                       int minWordCount = book.CategoriId == (int)BookCategory.Siir
-                           ? kitapSiirIseWordLenght
-                           : pageLenght;
-
-                       return context?.Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length >= minWordCount;
-                   })
-                   .WithMessage(context =>
-                   {
-
-                       Books book = _bookservice.GetBooks(context.BooksId);
-                       int minWordCount = book.CategoriId == (int)BookCategory.Siir
-                           ? kitapSiirIseWordLenght
-                           : pageLenght;
-
-                       return $"Kitabın ilgili Sayfası en az {minWordCount}kelime içermelidir";
-                   });              
-
-
-                //page.RuleFor(x => x.PageWrite)
-                //    .Must(content => content?.Length <= pageLenght)
-                //    .WithMessage($"Kitabın ilgili Sayfa içeriği en fazla {pageLenght} karakter olabilir");
-
-                //page.RuleFor(x => x.PageWrite)
-                //    .Must(content => content?.Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length >= pageLenght)
-                //    .WithMessage($"Kitabın ilgili Sayfası en az {pageWordLenght} kelime içermelidir");
+                        return $"Kitabın ilgili Sayfası ({parent.ID}), en az {minWordCount} kelime içermelidir.";
+                    });
             });
 
             // Kitabın en az 50 sayfa olması gerektiğini kontrol ediyoruz
@@ -127,7 +102,7 @@ namespace HerkesYazarOlsun.BLL.Validation
             });
 
         }
-      
+
         private bool HasMinimumPageCount(long bookId)
         {
             int pageCount = _booksPagesService.GetPagesByBooks(bookId).Count();

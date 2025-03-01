@@ -25,8 +25,11 @@ namespace HerkesYazarOlsun.DataLayer.Context
     {
 
         public virtual DbSet<FAVORILER> FAVORILER { get; set; }
+        public virtual DbSet<CarouselDuyuru> CarouselDuyuru { get; set; }
+        
         public virtual DbSet<BooksDegerlendirme> BooksDegerlendirme { get; set; }
         public virtual DbSet<Odeme> Odeme { get; set; }
+        public virtual DbSet<TALEPLER> TALEPLER { get; set; }        
         public virtual DbSet<AccountLogin> AccountLogin { get; set; }
         
         public virtual DbSet<Bildirimler> Bildirimler { get; set; }

@@ -1,3 +1,14 @@
-Startup.cs ve PorgramYedek.cs dosyalarý kullanýlmamaktadýr.
 
-Proje .net 7 freamworklü olduðundan Program.cs dosyasýndan ayaða kalkmaktadýr.
+ ile tablolara ekler 
+dotnet ef migrations add AddCarouselDuyuruRenk --project HerkesYazarOlsun.DataLayer
+
+ekleneni dbye yansýtmak için
+
+dotnet ef database update --project HerkesYazarOlsun.DataLayer
+
+Son eklenen migration'ý kaldýrmak için
+
+dotnet ef migrations remove
+
+Mevcut migration'larý görmek için:
+dotnet ef migrations list

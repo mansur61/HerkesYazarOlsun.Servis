@@ -85,23 +85,22 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             try
             {
-                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-                {
-                    var mevcutKayit = ctx.BooksStars.Where(p => p.LoginUserId == star.LoginUserId && p.BookaId == star.BookaId).FirstOrDefault();
-                    if (mevcutKayit == null)
-                    {
-                        star = bookStarDal.Add(star);
-                    }
-                    else
-                    {
-                        mevcutKayit!.StarPuani = star.StarPuani;
+                star = bookStarDal.Add(star);
+                //using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                //{
+                //    var mevcutKayit = ctx.BooksStars.Where(p => p.LoginUserId == star.LoginUserId && p.BookaId == star.BookaId).FirstOrDefault();
+                //    if (mevcutKayit == null)
+                //    {
+                //        star = bookStarDal.Add(star);
+                //    }
+                //    else
+                //    {
+                //        mevcutKayit!.StarPuani = star.StarPuani;
 
-                        ctx.BooksStars.Update(mevcutKayit);
-                        ctx.SaveChanges();
-                    }
-
-                   
-                }
+                //        ctx.BooksStars.Update(mevcutKayit);
+                //        ctx.SaveChanges();
+                //    } 
+                //}
 
                 result.State = MessageResultState.SUCCESS;
                 return result;
@@ -141,21 +140,23 @@ namespace HerkesYazarOlsun.Servis.Controllers
             BooksDegerlendirme booksDegerlendirme = ObjectMapper.Map(degerlendirme, new BooksDegerlendirme());
             try
             {
-                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-                {
-                    var mevcutKayit = ctx.BooksDegerlendirme.Where(p => p.LoginUserId == degerlendirme.LoginUserId && p.BookId == degerlendirme.BookId).FirstOrDefault();
-                    if(mevcutKayit == null)
-                    {
-                        booksDegerlendirmeDal.Add(booksDegerlendirme);
-                    }
-                    else
-                    {
-                        mevcutKayit!.StarPuani = degerlendirme.StarPuani;
-                        ctx.BooksDegerlendirme.Update(mevcutKayit);
-                        ctx.SaveChanges();
-                    }
-                   
-                }
+                booksDegerlendirmeDal.Add(booksDegerlendirme);
+                //using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                //{
+                //    var mevcutKayit = ctx.BooksDegerlendirme.Where(p => p.LoginUserId == degerlendirme.LoginUserId && p.BookId == degerlendirme.BookId).FirstOrDefault();
+                //    booksDegerlendirmeDal.Add(booksDegerlendirme);
+                //    if (mevcutKayit == null)
+                //    {
+                //        booksDegerlendirmeDal.Add(booksDegerlendirme);
+                //    }
+                //    else
+                //    {
+                //        mevcutKayit!.StarPuani = degerlendirme.StarPuani;
+                //        ctx.BooksDegerlendirme.Update(mevcutKayit);
+                //        ctx.SaveChanges();
+                //    }
+
+                //}
 
                 result.State = MessageResultState.SUCCESS;
                 return result;
@@ -192,20 +193,22 @@ namespace HerkesYazarOlsun.Servis.Controllers
             BooksComment booksDegerlendirme = ObjectMapper.Map(mesajlar, new BooksComment());
             try
             {
-                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-                {
-                    var mevcutKayit = ctx.BooksComment.Where(p => p.LoginUserId == mesajlar.LoginUserId && p.BookId == mesajlar.BookId).FirstOrDefault();
-                    if (mevcutKayit == null)
-                    {
-                        booksCommentDal.Ekle(booksDegerlendirme,MAIL);
-                    }
-                    else
-                    {
-                        ctx.BooksComment.Update(mevcutKayit);
-                        ctx.SaveChanges();
-                    }
+                booksCommentDal.Ekle(booksDegerlendirme, MAIL ?? mesajlar.EMAIL ?? "");
+                //using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                //{
+                //    var mevcutKayit = ctx.BooksComment.Where(p => p.LoginUserId == mesajlar.LoginUserId && p.BookId == mesajlar.BookId).FirstOrDefault();
+                //    booksCommentDal.Ekle(booksDegerlendirme, MAIL ?? mesajlar.EMAIL ?? "");
+                //    if (mevcutKayit == null)
+                //    {
+                //        booksCommentDal.Ekle(booksDegerlendirme, MAIL);
+                //    }
+                //    else
+                //    {
+                //        ctx.BooksComment.Update(mevcutKayit);
+                //        ctx.SaveChanges();
+                //    }
 
-                }
+                //}
 
                 result.State = MessageResultState.SUCCESS;
                 return result;
