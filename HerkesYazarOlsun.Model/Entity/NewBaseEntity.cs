@@ -14,14 +14,14 @@ namespace HerkesYazarOlsun.Model.Entity
         public long? USER_CREATED_ID { get; set; }
         public string? OLUSTURAN_EMAIL { get; set; }
 
-        public long IS_MODIFIED { get; set; }
+        public long? IS_MODIFIED { get; set; }
 
         public DateTime? MODIFIED_AT { get; set; }
 
-        public long USER_MODIFIED_ID { get; set; }
+        public long? USER_MODIFIED_ID { get; set; }
 
         public string? USER_MODIFIED_MAIL { get; set; }
 
-        public long IS_DELETED { get; set; }
+        public long? IS_DELETED { get; set; }
     }
 }

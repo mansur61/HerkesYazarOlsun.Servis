@@ -19,9 +19,11 @@ namespace HerkesYazarOlsun.Controllers
     {
        
         private IAyarlarDal ayrDal;
-        public SettingsController(IAyarlarDal ayrDal, IUserAccessor userAccessor) :base(userAccessor)
+        private IYayinAyarlariDal yayrDal;
+        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IUserAccessor userAccessor) :base(userAccessor)
         {
             this.ayrDal = ayrDal;
+            yayrDal = _yayrDal;
         }
 
 
@@ -33,7 +35,15 @@ namespace HerkesYazarOlsun.Controllers
             return sonuc;
         }
 
-       
+        [HttpGet]
+        [Route("GetYyainAyarlari")]
+        public YayinAyarlari? GetYayinAyarlari()
+        {
+            var sonuc = yayrDal.GetList().SingleOrDefault();
+            return sonuc;
+        }
+
+
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
         public ServiceResult SaveOrUpdateAyarlar(VM_AYARLAR ayarlar)

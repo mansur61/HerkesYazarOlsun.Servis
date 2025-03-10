@@ -3,6 +3,7 @@ using System;
 using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerkesYazarOlsun.DataLayer.Migrations
 {
     [DbContext(typeof(HerkesYazaOlsunContext))]
-    partial class HerkesYazaOlsunContextModelSnapshot : ModelSnapshot
+    [Migration("20250309202128_AddNewBaseEntitySponsorlarDbOptional")]
+    partial class AddNewBaseEntitySponsorlarDbOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1122,31 +1125,6 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("WriterStars");
-                });
-
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.YayinAyarlari", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
-
-                    b.Property<int>("ToplamBegeni")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ToplamDegerlendirme")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ToplamYildiz")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ToplamYorum")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("YayinAyarlari");
                 });
 #pragma warning restore 612, 618
         }

@@ -34,6 +34,8 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public bool? isTamalama { get; set; }
         public VM_PAGINATION_BUTTON vM_PAGINATION_BUTTONS { get; set; }
         public VM_Stars  Stars{ get; set; }
+        public VM_BOOK_ISTATISTIKLER iSTATISTIK { get; set; }
+        
         public DateTime? CREATE_AT { get; set; }
         public  int Start { get; set; }
         public int End { get; set; }

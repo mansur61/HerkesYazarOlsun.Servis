@@ -31,7 +31,8 @@ namespace HerkesYazarOlsun.DataLayer.Context
         public virtual DbSet<Odeme> Odeme { get; set; }
         public virtual DbSet<TALEPLER> TALEPLER { get; set; }        
         public virtual DbSet<AccountLogin> AccountLogin { get; set; }
-        
+        public virtual DbSet<YayinAyarlari> YayinAyarlari { get; set; }
+
         public virtual DbSet<Bildirimler> Bildirimler { get; set; }
         public virtual DbSet<UsersDetails> UsersDetails { get; set; }
         public virtual DbSet<Profil> Profil { get; set; }

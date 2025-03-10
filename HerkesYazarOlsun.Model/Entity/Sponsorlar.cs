@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace HerkesYazarOlsun.Model.Entity
 {
     [Table(name: "Sponsorlar")]
-    public class Sponsorlar : BaseEntity
+    public class Sponsorlar : NewBaseEntity
     {
         public string SponsorAdi { get; set; }
         public string URL { get; set; }
