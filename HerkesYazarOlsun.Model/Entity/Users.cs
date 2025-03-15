@@ -20,6 +20,9 @@ namespace HerkesYazarOlsun.Model.Entity
         public int isTelno { get; set; }
         public string? PASSWORD { get; set; }
 
+        public int? isSozlesmeOnay { get; set; }
+         
+
 
     }
 
