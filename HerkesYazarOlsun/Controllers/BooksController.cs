@@ -35,7 +35,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
         {
 
             var getBook = booksService.GetBooks(id);
-
+            //var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
+            //vmBook.iSTATISTIK = GetISTATISTIKLERBooksById(id);
             return getBook;
         }
 

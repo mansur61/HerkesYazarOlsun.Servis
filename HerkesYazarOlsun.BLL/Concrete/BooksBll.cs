@@ -46,23 +46,23 @@ namespace HerkesYazarOlsun.BLL.Concrete
             VM_BOOK_ISTATISTIKLER istastk = new VM_BOOK_ISTATISTIKLER();
 
             IBooksStarsDal bookStar = InstanceFactory.GetInstance<IBooksStarsDal>();
-            var starSonuc = bookStar.GetList(book => book.ID == id).GroupBy(p => p.LoginUserId).ToList();
+            var starSonuc = bookStar.GetList(book => book.BookaId == id).GroupBy(p => p.LoginUserId).ToList();
             istastk.ToplamYildiz = starSonuc.Count; // toplam LoginUserId gruba göre ilgili kitaba kaç farklı kişi yıldız vermiş
 
             //----------------
             IFavBookDal bookFav = InstanceFactory.GetInstance<IFavBookDal>();
-            var favSonuc = bookFav.GetAllQueryable(book => book.ID == id).GroupBy(p => p.USER_ID).ToList();
+            var favSonuc = bookFav.GetAllQueryable(book => book.BOOKS_ID == id).GroupBy(p => p.USER_ID).ToList();
             istastk.ToplamBegeni = favSonuc.Count; // toplam USER_ID gruba göre ilgili kitaba kaç farklı kişi favorilere ekledi  
 
 
             //----------------
             IBooksCommentDal bookComment = InstanceFactory.GetInstance<IBooksCommentDal>();
-            var commentSonuc = bookComment.GetAllQueryable(book => book.ID == id).GroupBy(p => p.LoginUserId).ToList();
+            var commentSonuc = bookComment.GetAllQueryable(book => book.BookId == id).GroupBy(p => p.LoginUserId).ToList();
             istastk.ToplamYorum = commentSonuc.Count; // toplam LoginUserId gruba göre ilgili kitaba kaç farklı kişi yorum ekledi  
 
             //----------------
             IBooksDegerlendirmeDal bookDegerlendirme = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>();
-            var degerlendirmeSonuc = bookDegerlendirme.GetList(book => book.ID == id).GroupBy(p => p.LoginUserId).ToList();
+            var degerlendirmeSonuc = bookDegerlendirme.GetList(book => book.BookId == id).GroupBy(p => p.LoginUserId).ToList();
             istastk.ToplamDegerlendirme = degerlendirmeSonuc.Count; // toplam LoginUserId gruba göre ilgili kitabı kaç farklı kişi değelendirmiş
 
             return istastk;
