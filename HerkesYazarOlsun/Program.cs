@@ -20,8 +20,9 @@ builder.Services.IoCBusinessLogicLayerRegister();
 
 InstanceFactory.Provider = builder.Services.BuildServiceProvider();
 
-DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb2");
-
+DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
+DbSettings.HerkesYazarOlsunDbSQL = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb");
+DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContext<HerkesYazaOlsunContext>();
 

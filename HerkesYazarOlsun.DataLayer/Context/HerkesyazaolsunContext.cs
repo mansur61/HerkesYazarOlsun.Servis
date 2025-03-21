@@ -21,7 +21,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
         }
     }
 
-    public class HerkesYazaOlsunContext : BaseNpSqlDbContext // DbContext
+    public class HerkesYazaOlsunContext : BaseNpSqlDbContext 
     {
 
         public virtual DbSet<FAVORILER> FAVORILER { get; set; }
