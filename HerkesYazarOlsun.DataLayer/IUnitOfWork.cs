@@ -1,4 +1,4 @@
-﻿using HerkesYazarOlsun.DataLayer.Repo;
+﻿using HerkesYazarOlsun.DataLayer.Repo; 
 using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.Model.Entity;
 

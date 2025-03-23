@@ -2,14 +2,9 @@
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using NpgsqlTypes;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using NpgsqlTypes; 
+using System.Data; 
+using System.Linq.Expressions; 
 
 namespace HerkesYazarOlsun.DataLayer.Repo
 {

@@ -3,24 +3,24 @@ using System;
 using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace HerkesYazarOlsun.DataLayer.Migrations
+namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 {
-    [DbContext(typeof(HerkesYazaOlsunContext))]
-    partial class HerkesYazaOlsunContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(SqlServerContext))]
+    partial class SqlServerContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.AccountLogin", b =>
                 {
@@ -28,16 +28,16 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<bool?>("AllowRefresh")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ExpiresUtc")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -46,19 +46,19 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<bool?>("IsPersistent")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<long>("LoginUserId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("RememberLogin")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -67,16 +67,16 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("benihatirla")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("email")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("sifre")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -89,13 +89,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<long>("BildirimID")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -107,10 +107,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("ProfileID")
                         .HasColumnType("bigint");
@@ -122,13 +122,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("UserDetailID")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("isDegisiklik")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -141,10 +141,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -153,22 +153,22 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsKitapYayin")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsKitapYorum")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsTakip")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<long?>("LoginUserId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -177,7 +177,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -190,18 +190,18 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<string>("ARKAKAPAKFOTO")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ARKAKAPAKYAZISI")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("CategoriId")
                         .HasColumnType("bigint");
@@ -213,25 +213,25 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ONKAPAKFOTO")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ONSOZ")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TAMAMLANDIMI")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -240,10 +240,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("YAYINDAMI")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<long>("YazarId")
                         .HasColumnType("bigint");
@@ -259,21 +259,21 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<string>("ACIKLAMA")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("BookId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("EMAIL")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -285,14 +285,14 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NAME")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -301,7 +301,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -314,32 +314,32 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<string>("ACIKLAMA")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("BookId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("EMAIL")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KONU")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("LoginUserId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("NAME")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StarPuani")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -352,13 +352,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<long>("BooksId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -367,22 +367,22 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PageFoto")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PageWrite")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PageWriteBase64")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -391,7 +391,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -404,16 +404,16 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<int>("BookaId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("LoginUserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("StarPuani")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -426,20 +426,20 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ICERIK")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ICERIK_TARIHI")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ICON")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -448,16 +448,16 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RENK")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("URL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -466,7 +466,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -479,14 +479,14 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<int>("BooksId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -499,13 +499,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<long>("BOOKS_ID")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -514,10 +514,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -529,7 +529,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -542,10 +542,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -554,13 +554,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<int>("LoginUserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -569,10 +569,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("YazarId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -585,13 +585,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<long>("BOOKS_ID")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -600,10 +600,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -615,7 +615,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -628,10 +628,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("Cvv")
                         .HasColumnType("bigint");
@@ -644,27 +644,27 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<string>("KartNo")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KartTarihi")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("KartTarihiAy")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("KartTarihiYil")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("KartUzerindekiIsim")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("OdemeId")
                         .HasColumnType("bigint");
@@ -679,7 +679,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -692,10 +692,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -710,10 +710,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -722,10 +722,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isOdeme")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.HasKey("ID");
 
@@ -738,10 +738,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -756,21 +756,21 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Mail")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Mesaj")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameSurname")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SponsorId")
                         .HasColumnType("bigint");
@@ -785,7 +785,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -798,10 +798,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -813,28 +813,28 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("MimeType")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilArkaplanRenkKodu")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilArkaplanResmi")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilResimBase64")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilResimName")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilResimURl")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -843,7 +843,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -856,14 +856,14 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ICON")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -872,18 +872,18 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SponsorAdi")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("URL")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -892,7 +892,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -905,17 +905,17 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<string>("ADISOYADI")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("EMAIL")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -924,22 +924,22 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("KONU")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("KONU_ID")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("MESAJ")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("TARIHI")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -948,7 +948,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -961,13 +961,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<long>("BildirimID")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -979,10 +979,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("ProfileID")
                         .HasColumnType("bigint");
@@ -994,13 +994,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("UserDetailID")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("isDegisiklik")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -1013,13 +1013,13 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -1028,25 +1028,25 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NAME")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PASSWORD")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SURNAME")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TELNO")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("USERNAME")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -1055,16 +1055,16 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("isEmail")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int?>("isSozlesmeOnay")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("isTelno")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -1077,19 +1077,19 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DogumTarihi")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FacebookLink")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HAKKINDA")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -1098,25 +1098,25 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("InstagramLink")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LinkedinLink")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("LoginUserId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TEL")
                         .HasColumnType("bigint");
 
                     b.Property<string>("TwitterLink")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
@@ -1125,10 +1125,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("WebSite")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -1141,16 +1141,16 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<int>("LoginUserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("YazarId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("isFollow")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -1163,16 +1163,16 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<int>("LoginUserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("StarPuani")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("YazarId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -1185,19 +1185,19 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<int?>("ToplamBegeni")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int?>("ToplamDegerlendirme")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int?>("ToplamYildiz")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int?>("ToplamYorum")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 

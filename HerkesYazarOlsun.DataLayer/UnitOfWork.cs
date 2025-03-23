@@ -1,5 +1,5 @@
 ﻿using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.DataLayer.Repo;
+using HerkesYazarOlsun.DataLayer.Repo; 
 using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.EntityFrameworkCore;

@@ -1,29 +1,27 @@
-﻿
-using Dapper;
-using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Utils;
+﻿using Dapper;
+using HerkesYazarOlsun.Model.Entity; 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Design; 
 using System.Dynamic;
 
 namespace HerkesYazarOlsun.DataLayer.Context
 {
-    public class HerkesYazaOlsunContextFactory : IDesignTimeDbContextFactory<HerkesYazaOlsunContext>
+    public class SqlServerContextFactory : IDesignTimeDbContextFactory<SqlServerContext>
     {
-        public HerkesYazaOlsunContext CreateDbContext(string[] args)
+        public SqlServerContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<HerkesYazaOlsunContext>();
-            string baglanti = ConnectionConncet.GetPostgreSqlConnect();
-            optionsBuilder.UseNpgsql(baglanti);
+            var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();             
+            string baglanti = ConnectionConncet.GetSqlConnect();
+            optionsBuilder.UseSqlServer(baglanti);
 
-            return new HerkesYazaOlsunContext();
+            return new SqlServerContext();
         }
     }
-
-    public class HerkesYazaOlsunContext : BaseNpSqlDbContext
+  
+    public class SqlServerContext : BaseSqlDbContext
     {
-        public virtual DbSet<Test> Test { get; set; }
         public virtual DbSet<FAVORILER> FAVORILER { get; set; }
+        public virtual DbSet<Test> Test { get; set; }
         public virtual DbSet<CarouselDuyuru> CarouselDuyuru { get; set; }
 
         public virtual DbSet<BooksDegerlendirme> BooksDegerlendirme { get; set; }
@@ -57,11 +55,9 @@ namespace HerkesYazarOlsun.DataLayer.Context
         /// </summary>
         /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string baglanti = ConnectionConncet.GetPostgreSqlConnect();
-            //"Host=localhost;Port=5432;Database=HERKESYAZAROLSUN;User Id=postgres;Password=12345;Integrated Security=true;Pooling=true;";
-            optionsBuilder.UseNpgsql(baglanti);
-
+        { 
+            string baglanti = ConnectionConncet.GetSqlConnect();
+            optionsBuilder.UseSqlServer(baglanti);
         }
 
         /// <summary>
@@ -73,7 +69,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        public override IList<T> NpSqlQueryDapper<T>(string sql, object[] parameters = null)
+        public override IList<T> SqlQueryDapper<T>(string sql, object[] parameters = null)
         {
             try
             {

@@ -4,6 +4,8 @@
     {
         public static string HerkesYazarOlsunDbContext { get; set; }
         public static string HerkesYazarOlsunDbSQL { get; set; }
+        public static string HerkesYazarOlsunSQLDbTest { get; set; }
+                
         public static string HerkesYazarOlsunDbSQLWindowsAuthentication { get; set; }
     }
 }

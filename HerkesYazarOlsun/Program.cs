@@ -1,8 +1,8 @@
 using HerkesYazarOlsun.BLL.Ioc;
-using HerkesYazarOlsun.BusinessLayer.Factory;
-using HerkesYazarOlsun.DataLayer.Context;
+using HerkesYazarOlsun.BusinessLayer.Factory; 
+using HerkesYazarOlsun.DataLayer.Context; 
 using HerkesYazarOlsun.Utils;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore; 
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +22,14 @@ InstanceFactory.Provider = builder.Services.BuildServiceProvider();
 
 DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
 DbSettings.HerkesYazarOlsunDbSQL = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb");
+DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDbTest");
 DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
+
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+ 
+
 builder.Services.AddDbContext<HerkesYazaOlsunContext>();
 
 var app = builder.Build();

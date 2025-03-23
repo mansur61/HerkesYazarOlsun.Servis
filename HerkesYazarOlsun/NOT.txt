@@ -1,5 +1,5 @@
 
- ile tablolara ekler 
+--------- PostgreSQL Server için ------------- 
 dotnet ef migrations add AddCarouselDuyuruRenk --project HerkesYazarOlsun.DataLayer
 
 ekleneni dbye yansýtmak için
@@ -12,3 +12,14 @@ dotnet ef migrations remove
 
 Mevcut migration'larý görmek için:
 dotnet ef migrations list
+
+
+
+---------  SQL Server için -------------
+Bu komut, DataLayer/SqlServerMigrations içinde SQL Server için migrationlarý oluþturacaktýr.
+dotnet ef migrations add InitialMigration --context SqlServerContext --output-dir SqlServerMigrations --project HerkesYazarOlsun.DataLayer
+
+Migration'ý veritabanýna uygulamak için:
+dotnet ef database update --context SqlServerContext --project HerkesYazarOlsun.DataLayer  
+
+ 
