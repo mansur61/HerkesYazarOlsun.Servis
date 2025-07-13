@@ -1,5 +1,6 @@
 ﻿
 using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.DataLayer.Concrete;
 using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.Extensions.DependencyInjection;

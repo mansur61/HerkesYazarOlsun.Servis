@@ -1,15 +1,16 @@
 ﻿using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class BooksDal : Repo<Books>, IBooksDal
+    public class BooksDal : HybridRepo<Books>, IBooksDal
     {
+        public BooksDal(SqlRepo<Books> sqlRepo, NpgsqlRepo<Books> npgsqlRepo, IConfiguration config)
+       : base(sqlRepo, npgsqlRepo, config)
+        {
+        }
     }
 }

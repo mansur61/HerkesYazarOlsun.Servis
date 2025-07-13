@@ -5,13 +5,10 @@ using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.DataLayer.Migrations;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {

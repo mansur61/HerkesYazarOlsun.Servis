@@ -1,7 +1,6 @@
 ﻿
 using Dapper;
 using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System.Dynamic;
@@ -52,15 +51,20 @@ namespace HerkesYazarOlsun.DataLayer.Context
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
+       
         /// <summary>
         /// ilgili db'ye bağlanma araçlarını sunar
         /// </summary>
         /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string baglanti = ConnectionConncet.GetPostgreSqlConnect();
+            string baglanti = 
+            //    ConnectionConncet.GetSqlConnect();
+            //optionsBuilder.UseSqlServer(baglanti);
+             ConnectionConncet.GetPostgreSqlConnect();
             //"Host=localhost;Port=5432;Database=HERKESYAZAROLSUN;User Id=postgres;Password=12345;Integrated Security=true;Pooling=true;";
             optionsBuilder.UseNpgsql(baglanti);
+
 
         }
 
@@ -73,6 +77,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
             base.OnModelCreating(modelBuilder);
         }
 
+         
         public override IList<T> NpSqlQueryDapper<T>(string sql, object[] parameters = null)
         {
             try
@@ -94,7 +99,6 @@ namespace HerkesYazarOlsun.DataLayer.Context
                 return new List<T>();
             }
         }
-
-
+         
     }
 }
