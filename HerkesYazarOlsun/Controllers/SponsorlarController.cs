@@ -1,5 +1,6 @@
 
 using HerkesYazarOlsun.BLL.Accessor;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract; 
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
@@ -16,7 +17,8 @@ namespace HerkesYazarOlsun.Controllers
     {
 
         private ISponsorlarDal _spnsDal;
-        public SponsorlarController(IUserAccessor userAccessor, ISponsorlarDal spnsDal) : base(userAccessor)
+        public SponsorlarController(  ISponsorlarDal spnsDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+            : base(userAccessor, unitOfWork, configuration)
         {
             _spnsDal = spnsDal;
         }

@@ -3,12 +3,14 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Configuration;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
@@ -19,7 +21,9 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private IBooksService booksService;
         private ICategoryService _categoryService;
         private IBooksPagesService booksPagesService;
-        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, IUserAccessor userAccessor, ICategoryService categoryService) : base(userAccessor)
+        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, ICategoryService categoryService,
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+            : base(userAccessor, unitOfWork, configuration)
         {
             booksService = _booksService;
             booksPagesService = _booksPagesService;

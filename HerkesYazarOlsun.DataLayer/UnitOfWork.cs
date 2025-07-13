@@ -3,22 +3,41 @@ using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace HerkesYazarOlsun.DataLayer
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly DbContext _dbContext;
+         
+        private readonly Dictionary<Type, object> _repositories = new(); 
 
-        // Repository instance cache (isteğe bağlı)
-        private readonly Dictionary<Type, object> _repositories = new();
-
-        public UnitOfWork(DbContext dbContext)
+        public UnitOfWork(IConfiguration configuration)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        }
+            var dbType = configuration["DbType"];  
 
-        // Generic repository seçimi DbContext tipine göre (örnek)
+            if (dbType == "Sql")
+            {
+                var options = new DbContextOptionsBuilder<SqlServerContext>()
+                    .UseSqlServer(configuration.GetConnectionString("HerkesYazarOlsunSQLDb"))
+                    .Options;
+
+                _dbContext = new SqlServerContext();
+            }
+            else if (dbType == "Postgre")
+            {
+                var options = new DbContextOptionsBuilder<HerkesYazaOlsunContext>()
+                    .UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"))
+                    .Options;
+
+                _dbContext = new HerkesYazaOlsunContext();
+            }
+            else
+            {
+                throw new NotSupportedException($"Unsupported DbType: {dbType}");
+            }
+        } 
         public IRepository<T> GetRepository<T>() where T : BaseEntity
         {
             if (_repositories.ContainsKey(typeof(T)))

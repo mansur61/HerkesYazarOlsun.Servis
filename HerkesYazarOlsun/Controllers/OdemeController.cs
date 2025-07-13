@@ -3,6 +3,7 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
@@ -22,7 +23,9 @@ namespace HerkesYazarOlsun.Controllers
         private IOdemeDal odemeDal;
         private IOdemeSponsorlariDal odemeSpnsDal;
 
-        public OdemeController(IKartlarDal _kartlarDal, IOdemeDal odemeDal, IOdemeSponsorlariDal odemeSpnsDal, IUserAccessor userAccessor):base(userAccessor)
+        public OdemeController(IKartlarDal _kartlarDal, IOdemeDal odemeDal, IOdemeSponsorlariDal odemeSpnsDal,
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+            : base(userAccessor, unitOfWork, configuration)
         {
             kartlarDal = _kartlarDal;
             this.odemeDal = odemeDal;

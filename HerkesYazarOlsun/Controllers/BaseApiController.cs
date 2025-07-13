@@ -3,6 +3,7 @@ using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace HerkesYazarOlsun.Servis.Controllers
 {
 
@@ -12,21 +13,31 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         protected IUserAccessor _userAccessor;
 
-        public readonly UnitOfWork _db;
+        public readonly IUnitOfWork _db;
 
-        public readonly HerkesYazaOlsunContext _ctx;
+        private readonly DbContext _ctx;
 
         public long YETKILITCNO { get; set; }
         public long TELNO { get; set; }
         public string? MAIL { get; set; }
 
-        public BaseApiController(IUserAccessor userAccessor)
+        public BaseApiController(IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _httpContextAccessor = userAccessor._accessor;
             _userAccessor = userAccessor;
 
-            _ctx = new HerkesYazaOlsunContext();
-            _db = new UnitOfWork();
+            var dbType = configuration["DbType"];
+
+            if (dbType == "Sql")
+            {
+                _ctx = new SqlServerContext(); // SQL Server DbContext
+            }
+            else
+            {
+                _ctx = new HerkesYazaOlsunContext(); // PostgreSQL DbContext
+            }
+
+            _db = unitOfWork;
 
             if (_httpContextAccessor.HttpContext.Request != null)
             {

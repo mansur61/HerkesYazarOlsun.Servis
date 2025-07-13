@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.BLL.Accessor;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -11,7 +12,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class CarouselDuyuruController : BaseApiController
     {
         ICarouselDuyuruDal _carouselDuyuruDal;
-        public CarouselDuyuruController(IUserAccessor userAccessor, ICarouselDuyuruDal carouselDuyuruDal) : base(userAccessor)
+        public CarouselDuyuruController ( ICarouselDuyuruDal carouselDuyuruDal ,IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+            : base(userAccessor, unitOfWork, configuration)
         {
             _carouselDuyuruDal = carouselDuyuruDal;
         }

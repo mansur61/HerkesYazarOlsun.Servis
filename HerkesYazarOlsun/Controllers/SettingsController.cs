@@ -3,6 +3,7 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
@@ -20,7 +21,8 @@ namespace HerkesYazarOlsun.Controllers
        
         private IAyarlarDal ayrDal;
         private IYayinAyarlariDal yayrDal;
-        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IUserAccessor userAccessor) :base(userAccessor)
+        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+            : base(userAccessor, unitOfWork, configuration)
         {
             this.ayrDal = ayrDal;
             yayrDal = _yayrDal;

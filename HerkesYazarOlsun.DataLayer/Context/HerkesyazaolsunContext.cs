@@ -18,7 +18,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
             return new HerkesYazaOlsunContext();
         }
     }
-
+         
     public class HerkesYazaOlsunContext : BaseNpSqlDbContext
     {
         public virtual DbSet<Test> Test { get; set; }
