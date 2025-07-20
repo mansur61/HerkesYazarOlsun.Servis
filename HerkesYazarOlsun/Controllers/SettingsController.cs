@@ -21,7 +21,7 @@ namespace HerkesYazarOlsun.Controllers
        
         private IAyarlarDal ayrDal;
         private IYayinAyarlariDal yayrDal;
-        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
             this.ayrDal = ayrDal;

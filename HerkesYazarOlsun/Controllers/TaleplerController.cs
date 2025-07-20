@@ -12,7 +12,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class TaleplerController : BaseApiController
     {
         ITaleplerDal _taleplerDal;
-        public TaleplerController( ITaleplerDal taleplerDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public TaleplerController( ITaleplerDal taleplerDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
             _taleplerDal = taleplerDal;

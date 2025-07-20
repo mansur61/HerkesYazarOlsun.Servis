@@ -14,12 +14,18 @@ namespace HerkesYazarOlsun.DataLayer.Context
             string baglanti = ConnectionConncet.GetSqlConnect();
             optionsBuilder.UseSqlServer(baglanti);
 
-            return new SqlServerContext();
+            //return new SqlServerContext();
+            return new SqlServerContext(optionsBuilder.Options);
         }
     }
   
     public class SqlServerContext : BaseSqlDbContext
     {
+        public SqlServerContext(DbContextOptions options) : base(options)
+        {
+        }
+         
+
         public virtual DbSet<FAVORILER> FAVORILER { get; set; }
         public virtual DbSet<Test> Test { get; set; }
         public virtual DbSet<CarouselDuyuru> CarouselDuyuru { get; set; }
@@ -55,9 +61,12 @@ namespace HerkesYazarOlsun.DataLayer.Context
         /// </summary>
         /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        { 
-            string baglanti = ConnectionConncet.GetSqlConnect();
-            optionsBuilder.UseSqlServer(baglanti);
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                string baglanti = ConnectionConncet.GetSqlConnect();
+                optionsBuilder.UseSqlServer(baglanti);
+            }
         }
 
         /// <summary>

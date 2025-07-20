@@ -17,7 +17,7 @@ namespace HerkesYazarOlsun.Controllers
     {
 
         private ISponsorlarDal _spnsDal;
-        public SponsorlarController(  ISponsorlarDal spnsDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public SponsorlarController(  ISponsorlarDal spnsDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
             _spnsDal = spnsDal;

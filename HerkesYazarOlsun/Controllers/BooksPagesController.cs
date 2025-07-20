@@ -16,7 +16,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private IBooksPagesService _booksPagesService;
        
         public BooksPagesController(IBooksPagesService booksPagesService, IUserAccessor userAccessor, 
-            IUnitOfWork unitOfWork, IConfiguration configuration)
+            IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
             _booksPagesService = booksPagesService;

@@ -13,8 +13,8 @@ namespace HerkesYazarOlsun.DataLayer
          
         private readonly Dictionary<Type, object> _repositories = new(); 
 
-        public UnitOfWork(IConfiguration configuration)
-        {
+        public UnitOfWork(IConfiguration configuration)  
+        {  
             var dbType = configuration["DbType"];  
 
             if (dbType == "Sql")
@@ -23,7 +23,7 @@ namespace HerkesYazarOlsun.DataLayer
                     .UseSqlServer(configuration.GetConnectionString("HerkesYazarOlsunSQLDb"))
                     .Options;
 
-                _dbContext = new SqlServerContext();
+                _dbContext = new SqlServerContext(options);
             }
             else if (dbType == "Postgre")
             {
@@ -45,7 +45,7 @@ namespace HerkesYazarOlsun.DataLayer
 
             IRepository<T> repo;
 
-            if (_dbContext is HerkesYazaOlsunContext)
+            if (_dbContext is SqlServerContext)
             {
                 repo = new RepositorySql<T>((SqlServerContext)_dbContext);
             }

@@ -24,7 +24,7 @@ namespace HerkesYazarOlsun.Controllers
         private IOdemeSponsorlariDal odemeSpnsDal;
 
         public OdemeController(IKartlarDal _kartlarDal, IOdemeDal odemeDal, IOdemeSponsorlariDal odemeSpnsDal,
-            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
             kartlarDal = _kartlarDal;

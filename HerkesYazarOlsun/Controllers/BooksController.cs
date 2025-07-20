@@ -22,8 +22,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private ICategoryService _categoryService;
         private IBooksPagesService booksPagesService;
         public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, ICategoryService categoryService,
-            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
-            : base(userAccessor, unitOfWork, configuration)
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+            : base(userAccessor, unitOfWork, httpContextAccessor)
         {
             booksService = _booksService;
             booksPagesService = _booksPagesService;

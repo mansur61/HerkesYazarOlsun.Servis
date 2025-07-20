@@ -59,11 +59,13 @@ namespace HerkesYazarOlsun.DataLayer.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string baglanti = 
-            //    ConnectionConncet.GetSqlConnect();
-            //optionsBuilder.UseSqlServer(baglanti);
-             ConnectionConncet.GetPostgreSqlConnect();
+                ConnectionConncet.GetSqlConnect();
+            optionsBuilder.UseSqlServer(baglanti);
+
+            // ConnectionConncet.GetPostgreSqlConnect();
+            //optionsBuilder.UseNpgsql(baglanti);
             //"Host=localhost;Port=5432;Database=HERKESYAZAROLSUN;User Id=postgres;Password=12345;Integrated Security=true;Pooling=true;";
-            optionsBuilder.UseNpgsql(baglanti);
+
 
 
         }

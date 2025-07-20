@@ -10,26 +10,34 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// IHttpContextAccessor servis olarak ekleniyor:
+builder.Services.AddHttpContextAccessor();
+
+
 // Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// DbContext yapýlandýrmasý
-builder.Services.AddDbContext<DbContext>((serviceProvider, options) =>
-{
-    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var dbType = configuration["DbType"];
+var configuration = builder.Configuration;
+var dbType = configuration["DbType"]; 
 
-    if (dbType == "Sql")
+if (dbType == "Sql")
+{
+    builder.Services.AddDbContext<SqlServerContext>((serviceProvider, options) =>
     {
         options.UseSqlServer(configuration.GetConnectionString("HerkesYazarOlsunSQLDb"));
-    }
-    else
+    });
+}
+else
+{
+    builder.Services.AddDbContext<HerkesYazaOlsunContext>((serviceProvider, options) =>
     {
         options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"));
-    }
-});
+    });
+}
+
+
 
 
 // Repository ve servis kayýtlarý
@@ -96,3 +104,22 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
+
+
+void ConfigureDb<TContext>(IServiceCollection services, IConfiguration configuration)
+    where TContext : DbContext
+{
+    services.AddDbContext<TContext>((sp, options) =>
+    {
+        var dbType = configuration["DbType"];
+
+        if (dbType == "Sql")
+        {
+            options.UseSqlServer(configuration.GetConnectionString($"{typeof(TContext).Name}SqlDb"));
+        }
+        else
+        {
+            options.UseNpgsql(configuration.GetConnectionString($"{typeof(TContext).Name}Db"));
+        }
+    });
+}

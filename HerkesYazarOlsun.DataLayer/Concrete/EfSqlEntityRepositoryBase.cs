@@ -8,19 +8,15 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
 {
     public class EfSqlEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         where TEntity : class, IEntity, new()
-    {
-        private SqlServerContext ctx;
+    { 
+        private  SqlServerContext _ctx;
 
-        public SqlServerContext _ctx
+        // DbContext DI ile inject edilir
+        public EfSqlEntityRepositoryBase(SqlServerContext context)
         {
-            get
-            {
-                if (ctx == null)
-                    ctx = new SqlServerContext();
-                return ctx;
-            }
+            _ctx = context;
         }
-
+         
         public TEntity Add(TEntity entity)
         {
             try
@@ -104,7 +100,7 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
 
         private bool HandleDetached(TEntity entity)
         {
-            ctx = null;
+            _ctx = null;
             return true;
         }
 

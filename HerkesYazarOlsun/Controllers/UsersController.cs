@@ -24,7 +24,7 @@ namespace HerkesYazarOlsun.Controllers
         private IUsersService userService;
         private IUsersDal kisilerDal;
         public UsersController(ILogger<UsersController> logger, IUsersService _userService,
-            IUsersDal kisilerDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+            IUsersDal kisilerDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
             _logger = logger;

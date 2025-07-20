@@ -12,7 +12,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class CarouselDuyuruController : BaseApiController
     {
         ICarouselDuyuruDal _carouselDuyuruDal;
-        public CarouselDuyuruController ( ICarouselDuyuruDal carouselDuyuruDal ,IUserAccessor userAccessor, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public CarouselDuyuruController ( ICarouselDuyuruDal carouselDuyuruDal ,IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
             _carouselDuyuruDal = carouselDuyuruDal;
