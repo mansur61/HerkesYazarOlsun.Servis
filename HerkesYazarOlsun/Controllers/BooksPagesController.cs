@@ -1,6 +1,7 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -14,7 +15,10 @@ namespace HerkesYazarOlsun.Servis.Controllers
     {
         private IBooksPagesService _booksPagesService;
        
-        public BooksPagesController(IBooksPagesService booksPagesService, IUserAccessor userAccessor):base(userAccessor) {
+        public BooksPagesController(IBooksPagesService booksPagesService, IUserAccessor userAccessor, 
+            IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+            : base(userAccessor, unitOfWork, configuration)
+        {
             _booksPagesService = booksPagesService;
            
         }

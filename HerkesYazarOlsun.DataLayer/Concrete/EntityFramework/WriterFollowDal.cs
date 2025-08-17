@@ -1,16 +1,18 @@
 ﻿using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class WriterFollowDal : EfEntityRepositoryBase<WriterFollow, HerkesYazaOlsunContext>, IWriterFollowDal
+    public class WriterFollowDal : HybridEntityRepositoryBase<WriterFollow>, IWriterFollowDal
     {
+        public WriterFollowDal(
+         EfSqlEntityRepositoryBase<WriterFollow> sqlRepo,
+         EfNpSqlEntityRepositoryBase<WriterFollow> npgsqlRepo,
+         IConfiguration config)
+         : base(sqlRepo, npgsqlRepo, config)
+        {
+        }
     }
 }

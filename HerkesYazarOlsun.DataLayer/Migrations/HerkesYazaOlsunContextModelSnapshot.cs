@@ -17,7 +17,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -39,10 +39,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("ExpiresUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<bool?>("IsPersistent")
@@ -63,7 +63,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -97,10 +97,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<long>("LoginUserId")
@@ -118,7 +118,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -146,10 +146,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsKitapYayin")
@@ -173,7 +173,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -206,10 +206,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("CategoriId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
@@ -236,7 +236,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -275,10 +275,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<long>("LoginUserId")
@@ -297,7 +297,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -360,10 +360,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
@@ -387,7 +387,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -441,10 +441,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<string>("ICON")
                         .HasColumnType("text");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
@@ -462,7 +462,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -507,10 +507,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
@@ -525,7 +525,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("USER_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -547,10 +547,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<int>("LoginUserId")
@@ -565,7 +565,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -593,10 +593,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
@@ -611,7 +611,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("USER_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -636,10 +636,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long>("Cvv")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<string>("KartNo")
@@ -675,7 +675,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -697,10 +697,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<long>("KitapId")
@@ -718,7 +718,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -743,10 +743,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<long>("KitapId")
@@ -781,7 +781,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -803,10 +803,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("LoginUserId")
@@ -839,7 +839,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -858,8 +858,23 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
 
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("ICON")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
                         .HasColumnType("text");
 
                     b.Property<string>("SponsorAdi")
@@ -868,6 +883,15 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
 
                     b.Property<string>("URL")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
                         .HasColumnType("text");
 
                     b.HasKey("ID");
@@ -893,10 +917,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<string>("KONU")
@@ -920,7 +944,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -929,6 +953,58 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("TALEPLER");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Test", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<long>("BildirimID")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("CREATE_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("IS_DELETED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("IS_MODIFIED")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("MODIFIED_AT")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OLUSTURAN_EMAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long>("ProfileID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("USER_CREATED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("USER_MODIFIED_ID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("USER_MODIFIED_MAIL")
+                        .HasColumnType("text");
+
+                    b.Property<long>("UserDetailID")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("isDegisiklik")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Test");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>
@@ -945,10 +1021,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<string>("EMAIL")
                         .HasColumnType("text");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("MODIFIED_AT")
@@ -975,13 +1051,16 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
                         .HasColumnType("text");
 
                     b.Property<int>("isEmail")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("isSozlesmeOnay")
                         .HasColumnType("integer");
 
                     b.Property<int>("isTelno")
@@ -1012,10 +1091,10 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<string>("HAKKINDA")
                         .HasColumnType("text");
 
-                    b.Property<long>("IS_DELETED")
+                    b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IS_MODIFIED")
+                    b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
                     b.Property<string>("InstagramLink")
@@ -1042,7 +1121,7 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_MODIFIED_ID")
+                    b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
@@ -1098,6 +1177,31 @@ namespace HerkesYazarOlsun.DataLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("WriterStars");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.YayinAyarlari", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<int?>("ToplamBegeni")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ToplamDegerlendirme")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ToplamYildiz")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ToplamYorum")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("YayinAyarlari");
                 });
 #pragma warning restore 612, 618
         }

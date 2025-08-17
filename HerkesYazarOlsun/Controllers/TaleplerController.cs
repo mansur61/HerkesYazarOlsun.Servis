@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.BLL.Accessor;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils; 
@@ -11,7 +12,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class TaleplerController : BaseApiController
     {
         ITaleplerDal _taleplerDal;
-        public TaleplerController(IUserAccessor userAccessor, ITaleplerDal taleplerDal) : base(userAccessor)
+        public TaleplerController( ITaleplerDal taleplerDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+            : base(userAccessor, unitOfWork, configuration)
         {
             _taleplerDal = taleplerDal;
         }

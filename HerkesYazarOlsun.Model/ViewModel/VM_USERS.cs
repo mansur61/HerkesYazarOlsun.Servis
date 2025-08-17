@@ -13,6 +13,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public long ID { get; set; }
         public string? NAME { get; set; }
         public string? SURNAME { get; set; }
+        public int? isSozlesmeOnay { get; set; }
         public string? USERNAME { get; set; }
         public int bolum { get; set; }
         public string? EMAIL { get; set; }

@@ -3,15 +3,14 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.DataLayer.Migrations;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Drawing;
+using System.Configuration;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
@@ -22,7 +21,9 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private IBooksService booksService;
         private ICategoryService _categoryService;
         private IBooksPagesService booksPagesService;
-        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, IUserAccessor userAccessor, ICategoryService categoryService) : base(userAccessor)
+        public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, ICategoryService categoryService,
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+            : base(userAccessor, unitOfWork, httpContextAccessor)
         {
             booksService = _booksService;
             booksPagesService = _booksPagesService;
@@ -35,29 +36,39 @@ namespace HerkesYazarOlsun.Servis.Controllers
         {
 
             var getBook = booksService.GetBooks(id);
-
+            //var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
+            //vmBook.iSTATISTIK = GetISTATISTIKLERBooksById(id);
             return getBook;
         }
-       
+
         [HttpGet]
         [Route("GetBooksList")]
         public List<VM_BOOKS> GetBooksList()
         {
             var getBookList = booksService.GetBooksList();
-            var lst = new  List<VM_BOOKS_COMMENT>();
+            var lst = new List<VM_BOOKS_COMMENT>();
 
             var vmBookList = ObjectMapper.MapList(getBookList, new List<VM_BOOKS>());
-            foreach (var item in vmBookList)
+            try
             {
-                item.Stars = GetMaxStarBooksById(item.ID);
-                var comments = GetCommenstBooksById(item.ID);
-                item.bookComments = comments;
-                // Assign the comment count to the book
-                item.CommentCount = comments.Count;
-                var categoryModel = _categoryService.GetCategoryById(item.ID);
-                item.CategoryName = categoryModel != null ? categoryModel.Name : "";
+                foreach (var item in vmBookList)
+                {
+                    item.Stars = GetMaxStarBooksById(item.ID);
+                    item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID);
+                    var comments = GetCommenstBooksById(item.ID);
+                    item.bookComments = comments;
+                    // Assign the comment count to the book
+                    item.CommentCount = comments.Count;
+                    var categoryModel = _categoryService.GetCategoryById(item.ID);
+                    item.CategoryName = categoryModel != null ? categoryModel.Name : "";
+                }
             }
-           
+            catch (Exception e)
+            {
+                var _ = e.Message;
+                return vmBookList;
+            }
+
             return vmBookList;
         }
 
@@ -104,13 +115,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
                 result.State = MessageResultState.SUCCESS;
                 return result;
-                
+
             }
             catch (Exception)
             {
                 result.Message = "Kitap yıldız ekleme başarısız";
                 result.State = MessageResultState.ERROR;
-               
+
             }
 
             result.Result = star;
@@ -231,6 +242,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
         }
 
         [HttpGet]
+        [Route("GetISTATISTIKLERBooksById")]
+        public VM_BOOK_ISTATISTIKLER GetISTATISTIKLERBooksById(long id)
+        {
+            return booksService.GetISTATISTIKLERBooksById(id);
+        }
+
+        [HttpGet]
         [Route("GetDegerlendirmelerBooksById")]
         public List<VM_BOOKS_DEGERLENDIRME> GetDegerlendirmelerBooksById(long kitapId)
         {
@@ -257,7 +275,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("TumKitaplar")]
         public List<VM_BOOKS> TumKitaplar(VM_ARAMA_INPUT arama)
         {
-            List < Books > bookList = bookList = booksService.GetBooksList(); //new List < Books >();
+            List<Books> bookList = bookList = booksService.GetBooksList(); //new List < Books >();
             if (!string.IsNullOrEmpty(arama.KITAP_ADI))
             {
                 bookList = bookList.Where(p => p.Name.Contains(arama.KITAP_ADI!)).ToList();
@@ -283,12 +301,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 bookList = bookList.Where(p => p.YAYINDAMI == arama.YayinlananKitaplar.Value).ToList();
             }
 
-            var vmBookList = ObjectMapper.MapList(bookList,new  List<VM_BOOKS>());
+            var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
             foreach (var item in vmBookList)
             {
                 item.Stars = GetMaxStarBooksById(item.ID);
                 var categoryModel = _categoryService.GetCategoryById(item.ID);
                 item.CategoryName = categoryModel != null ? categoryModel.Name : "";
+                item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID);
             }
 
             return vmBookList;
@@ -314,7 +333,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 result.State = MessageResultState.WARNING;
                 return result;
             }
-            
+
 
             var getBook = booksService.PostSaveBook(book);
             result.Result = getBook;
@@ -337,7 +356,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("UpdateBook")]
         public ServiceResult<Books> UpdateBook(Books book)
         {
-            
+
             ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
             int sayfaCount = booksPagesService.GetPagesByBooks(book.ID)!.Count();
             if (sayfaCount < 50)
@@ -348,7 +367,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             else
             {
                 book = booksService.UpdateBook(book);
-                if(book != null && book.TAMAMLANDIMI)
+                if (book != null && book.TAMAMLANDIMI)
                 {
                     result.Message = "Kitap Tamamlandı. İlgili kitaba yönlendiriliyorsunuz..";
                     result.State = MessageResultState.SUCCESS;
@@ -357,11 +376,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 {
                     result.State = MessageResultState.WARNING;
                     result.Message = "Kitap Tamamlanamadı";
-                    
+
                 }
-               
+
             }
-           
+
             result.Result = book;
 
             return result;
@@ -376,7 +395,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             var bookPages = booksPagesService.GetPagesByBooks(book.ID);
             int sayfaCount = bookPages!.Count();
 
-            var vmBooks = ObjectMapper.Map(book, new VM_BOOKS());            
+            var vmBooks = ObjectMapper.Map(book, new VM_BOOKS());
 
             var VM_BOOKS_PAGES = ObjectMapper.MapList(bookPages, new List<VM_BOOKS_PAGES>());
             vmBooks.BooksPageList = VM_BOOKS_PAGES;
@@ -386,11 +405,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             if (!sonuc2!.IsValid)
             {
-                var uniqueErrors = new HashSet<string>();  
+                var uniqueErrors = new HashSet<string>();
 
                 foreach (var item in sonuc2.Errors)
                 {
-                    if (uniqueErrors.Add(item.ErrorMessage))  
+                    if (uniqueErrors.Add(item.ErrorMessage))
                     {
                         result.Message += item.ErrorMessage + ",";
                     }
@@ -408,7 +427,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("DeleteBook")]
         public void DeleteBook(Books book)
         {
-            int kitapId = Convert.ToInt32(book.ID);   
+            int kitapId = Convert.ToInt32(book.ID);
             //booksService.DeleteBook(kitapId);
 
             using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())

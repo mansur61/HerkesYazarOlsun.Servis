@@ -1,10 +1,18 @@
 ﻿using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
+using Microsoft.Extensions.Configuration;
+using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class SponsorlarDal : EfEntityRepositoryBase<Sponsorlar, HerkesYazaOlsunContext>, ISponsorlarDal
+    public class SponsorlarDal : HybridEntityRepositoryBase<Sponsorlar>, ISponsorlarDal
     {
+        public SponsorlarDal(
+         EfSqlEntityRepositoryBase<Sponsorlar> sqlRepo,
+         EfNpSqlEntityRepositoryBase<Sponsorlar> npgsqlRepo,
+         IConfiguration config)
+         : base(sqlRepo, npgsqlRepo, config)
+        {
+        }
     }
 }

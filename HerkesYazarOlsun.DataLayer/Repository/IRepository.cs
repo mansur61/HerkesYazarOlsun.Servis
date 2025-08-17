@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Repository
 {
-    public interface IRepository<T> where T : BaseEntity
+    public interface IRepository<T> where T :   BaseEntity
     {
         IQueryable<T> GetAll();
         IQueryable<T> GetAll(Expression<Func<T, bool>> predicate);
@@ -17,4 +17,5 @@ namespace HerkesYazarOlsun.DataLayer.Repository
 
         long GetSequneceNextVal(string sequneceName);
     }
+
 }

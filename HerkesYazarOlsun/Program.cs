@@ -1,38 +1,84 @@
 using HerkesYazarOlsun.BLL.Ioc;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer.Concrete;
 using HerkesYazarOlsun.DataLayer.Context;
+using HerkesYazarOlsun.DataLayer.Repo;
+using HerkesYazarOlsun.DataLayer.Repository;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// IHttpContextAccessor servis olarak ekleniyor:
+builder.Services.AddHttpContextAccessor();
 
+
+// Swagger
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var configuration = builder.Configuration;
+var dbType = configuration["DbType"]; 
+
+if (dbType == "Sql")
+{
+    builder.Services.AddDbContext<SqlServerContext>((serviceProvider, options) =>
+    {
+        options.UseSqlServer(configuration.GetConnectionString("HerkesYazarOlsunSQLDb"));
+    });
+}
+else
+{
+    builder.Services.AddDbContext<HerkesYazaOlsunContext>((serviceProvider, options) =>
+    {
+        options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"));
+    });
+}
+
+
+
+
+// Repository ve servis kayýtlarý
+builder.Services.AddScoped(typeof(SqlRepo<>));
+builder.Services.AddScoped(typeof(BaseSqlDbContext), typeof(SqlServerContext));
+
+builder.Services.AddScoped(typeof(NpgsqlRepo<>));
+builder.Services.AddScoped(typeof(BaseNpSqlDbContext), typeof(HerkesYazaOlsunContext));
+
+builder.Services.AddScoped(typeof(EfSqlEntityRepositoryBase<>));
+builder.Services.AddScoped(typeof(EfNpSqlEntityRepositoryBase<>));
+
+builder.Services.AddScoped(typeof(IRepo<>), typeof(HybridRepo<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped(typeof(RepositorySql<>));
+builder.Services.AddScoped(typeof(RepositoryNpgsql<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(HybridRepository<>));
 
 builder.Services.IoCDataAccessLayerRegister();
 builder.Services.IoCBusinessLogicLayerRegister();
 
-
 InstanceFactory.Provider = builder.Services.BuildServiceProvider();
 
-DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb2");
+DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
+DbSettings.HerkesYazarOlsunDbSQL = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb");
+DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDbTest");
+DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-builder.Services.AddDbContext<HerkesYazaOlsunContext>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Middleware ve routing ayarlarý
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.Use((context, next) =>
 {
     if (context.Request.Path.Value.StartsWith("//"))
@@ -45,6 +91,7 @@ app.Use((context, next) =>
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
@@ -52,10 +99,27 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
 
-
 app.UseHttpsRedirection();
-
 
 app.MapControllers();
 
 app.Run();
+
+
+void ConfigureDb<TContext>(IServiceCollection services, IConfiguration configuration)
+    where TContext : DbContext
+{
+    services.AddDbContext<TContext>((sp, options) =>
+    {
+        var dbType = configuration["DbType"];
+
+        if (dbType == "Sql")
+        {
+            options.UseSqlServer(configuration.GetConnectionString($"{typeof(TContext).Name}SqlDb"));
+        }
+        else
+        {
+            options.UseNpgsql(configuration.GetConnectionString($"{typeof(TContext).Name}Db"));
+        }
+    });
+}

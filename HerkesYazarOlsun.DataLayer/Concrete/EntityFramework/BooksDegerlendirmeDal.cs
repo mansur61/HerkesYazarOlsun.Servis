@@ -1,16 +1,18 @@
 ﻿using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Linq.Expressions;
 
-namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
+namespace HerkesYazarOlsun.DataLayer.Concrete
 {
-    public class BooksDegerlendirmeDal : EfEntityRepositoryBase<BooksDegerlendirme, HerkesYazaOlsunContext>, IBooksDegerlendirmeDal
+    public class BooksDegerlendirmeDal : HybridEntityRepositoryBase<BooksDegerlendirme>, IBooksDegerlendirmeDal
     {
+        public BooksDegerlendirmeDal(
+         EfSqlEntityRepositoryBase<BooksDegerlendirme> sqlRepo,
+         EfNpSqlEntityRepositoryBase<BooksDegerlendirme> npgsqlRepo,
+         IConfiguration config)
+         : base(sqlRepo, npgsqlRepo, config)
+        {
+        }
     }
 }

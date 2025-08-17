@@ -1,56 +1,52 @@
-
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer;
-using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.AspNetCore.Mvc;
+
 namespace HerkesYazarOlsun.Servis.Controllers
 {
-
     public class BaseApiController : ControllerBase
     {
-        protected IHttpContextAccessor _httpContextAccessor;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IUserAccessor _userAccessor;
+        public readonly IUnitOfWork _db;
 
-        protected IUserAccessor _userAccessor;
+        public long YETKILITCNO { get; private set; }
+        public long TELNO { get; private set; }
+        public string? MAIL { get; private set; }
 
-        public readonly UnitOfWork _db;
-
-        public readonly HerkesYazaOlsunContext _ctx;
-
-        public long YETKILITCNO { get; set; }
-        public long TELNO { get; set; }
-        public string? MAIL { get; set; }
-
-        public BaseApiController(IUserAccessor userAccessor)
+        public BaseApiController(
+            IUserAccessor userAccessor,
+            IUnitOfWork unitOfWork,
+            IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = userAccessor._accessor;
             _userAccessor = userAccessor;
+            _db = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
 
-            _ctx = new HerkesYazaOlsunContext();
-            _db = new UnitOfWork();
+            ReadHeaders();
+        }
 
-            if (_httpContextAccessor.HttpContext.Request != null)
+        private void ReadHeaders()
+        {
+            var context = _httpContextAccessor.HttpContext;
+            if (context == null) return;
+
+            var tckimlikno = context.Request.Headers["tckimlikno"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(tckimlikno) && long.TryParse(tckimlikno, out var tc))
             {
-                var values = _httpContextAccessor.HttpContext.Request.Headers["tckimlikno"];
-               
-                if (!string.IsNullOrEmpty(values))
-                {
-                    YETKILITCNO = Convert.ToInt64(values);
-                }
+                YETKILITCNO = tc;
+            }
 
-                var values2 = _httpContextAccessor.HttpContext.Request.Headers["email"];
+            var email = context.Request.Headers["email"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(email))
+            {
+                MAIL = email;
+            }
 
-                if (!string.IsNullOrEmpty(values2))
-                {
-                    MAIL = values2;
-                }
-
-                var values3 = _httpContextAccessor.HttpContext.Request.Headers["telno"];
-
-                if (!string.IsNullOrEmpty(values3))
-                {
-                    TELNO = Convert.ToInt64(values3);
-                }
-
+            var telno = context.Request.Headers["telno"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(telno) && long.TryParse(telno, out var tel))
+            {
+                TELNO = tel;
             }
         }
     }

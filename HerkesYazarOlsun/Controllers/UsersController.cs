@@ -4,6 +4,7 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract; 
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
@@ -22,7 +23,9 @@ namespace HerkesYazarOlsun.Controllers
         private readonly ILogger<UsersController> _logger;
         private IUsersService userService;
         private IUsersDal kisilerDal;
-        public UsersController(ILogger<UsersController> logger, IUsersService _userService, IUsersDal kisilerDal, IUserAccessor userAccessor):base(userAccessor)
+        public UsersController(ILogger<UsersController> logger, IUsersService _userService,
+            IUsersDal kisilerDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+            : base(userAccessor, unitOfWork, configuration)
         {
             _logger = logger;
             userService = _userService;

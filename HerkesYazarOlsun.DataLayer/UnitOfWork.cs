@@ -3,85 +3,124 @@ using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace HerkesYazarOlsun.DataLayer
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private readonly HerkesYazaOlsunContext _dbContext;
+        private readonly DbContext _dbContext;
+         
+        private readonly Dictionary<Type, object> _repositories = new(); 
 
-        public UnitOfWork() { _dbContext = new HerkesYazaOlsunContext(); }
-        public UnitOfWork(HerkesYazaOlsunContext context) { _dbContext = context; }
+        public UnitOfWork(IConfiguration configuration)  
+        {  
+            var dbType = configuration["DbType"];  
 
-        #region IUnitOfWork 
-        public IRepository<T> GetRepository<T>() where T : BaseEntity => new Repository<T>(_dbContext);
-        public IRepo<T> Repo<T>() where T : NewBaseEntity => new Repo<T>(_dbContext);
+            if (dbType == "Sql")
+            {
+                var options = new DbContextOptionsBuilder<SqlServerContext>()
+                    .UseSqlServer(configuration.GetConnectionString("HerkesYazarOlsunSQLDb"))
+                    .Options;
 
+                _dbContext = new SqlServerContext(options);
+            }
+            else if (dbType == "Postgre")
+            {
+                var options = new DbContextOptionsBuilder<HerkesYazaOlsunContext>()
+                    .UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"))
+                    .Options;
+
+                _dbContext = new HerkesYazaOlsunContext();
+            }
+            else
+            {
+                throw new NotSupportedException($"Unsupported DbType: {dbType}");
+            }
+        } 
+        public IRepository<T> GetRepository<T>() where T : BaseEntity
+        {
+            if (_repositories.ContainsKey(typeof(T)))
+                return (IRepository<T>)_repositories[typeof(T)];
+
+            IRepository<T> repo;
+
+            if (_dbContext is SqlServerContext)
+            {
+                repo = new RepositorySql<T>((SqlServerContext)_dbContext);
+            }
+            else if (_dbContext is HerkesYazaOlsunContext)
+            {
+                repo = new RepositoryNpgsql<T>((HerkesYazaOlsunContext)_dbContext);
+            }
+            else
+            {
+                throw new NotSupportedException("DbContext tipi desteklenmiyor.");
+            }
+
+            _repositories[typeof(T)] = repo;
+            return repo;
+        }
+
+        // Save işlemi
         public int Save()
         {
             try
             {
-                // Transaction işlemleri burada ele alınabilir veya Identity Map kurumsal tasarım kalıbı kullanılarak
-                // sadece değişen alanları güncellemeyide sağlayabiliriz.
                 return _dbContext.SaveChanges();
             }
-            catch
+            catch (Exception ex)
             {
-                // Burada DbEntityValidationException hatalarını handle edebiliriz.
+                // Burada loglama ya da özel hata yönetimi yapılabilir
                 throw;
             }
         }
-
-        public IList<T> ExecuteQuery<T>(string sql)
-        {
-            var result = _dbContext.NpSqlQueryDapper<T>(sql).ToList();
-            return result;
-        }
-
+         
         public int ExecuteSqlCommand(string sql)
         {
-            var result = _dbContext.Database.ExecuteSqlRaw(sql);
-            return result;
+            return _dbContext.Database.ExecuteSqlRaw(sql);
         }
 
-      
-        #endregion
-
-        #region Transaction
+        // Transaction örnekleri (gerektiğinde implement et)
+        public void OpenTransaction()
+        {
+            // Örnek: _dbContext.Database.BeginTransaction();
+            throw new NotImplementedException();
+        }
 
         public void CloseTransaction()
         {
+            // Örnek: Commit ya da Rollback işlemleri burada yapılır.
             throw new NotImplementedException();
         }
 
-        public void OpenTransaction()
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region IDisposable
-
+        #region IDisposable Support
         private bool _disposed = false;
+
         protected virtual void Dispose(bool disposing)
         {
-            if (!this._disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
+                _disposed = true;
             }
-            this._disposed = true;
         }
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        public IRepo<T> Repo<T>() where T : NewBaseEntity
+        {
+            throw new NotImplementedException();
+        }
         #endregion
-    
     }
+
+
 }

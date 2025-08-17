@@ -3,6 +3,7 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
@@ -19,9 +20,12 @@ namespace HerkesYazarOlsun.Controllers
     {
        
         private IAyarlarDal ayrDal;
-        public SettingsController(IAyarlarDal ayrDal, IUserAccessor userAccessor) :base(userAccessor)
+        private IYayinAyarlariDal yayrDal;
+        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+            : base(userAccessor, unitOfWork, configuration)
         {
             this.ayrDal = ayrDal;
+            yayrDal = _yayrDal;
         }
 
 
@@ -33,7 +37,15 @@ namespace HerkesYazarOlsun.Controllers
             return sonuc;
         }
 
-       
+        [HttpGet]
+        [Route("GetYyainAyarlari")]
+        public YayinAyarlari? GetYayinAyarlari()
+        {
+            var sonuc = yayrDal.GetList().SingleOrDefault();
+            return sonuc;
+        }
+
+
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
         public ServiceResult SaveOrUpdateAyarlar(VM_AYARLAR ayarlar)

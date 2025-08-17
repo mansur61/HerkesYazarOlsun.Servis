@@ -1,15 +1,15 @@
 ﻿using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class OdemeDal : Repo<Odeme>, IOdemeDal
+    public class OdemeDal : HybridRepo<Odeme>, IOdemeDal
     {
+        public OdemeDal(SqlRepo<Odeme> sqlRepo, NpgsqlRepo<Odeme> npgsqlRepo, IConfiguration config)
+       : base(sqlRepo, npgsqlRepo, config)
+        {
+        }
     }
 }

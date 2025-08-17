@@ -1,5 +1,6 @@
 ﻿
 using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.DataLayer.Concrete;
 using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ namespace HerkesYazarOlsun.BLL.Ioc
             service.AddTransient<IFavYazarDal, FavYazarDal>();
             service.AddTransient<IKartlarDal, KartlarDal>();
             service.AddTransient<IOdemeDal, OdemeDal>();
+            service.AddTransient<IYayinAyarlariDal, YayinAyarlariDal>();
+            
             service.AddTransient<IAccountLoginDal, AccountLoginDal>();
             service.AddTransient<IBildirimlerDal, BildirimlerDal>();
             service.AddTransient<IUsersDetailsDal, UsersDetailsDal>();

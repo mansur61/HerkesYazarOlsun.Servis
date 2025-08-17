@@ -1,16 +1,18 @@
 ﻿using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class WriterStarsDal : EfEntityRepositoryBase<WriterStars, HerkesYazaOlsunContext>, IWriterStarsDal
+    public class WriterStarsDal : HybridEntityRepositoryBase<WriterStars>, IWriterStarsDal
     {
+        public WriterStarsDal(
+         EfSqlEntityRepositoryBase<WriterStars> sqlRepo,
+         EfNpSqlEntityRepositoryBase<WriterStars> npgsqlRepo,
+         IConfiguration config)
+         : base(sqlRepo, npgsqlRepo, config)
+        {
+        }
     }
 }

@@ -15,10 +15,10 @@ namespace HerkesYazarOlsun.BLL.Concrete
         public BooksBll(IBooksDal booksDal, IFavBookDal favoriBookDal, IUserAccessor userAccessor)
         {
             _booksDal = booksDal;
-           // _favoriDal = favoriDal;
+            // _favoriDal = favoriDal;
             _favoriBookDal = favoriBookDal;
             this.userAccessor = userAccessor;
-           
+
         }
 
         public Books? GetBooks(long id)
@@ -32,13 +32,40 @@ namespace HerkesYazarOlsun.BLL.Concrete
             return _booksDal.GetAll();
         }
         public Books PostSaveBook(Books book)
-        {            
+        {
             return _booksDal.Ekle(book, userAccessor.MAIL);
         }
 
         public FavoriBooks PostFavoriSaveBook(FavoriBooks fav)
         {
             return _favoriBookDal.Add(fav, 0);
+        }
+
+        public VM_BOOK_ISTATISTIKLER GetISTATISTIKLERBooksById(long id)
+        {
+            VM_BOOK_ISTATISTIKLER istastk = new VM_BOOK_ISTATISTIKLER();
+
+            IBooksStarsDal bookStar = InstanceFactory.GetInstance<IBooksStarsDal>();
+            var starSonuc = bookStar.GetList(book => book.BookaId == id).GroupBy(p => p.LoginUserId).ToList();
+            istastk.ToplamYildiz = starSonuc.Count; // toplam LoginUserId gruba göre ilgili kitaba kaç farklı kişi yıldız vermiş
+
+            //----------------
+            IFavBookDal bookFav = InstanceFactory.GetInstance<IFavBookDal>();
+            var favSonuc = bookFav.GetAllQueryable(book => book.BOOKS_ID == id).GroupBy(p => p.USER_ID).ToList();
+            istastk.ToplamBegeni = favSonuc.Count; // toplam USER_ID gruba göre ilgili kitaba kaç farklı kişi favorilere ekledi  
+
+
+            //----------------
+            IBooksCommentDal bookComment = InstanceFactory.GetInstance<IBooksCommentDal>();
+            var commentSonuc = bookComment.GetAllQueryable(book => book.BookId == id).GroupBy(p => p.LoginUserId).ToList();
+            istastk.ToplamYorum = commentSonuc.Count; // toplam LoginUserId gruba göre ilgili kitaba kaç farklı kişi yorum ekledi  
+
+            //----------------
+            IBooksDegerlendirmeDal bookDegerlendirme = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>();
+            var degerlendirmeSonuc = bookDegerlendirme.GetList(book => book.BookId == id).GroupBy(p => p.LoginUserId).ToList();
+            istastk.ToplamDegerlendirme = degerlendirmeSonuc.Count; // toplam LoginUserId gruba göre ilgili kitabı kaç farklı kişi değelendirmiş
+
+            return istastk;
         }
         public VM_Stars GetMaxStarBooksById(long id)
         {
@@ -52,7 +79,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
             _yildizlar.Add(yildiz1);
             vM_BooksSatars.BirStarToplam = yildiz1;
             keyValuePairs.Add("yildiz1", yildiz1);
-           
+
             int yildiz2 = bookStar.GetList(p => p.StarPuani == 2 && p.BookaId == id).Count();
             _yildizlar.Add(yildiz2);
             keyValuePairs.Add("yildiz2", yildiz2);
@@ -92,8 +119,8 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public void DeleteBook(int bookId)
         {
-             _booksDal.Sil(bookId, userAccessor.MAIL);
+            _booksDal.Sil(bookId, userAccessor.MAIL);
         }
-        
+
     }
 }
