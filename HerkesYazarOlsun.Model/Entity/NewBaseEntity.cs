@@ -22,6 +22,6 @@ namespace HerkesYazarOlsun.Model.Entity
 
         public string? USER_MODIFIED_MAIL { get; set; }
 
-        public long? IS_DELETED { get; set; }
+        public long? IS_DELETED { get; set; } = 0;
     }
 }
