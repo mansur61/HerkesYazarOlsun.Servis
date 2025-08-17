@@ -59,40 +59,64 @@ namespace HerkesYazarOlsun.DataLayer.Repo
 
         public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0).Where(predicate);
         }
 
         public IQueryable<T> GetAllQueryable()
         {
-            throw new NotImplementedException();
+            return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0);
         }
 
         public T Ekle(T entity, string mail)
         {
-            throw new NotImplementedException();
+            entity.USER_MODIFIED_MAIL = mail;
+            entity.CREATE_AT = DateTime.Now;
+            entity.MODIFIED_AT = DateTime.Now;
+            _dbSet.Add(entity);
+            _dbContext.SaveChanges();
+            return entity;
         }
 
         public T Update(T entity, long tcNo)
         {
-            throw new NotImplementedException();
+            entity.USER_MODIFIED_ID = tcNo;
+            entity.MODIFIED_AT = DateTime.Now;
+            _dbSet.Update(entity);
+            _dbContext.SaveChanges();
+            return entity;
         }
 
         public T Guncelle(T entity, string mail)
         {
-            throw new NotImplementedException();
+            entity.USER_MODIFIED_MAIL = mail;
+            entity.MODIFIED_AT = DateTime.Now;
+            _dbSet.Update(entity);
+            _dbContext.SaveChanges();
+            return entity;
         }
 
         public void Sil(int id, string mail)
         {
-            throw new NotImplementedException();
+            var entity = _dbSet.FirstOrDefault(x => x.ID == id && x.IS_DELETED == 0);
+            if (entity != null)
+            {
+                entity.IS_DELETED = 1;
+                entity.USER_MODIFIED_MAIL = mail;
+                entity.MODIFIED_AT = DateTime.Now;
+                _dbSet.Update(entity);
+                _dbContext.SaveChanges();
+            }
         }
 
         public void Delete(T entity, long tcNo)
         {
-            throw new NotImplementedException();
+            entity.IS_DELETED = 1;
+            entity.USER_MODIFIED_ID = tcNo;
+            entity.MODIFIED_AT = DateTime.Now;
+            _dbSet.Update(entity);
+            _dbContext.SaveChanges();
         }
 
-        // Diğer metodlar burada da aynı şekilde
     }
 
 }

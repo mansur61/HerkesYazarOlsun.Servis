@@ -21,39 +21,39 @@ namespace HerkesYazarOlsun.DataLayer.Repo
 
         public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _repo.GetAllQueryable(predicate);
         }
 
         public IQueryable<T> GetAllQueryable()
         {
-            throw new NotImplementedException();
+           return _repo.GetAllQueryable();
         }
 
         public T Ekle(T entity, string mail)
         {
-            throw new NotImplementedException();
+            return _repo.Ekle(entity, mail);
         }
 
         public T Update(T entity, long tcNo)
         {
-            throw new NotImplementedException();
+            return _repo.Update(entity, tcNo);
         }
 
         public T Guncelle(T entity, string mail)
         {
-            throw new NotImplementedException();
+            return _repo.Guncelle(entity, mail);
         }
 
         public void Sil(int id, string mail)
         {
-            throw new NotImplementedException();
+            _repo.Sil(id, mail);
         }
 
         public void Delete(T entity, long tcNo)
         {
-            throw new NotImplementedException();
+           _repo.Delete(entity, tcNo);
         }
-        // diğer metodlar da bu şekilde _repo'ya delege edilir
+         
     }
 
 }

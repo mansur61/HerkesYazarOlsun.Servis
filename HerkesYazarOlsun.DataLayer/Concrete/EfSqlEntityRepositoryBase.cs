@@ -95,8 +95,28 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
 
         public long GetSequneceNextVal(string sequneceName)
         {
-            throw new NotSupportedException("SQL Server için GetSequenceNextVal metodu desteklenmiyor.");
+            try
+            {
+                var sql = $"SELECT NEXT VALUE FOR {sequneceName}";
+                var nextVal = _ctx.Database.ExecuteSqlRaw($"SELECT NEXT VALUE FOR {sequneceName}");
+
+                // Ancak ExecuteSqlRaw sadece etki yapan işlemler için kullanılır.
+                // Gerçek değeri döndürmek için FromSqlRaw kullanılır.
+
+                var result = _ctx.Set<SequenceResult>()
+                                 .FromSqlRaw($"SELECT NEXT VALUE FOR {sequneceName} AS Value")
+                                 .AsEnumerable()
+                                 .FirstOrDefault();
+
+                return result?.Value ?? 0;
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, new TEntity(), "GetSequneceNextVal");
+                return 0;
+            }
         }
+          
 
         private bool HandleDetached(TEntity entity)
         {
@@ -109,4 +129,11 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
             // loglama yapılabilir
         }
     }
+
+    public class SequenceResult
+    {
+        public long Value { get; set; }
+    }
 }
+
+
