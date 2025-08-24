@@ -6,11 +6,11 @@ using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
+using HerkesYazarOlsun.Model;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using System.Configuration;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
@@ -21,13 +21,18 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private IBooksService booksService;
         private ICategoryService _categoryService;
         private IBooksPagesService booksPagesService;
+        private readonly ILogger<BooksController> _logger;
+        private IFtpService _ftpService;
         public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, ICategoryService categoryService,
+            IFtpService ftpService, ILogger<BooksController> logger,
             IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
             : base(userAccessor, unitOfWork, httpContextAccessor)
         {
             booksService = _booksService;
             booksPagesService = _booksPagesService;
             _categoryService = categoryService;
+            _ftpService = ftpService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -53,13 +58,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
             {
                 foreach (var item in vmBookList)
                 {
-                    item.Stars = GetMaxStarBooksById(item.ID);
-                    item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID);
-                    var comments = GetCommenstBooksById(item.ID);
+                    item.Stars = GetMaxStarBooksById(item.ID ?? 0);
+                    item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID ?? 0);
+                    var comments = GetCommenstBooksById(item.ID ?? 0);
                     item.bookComments = comments;
                     // Assign the comment count to the book
                     item.CommentCount = comments.Count;
-                    var categoryModel = _categoryService.GetCategoryById(item.ID);
+                    var categoryModel = _categoryService.GetCategoryById(item.ID ?? 0);
                     item.CategoryName = categoryModel != null ? categoryModel.Name : "";
                 }
             }
@@ -304,22 +309,127 @@ namespace HerkesYazarOlsun.Servis.Controllers
             var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
             foreach (var item in vmBookList)
             {
-                item.Stars = GetMaxStarBooksById(item.ID);
-                var categoryModel = _categoryService.GetCategoryById(item.ID);
+                item.Stars = GetMaxStarBooksById(item.ID ?? 0);
+                var categoryModel = _categoryService.GetCategoryById(item.ID ?? 0);
                 item.CategoryName = categoryModel != null ? categoryModel.Name : "";
-                item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID);
+                item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID ?? 0);
             }
 
             return vmBookList;
         }
+        private async Task<ServiceResponse<VM_File_Result>> Upload(IFormFile file)
+        {
+            var sonuc = new ServiceResponse<VM_File_Result>(null) { IsSuccess = true };
+
+            try
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await file.CopyToAsync(ms);
+                    var bytes = ms.ToArray();
+                    var fileName = file.FileName;
+                    string extension = fileName.Split('.').Last();
+
+                    var newFileName = Guid.NewGuid() + "." + extension;
+                    string filePath = _ftpService.SaveDosyaByte(newFileName, bytes);
+
+                    var uploadResult = new VM_File_Result
+                    {
+                        IsSuccess = true,
+                        FileName = filePath
+                    };
+
+                    sonuc = new ServiceResponse<VM_File_Result>(uploadResult)
+                    {
+                        IsSuccess = true,
+                        Message = "Dosya FTP'ye yüklendi"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                sonuc = new ServiceResponse<VM_File_Result>(new VM_File_Result
+                {
+                    IsSuccess = false,
+                    FileName = "Dosya yükleme başarısız."
+                })
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+
+                _logger.LogError(ex, "Upload sırasında hata oluştu. File: {@File}", file.FileName);
+            }
+
+            return sonuc;
+        }
+
+        // FTP AYARLANINCA AKTİF HALE GETİR
+        private async Task<VM_BOOKS> ModelIlgiliDosyalariDoldur(VM_BOOKS input, List<IFormFile> files)
+        {
+            foreach (var item in files)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await item.CopyToAsync(memoryStream);
+                    byte[] fileBytes = memoryStream.ToArray();
+
+                    // Ön kapak
+                    if (!string.IsNullOrEmpty(input.ONKAPAKFOTO) && input.ONKAPAKFOTO == item.FileName)
+                    {
+                        input.ONKAPAKFOTO = Convert.ToBase64String(fileBytes);
+                        input.ONKAPAKFOTOPATH = "";
+                        // FTP'ye yükle
+                        /*var uploadResult = await Upload(item);
+                        if (uploadResult.IsSuccess)
+                            input.ONKAPAKFOTOPATH = uploadResult.Result.FileName;
+                        else
+                            _logger.LogWarning("ONKAPAKFOTO yüklenemedi: {FileName}", item.FileName);*/
+                    }
+
+                    // Arka kapak
+                    if (!string.IsNullOrEmpty(input.ARKAKAPAKFOTO) && input.ARKAKAPAKFOTO == item.FileName)
+                    {
+                        input.ARKAKAPAKFOTO = Convert.ToBase64String(fileBytes);
+                        input.ARKAKAPAKFOTOPATH = "";
+                        /*var uploadResult = await Upload(item);
+                        if (uploadResult.IsSuccess)
+                            input.ARKAKAPAKFOTOPATH = uploadResult.Result.FileName;
+                        else
+                            _logger.LogWarning("ARKAKAPAKFOTO yüklenemedi: {FileName}", item.FileName);*/
+                    }
+
+                    // KITAPSAYFAFOTO gerekirse buraya eklenebilir
+                }
+            }
+
+            return input;
+        }
+
+
 
         [HttpPost]
         [Route("PostSaveBook")]
-        public ServiceResult<Books> PostSaveBook(Books book)
+        public async Task<ServiceResult<Books>> PostSaveBook([FromForm] VM_BOOKS VMbook)
         {
             ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
             VM_BOOKS vmBooks = new VM_BOOKS();
-            vmBooks.BookModel = book;
+            
+            vmBooks = VMbook;
+
+            var files = VMbook.dosyalar;
+            if (files?.Count != 0 && files != null)
+            {
+                VMbook = await ModelIlgiliDosyalariDoldur(VMbook, files);
+            }
+
+            vmBooks.BookModel = VMbook.BookModel;
+            vmBooks.BookModel.ARKAKAPAKFOTOPATH = VMbook.ARKAKAPAKFOTOPATH;
+            vmBooks.BookModel.ONKAPAKFOTOPATH = VMbook.ONKAPAKFOTOPATH;
+
+            vmBooks.BookModel.ARKAKAPAKFOTO = VMbook.ARKAKAPAKFOTO;
+            vmBooks.BookModel.ONKAPAKFOTO = VMbook.ONKAPAKFOTO;
+            vmBooks.YazarId = vmBooks.BookModel.YazarId;
 
             BooksAddValidator validationRules = new BooksAddValidator();
             var sonuc = validationRules.Validate(vmBooks);
@@ -335,7 +445,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             }
 
 
-            var getBook = booksService.PostSaveBook(book);
+            var getBook = booksService.PostSaveBook(VMbook.BookModel);
             result.Result = getBook;
             return result;
         }

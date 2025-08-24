@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HerkesYazarOlsun.Model.Entity
 {
@@ -14,6 +9,8 @@ namespace HerkesYazarOlsun.Model.Entity
         public string ONSOZ { get; set; }
         public string ONKAPAKFOTO { get; set; }
         public string ARKAKAPAKFOTO { get; set; }
+        public string ONKAPAKFOTOPATH { get; set; }
+        public string ARKAKAPAKFOTOPATH { get; set; }
         public string ARKAKAPAKYAZISI { get; set; }
         public bool TAMAMLANDIMI { get; set; }
         public long YazarId { get; set; }

@@ -61,7 +61,7 @@ namespace HerkesYazarOlsun.BLL.Validation
             });
 
             // Kitabın en az 50 sayfa olması gerektiğini kontrol ediyoruz
-            RuleFor(x => x.ID)
+            RuleFor(x => x.ID ?? 0)
                 .Must(HasMinimumPageCount)
                 .WithMessage("Kitap en az 50 ve üzeri sayfadan fazla olmalıdır");
 
@@ -69,7 +69,7 @@ namespace HerkesYazarOlsun.BLL.Validation
             RuleFor(x => x.ID)
             .Must(bookId =>
             {
-                Books book = _bookservice.GetBooks(bookId);
+                Books book = _bookservice.GetBooks(bookId ?? 0);
                 int minWordCount = 0;
                 if (book.CategoriId == (int)BookCategory.Siir)
                 {
@@ -80,7 +80,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                     minWordCount = pageLenght;
                 }
 
-                var insufficientPageIndex = GetInsufficientPageIndex(bookId, minWordCount);
+                var insufficientPageIndex = GetInsufficientPageIndex(bookId ?? 0, minWordCount);
                 return insufficientPageIndex == null;
             })
             .WithMessage(x =>
@@ -95,7 +95,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                     minWordCount = pageLenght;
                 }
 
-                var insufficientPageIndex = GetInsufficientPageIndex(x.ID, minWordCount);
+                var insufficientPageIndex = GetInsufficientPageIndex(x.ID ?? 0, minWordCount);
                 return insufficientPageIndex != null
                     ? $"Yetersiz karakter sayısına sahip ilgili sayfalar: {string.Join(", ", insufficientPageIndex)}"
                     : string.Empty;
