@@ -1,22 +1,24 @@
 ﻿using System.Net;
 using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BLL.Helper;
+using HerkesYazarOlsun.BLL.Helper; 
+using File = System.IO.File;
 
 namespace HerkesYazarOlsun.BLL.Concrete
 {
 
     public class FtpWebService : IFtpService
     {
-        // bu bilgiler senin ftp sunucu bilgilerin olacak..
-        private string _ftpUSer = "emaden_user";
-        private string _ftpPWD = "Enerji.2020++";
-        private string _ftpServer = "10.0.199.10:";
+        // FTP bilgileri
+        private string _ftpUSer = "herkesya";
+        private string _ftpPWD = "u%pS3=antm29Ne@2";
+        private string _ftpServer = "77.245.159.121:21";
         private long _ftpPort = 21;
 
         private string _ftpPortType = "ftp://";
-        public string _ftpServerPath = "";
+        public string _ftpServerPath;
         public string _ftpLocalTempPath = "";
 
+        // Parametreli constructor
         public FtpWebService(string user, string pwd, string ip)
         {
             _ftpUSer = user;
@@ -24,13 +26,16 @@ namespace HerkesYazarOlsun.BLL.Concrete
             _ftpServer = ip;
 
             _ftpLocalTempPath = "C://Temp/";
-            _ftpServerPath = _ftpPortType + _ftpServer + _ftpPort + "/";
+
+            // FTP URL: IP + public_html
+            _ftpServerPath = $"{_ftpPortType}{_ftpServer}/httpdocs/";//public_html
         }
 
+        // Parametresiz constructor
         public FtpWebService()
         {
             _ftpLocalTempPath = "C://Temp/";
-            _ftpServerPath = _ftpPortType + _ftpServer + _ftpPort + "/eMadenFTP/";
+            _ftpServerPath = $"{_ftpPortType}{_ftpServer}/httpdocs/";//public_html
         }
 
         public byte[] GetDosya(string filePath)
@@ -248,7 +253,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
                     request.Method = WebRequestMethods.Ftp.UploadFile;
                     request.Credentials = new NetworkCredential(_ftpUSer, _ftpPWD);
                     request.UseBinary = true;
-                    request.UsePassive = false;
+                    request.UsePassive = true;
 
                     request.ContentLength = fileContents.Length;
                     //String status = (((FtpWebResponse)request.GetResponse()).StatusDescription);

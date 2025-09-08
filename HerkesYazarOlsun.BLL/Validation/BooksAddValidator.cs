@@ -3,7 +3,6 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Enums;
-using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 
 namespace HerkesYazarOlsun.BLL.Validation

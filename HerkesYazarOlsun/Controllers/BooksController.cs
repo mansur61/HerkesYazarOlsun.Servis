@@ -380,11 +380,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
                         input.ONKAPAKFOTO = Convert.ToBase64String(fileBytes);
                         input.ONKAPAKFOTOPATH = "";
                         // FTP'ye yükle
-                        /*var uploadResult = await Upload(item);
+                        var uploadResult = await Upload(item);
                         if (uploadResult.IsSuccess)
                             input.ONKAPAKFOTOPATH = uploadResult.Result.FileName;
                         else
-                            _logger.LogWarning("ONKAPAKFOTO yüklenemedi: {FileName}", item.FileName);*/
+                            _logger.LogWarning("ONKAPAKFOTO yüklenemedi: {FileName}", item.FileName);
                     }
 
                     // Arka kapak
@@ -392,11 +392,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     {
                         input.ARKAKAPAKFOTO = Convert.ToBase64String(fileBytes);
                         input.ARKAKAPAKFOTOPATH = "";
-                        /*var uploadResult = await Upload(item);
+                         var uploadResult = await Upload(item);
                         if (uploadResult.IsSuccess)
                             input.ARKAKAPAKFOTOPATH = uploadResult.Result.FileName;
                         else
-                            _logger.LogWarning("ARKAKAPAKFOTO yüklenemedi: {FileName}", item.FileName);*/
+                            _logger.LogWarning("ARKAKAPAKFOTO yüklenemedi: {FileName}", item.FileName); 
                     }
 
                     // KITAPSAYFAFOTO gerekirse buraya eklenebilir
