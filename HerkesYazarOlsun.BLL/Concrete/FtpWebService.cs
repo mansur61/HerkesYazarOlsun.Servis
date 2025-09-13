@@ -1,8 +1,11 @@
 ﻿using System.Net;
+using AutoMapper;
 using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BLL.Helper; 
+using HerkesYazarOlsun.BLL.Helper;
+using HerkesYazarOlsun.Model;
+using HerkesYazarOlsun.Model.ViewModel;
+using Microsoft.AspNetCore.Http;
 using File = System.IO.File;
-
 namespace HerkesYazarOlsun.BLL.Concrete
 {
 
@@ -28,16 +31,61 @@ namespace HerkesYazarOlsun.BLL.Concrete
             _ftpLocalTempPath = "C://Temp/";
 
             // FTP URL: IP + public_html
-            _ftpServerPath = $"{_ftpPortType}{_ftpServer}/httpdocs/";//public_html
+            _ftpServerPath = $"{_ftpPortType}{_ftpServer}/httpdocs/Belgeler/";//public_html
         }
 
         // Parametresiz constructor
         public FtpWebService()
         {
             _ftpLocalTempPath = "C://Temp/";
-            _ftpServerPath = $"{_ftpPortType}{_ftpServer}/httpdocs/";//public_html
+            _ftpServerPath = $"{_ftpPortType}{_ftpServer}/httpdocs/Belgeler/";//public_html
         }
 
+        public async Task<ServiceResponse<VM_File_Result>> Upload(IFormFile file, bool isProfile = false)
+        {
+            var sonuc = new ServiceResponse<VM_File_Result>(null) { IsSuccess = true };
+
+            try
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await file.CopyToAsync(ms);
+                    var bytes = ms.ToArray();
+                    var fileName = file.FileName;
+                    string extension = fileName.Split('.').Last();
+
+                    var newFileName = Guid.NewGuid() + "." + extension;
+                    string filePath = SaveDosyaByteOnIslem(newFileName, bytes, isProfile);
+
+                    var uploadResult = new VM_File_Result
+                    {
+                        IsSuccess = true,
+                        FileName = filePath
+                    };
+
+                    sonuc = new ServiceResponse<VM_File_Result>(uploadResult)
+                    {
+                        IsSuccess = true,
+                        Message = "Dosya FTP'ye yüklendi"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                sonuc = new ServiceResponse<VM_File_Result>(new VM_File_Result
+                {
+                    IsSuccess = false,
+                    FileName = "Dosya yükleme başarısız."
+                })
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+
+            }
+
+            return sonuc;
+        }
         public byte[] GetDosya(string filePath)
         {
             try
@@ -231,9 +279,14 @@ namespace HerkesYazarOlsun.BLL.Concrete
             }
         }
 
-        public string SaveDosyaByte(string url, byte[] fileContents)
+        public string SaveDosyaByteOnIslem(string url, byte[] fileContents, bool isProfile = false)
         {
-            string dizin = $"/{DateTime.Now.Year}/{DateTime.Now.Month}/{DateTime.Now.Day}/";
+            string dizin = "";
+            if (isProfile)
+                dizin = $"/Profile/";
+            else
+                dizin = $"/{DateTime.Now.Year}/{DateTime.Now.Month}/{DateTime.Now.Day}/";
+
             return SaveDosyaByte(url, fileContents, dizin);
         }
 
@@ -612,8 +665,8 @@ namespace HerkesYazarOlsun.BLL.Concrete
         {
             File.Delete(_ftpLocalTempPath + dosyaYolu);
         }
- 
-         
+
+
         public Stream GetPartialFileStream(string filePath, long start, long length)
         {
             var request = (FtpWebRequest)WebRequest.Create($"{_ftpServerPath}/{filePath}");

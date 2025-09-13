@@ -28,7 +28,7 @@ public class FileController : BaseApiController
     [HttpPost]
     [Route("SingleUpload")]
 
-    public IActionResult SingleUpload(string fileName)
+    public IActionResult SingleUpload(string fileName,string dizin)
     {
         var result = new VM_File_Result();
         try
@@ -41,7 +41,7 @@ public class FileController : BaseApiController
                 string extension = fileName.Split('.').Last();
 
                 var newFileName = Guid.NewGuid() + "." + extension;
-                string filePath = _ftpService.SaveDosyaByte(newFileName, bytes);
+                string filePath = _ftpService.SaveDosyaByte(newFileName, bytes, dizin);
 
                 result.IsSuccess = true;
                 result.FileName = filePath;
@@ -63,7 +63,7 @@ public class FileController : BaseApiController
 
     [HttpPost]
     [Route("SingleUploadFile")]
-    public async Task<IActionResult> SingleUploadFile(IFormFile file)
+    public async Task<IActionResult> SingleUploadFile(IFormFile file,string dizin)
     {
         var result = new VM_File_Result();
 
@@ -77,7 +77,7 @@ public class FileController : BaseApiController
                 string extension = fileName.Split('.').Last();
 
                 var newFileName = Guid.NewGuid() + "." + extension;
-                string filePath = _ftpService.SaveDosyaByte(newFileName, bytes);
+                string filePath = _ftpService.SaveDosyaByte(newFileName, bytes, dizin);
 
                 result.IsSuccess = true;
                 result.FileName = filePath;

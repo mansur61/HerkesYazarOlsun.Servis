@@ -317,54 +317,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return vmBookList;
         }
-        private async Task<ServiceResponse<VM_File_Result>> Upload(IFormFile file)
-        {
-            var sonuc = new ServiceResponse<VM_File_Result>(null) { IsSuccess = true };
-
-            try
-            {
-                using (var ms = new MemoryStream())
-                {
-                    await file.CopyToAsync(ms);
-                    var bytes = ms.ToArray();
-                    var fileName = file.FileName;
-                    string extension = fileName.Split('.').Last();
-
-                    var newFileName = Guid.NewGuid() + "." + extension;
-                    string filePath = _ftpService.SaveDosyaByte(newFileName, bytes);
-
-                    var uploadResult = new VM_File_Result
-                    {
-                        IsSuccess = true,
-                        FileName = filePath
-                    };
-
-                    sonuc = new ServiceResponse<VM_File_Result>(uploadResult)
-                    {
-                        IsSuccess = true,
-                        Message = "Dosya FTP'ye yüklendi"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                sonuc = new ServiceResponse<VM_File_Result>(new VM_File_Result
-                {
-                    IsSuccess = false,
-                    FileName = "Dosya yükleme başarısız."
-                })
-                {
-                    IsSuccess = false,
-                    Message = ex.Message
-                };
-
-                _logger.LogError(ex, "Upload sırasında hata oluştu. File: {@File}", file.FileName);
-            }
-
-            return sonuc;
-        }
-
-        // FTP AYARLANINCA AKTİF HALE GETİR
+       
         private async Task<VM_BOOKS> ModelIlgiliDosyalariDoldur(VM_BOOKS input, List<IFormFile> files)
         {
             foreach (var item in files)
@@ -380,11 +333,12 @@ namespace HerkesYazarOlsun.Servis.Controllers
                         input.ONKAPAKFOTO = Convert.ToBase64String(fileBytes);
                         input.ONKAPAKFOTOPATH = "";
                         // FTP'ye yükle
-                        var uploadResult = await Upload(item);
+                        var uploadResult = await _ftpService.Upload(item);
                         if (uploadResult.IsSuccess)
                             input.ONKAPAKFOTOPATH = uploadResult.Result.FileName;
                         else
-                            _logger.LogWarning("ONKAPAKFOTO yüklenemedi: {FileName}", item.FileName);
+                            _logger.LogWarning("ONKAPAKFOTO yüklenemedi: {FileName}", item.FileName + " Hata : " + uploadResult.Message);
+                        
                     }
 
                     // Arka kapak
@@ -392,11 +346,12 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     {
                         input.ARKAKAPAKFOTO = Convert.ToBase64String(fileBytes);
                         input.ARKAKAPAKFOTOPATH = "";
-                         var uploadResult = await Upload(item);
+                         var uploadResult = await _ftpService.Upload(item);
                         if (uploadResult.IsSuccess)
                             input.ARKAKAPAKFOTOPATH = uploadResult.Result.FileName;
                         else
-                            _logger.LogWarning("ARKAKAPAKFOTO yüklenemedi: {FileName}", item.FileName); 
+                            _logger.LogWarning("ARKAKAPAKFOTO yüklenemedi: {FileName}", item.FileName + " Hata : " + uploadResult.Message);
+                        
                     }
 
                     // KITAPSAYFAFOTO gerekirse buraya eklenebilir
@@ -405,7 +360,6 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return input;
         }
-
 
 
         [HttpPost]
