@@ -26,6 +26,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
             ReadHeaders();
         }
 
+        public BaseApiController(IUserAccessor userAccessor)
+        {
+            _userAccessor = userAccessor;
+        }
+
         private void ReadHeaders()
         {
             var context = _httpContextAccessor.HttpContext;

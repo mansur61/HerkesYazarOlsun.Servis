@@ -24,6 +24,9 @@ namespace HerkesYazarOlsun.BLL.Ioc
             service.AddTransient<IHttpContextAccessor, HttpContextAccessor>();         
             service.AddTransient<IBooksService, BooksBll>();
             service.AddTransient< IBooksPagesService, BooksPagesBll>();
+
+            service.AddTransient<IFtpService, FtpWebService>();
+            
         }
 
         public static T GetService<T>(IServiceProvider serviceProvider)

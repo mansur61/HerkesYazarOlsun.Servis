@@ -6,6 +6,7 @@ using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
+using HerkesYazarOlsun.Model;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -21,11 +22,17 @@ namespace HerkesYazarOlsun.Controllers
        
         private IAyarlarDal ayrDal;
         private IYayinAyarlariDal yayrDal;
-        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+        private readonly ILogger<SettingsController> _logger;
+        private IFtpService _ftpService;
+        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IFtpService ftpService,
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, 
+            IHttpContextAccessor configuration, ILogger<SettingsController> logger)
             : base(userAccessor, unitOfWork, configuration)
         {
             this.ayrDal = ayrDal;
             yayrDal = _yayrDal;
+            _logger = logger;
+            _ftpService = ftpService;
         }
 
 
@@ -43,15 +50,49 @@ namespace HerkesYazarOlsun.Controllers
         {
             var sonuc = yayrDal.GetList().SingleOrDefault();
             return sonuc;
+        }  
+        private async Task<VM_AYARLAR> ModelIlgiliDosyalariDoldur(VM_AYARLAR input)
+        {
+            foreach (var item in input.dosyalar)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await item.CopyToAsync(memoryStream);
+                    byte[] fileBytes = memoryStream.ToArray();
+
+                    // Ön kapak
+                    if (!string.IsNullOrEmpty(input.Profile.ProfilResimName) && input.Profile.ProfilResimName == item.FileName)
+                    {
+                        input.Profile.ProfilResimBase64 = Convert.ToBase64String(fileBytes);
+                        input.Profile.ProfilResimURl = "";
+                        // FTP'ye yükle
+                        var uploadResult = await _ftpService.Upload(item,true);
+                        if (uploadResult.IsSuccess)
+                            input.Profile.ProfilResimURl = uploadResult.Result.FileName;
+                        else
+                            _logger.LogWarning("Dosya yüklenemedi: {FileName}", item.FileName + " Hata : "+ uploadResult.Message);
+                    }
+                   
+                }
+            }
+
+            return input;
         }
 
 
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
-        public ServiceResult SaveOrUpdateAyarlar(VM_AYARLAR ayarlar)
+        public async Task<ServiceResult> SaveOrUpdateAyarlar([FromForm] VM_AYARLAR ayarlar)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-           
+
+            var files = ayarlar.dosyalar;
+            if (files?.Count != 0 && files != null)
+            {
+                ayarlar = await ModelIlgiliDosyalariDoldur(ayarlar);
+            }
+
+
             IAyarlarDal ayarDal = InstanceFactory.GetInstance<IAyarlarDal>();
             IBildirimlerDal bildrmlerDal = InstanceFactory.GetInstance<IBildirimlerDal>();
             IUsersDetailsDal usrDtlsDal = InstanceFactory.GetInstance<IUsersDetailsDal>();
@@ -109,6 +150,8 @@ namespace HerkesYazarOlsun.Controllers
                     }
                     else
                     {
+                        prflKayit.ProfilResimBase64 = ayarlar.Profile.ProfilResimBase64;
+                        prflKayit.ProfilResimURl = ayarlar.Profile.ProfilResimURl;
                         ctx.Profil.Update(prflKayit);
                         ctx.SaveChanges();
                     }

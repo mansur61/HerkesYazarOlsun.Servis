@@ -112,7 +112,7 @@ namespace HerkesYazarOlsun.Controllers
             var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
             foreach (var item in vmBookList)
             {
-                item.Stars = booksService.GetMaxStarBooksById(item.ID);
+                item.Stars = booksService.GetMaxStarBooksById(item.ID ?? 0);
             }
             sonuc.vmBook.VMBooksList = new List<VM_BOOKS>();
             sonuc.vmBook.VMBooksList = vmBookList;
