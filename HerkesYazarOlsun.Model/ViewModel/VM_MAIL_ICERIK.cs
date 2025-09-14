@@ -9,7 +9,8 @@ namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_MAIL_ICERIK
     {
-
+        public int? Port { get; set; }
+        public Boolean EnableSSL { get; set; } = true;
         public string? kime { get; set; }
         public string? sifre { get; set; }
         public string? password { get; set; }
