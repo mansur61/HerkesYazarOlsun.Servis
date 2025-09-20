@@ -6,7 +6,6 @@ using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.Model;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -47,6 +46,15 @@ namespace HerkesYazarOlsun.Servis.Controllers
         }
 
         [HttpGet]
+        [Route("GetCategories")]
+        public List<VM_CATEGORI> GetCategories()
+        { 
+            var cats = _categoryService.GetCategories(); 
+            var vmcatsList = ObjectMapper.MapList(cats, new List<VM_CATEGORI>());
+            return vmcatsList;
+        }
+
+        [HttpGet]
         [Route("GetBooksList")]
         public List<VM_BOOKS> GetBooksList()
         {
@@ -64,7 +72,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     item.bookComments = comments;
                     // Assign the comment count to the book
                     item.CommentCount = comments.Count;
-                    var categoryModel = _categoryService.GetCategoryById(item.ID ?? 0);
+                    var categoryModel = _categoryService.GetCategory(item.CategoriId ?? 0);
                     item.CategoryName = categoryModel != null ? categoryModel.Name : "";
                 }
             }
@@ -310,7 +318,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             foreach (var item in vmBookList)
             {
                 item.Stars = GetMaxStarBooksById(item.ID ?? 0);
-                var categoryModel = _categoryService.GetCategoryById(item.ID ?? 0);
+                var categoryModel = _categoryService.GetCategory(item.CategoriId ?? 0);
                 item.CategoryName = categoryModel != null ? categoryModel.Name : "";
                 item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID ?? 0);
             }

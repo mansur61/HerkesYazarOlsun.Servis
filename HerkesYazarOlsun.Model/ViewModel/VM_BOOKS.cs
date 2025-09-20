@@ -6,6 +6,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
     public class VM_BOOKS
     {
         public long? ID { get; set; }
+        public string? kitap_id { get; set; }
         public int? sliderdaGosterilecekKayit { get; set; }
         public int? kalan { get; set; }
         public int? bolum { get; set; }
@@ -21,6 +22,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public bool? TAMAMLANDIMI { get; set; }
         public long? YazarId { get; set; }
         public bool? YAYINDAMI { get; set; }
+        public bool IsWowBookEdit { get; set; } = false;
         public long? CategoriId { get; set; }
         public string? profilKitapTuru { get; set; }
         public long? YAZAR_ID { get; set; }
@@ -52,6 +54,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public List<Books>? BooksList { get; set; }
         public Books? BookModel { get; set; }
         public List<VM_BOOKS>? VMBooksList { get; set; }
+        public List<VM_CATEGORI>? Categories { get; set; }
         public List<VM_BOOKS_COMMENT>? bookComments { get; set; }
         public List<VM_BOOKS_PAGES>? BooksPageList { get; set; }
     }
