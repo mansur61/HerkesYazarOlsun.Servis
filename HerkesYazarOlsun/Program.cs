@@ -9,6 +9,13 @@ using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+// Logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+if (OperatingSystem.IsWindows())
+{
+    builder.Logging.AddEventLog(); // Sadece Windows'ta etkin
+}
 
 // IHttpContextAccessor servis olarak ekleniyor:
 builder.Services.AddHttpContextAccessor();
@@ -35,10 +42,9 @@ else
     {
         options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"));
     });
-}
 
-
-
+    AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+} 
 
 // Repository ve servis kayýtlarý
 builder.Services.AddScoped(typeof(SqlRepo<>));
@@ -60,14 +66,14 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(HybridRepository<>));
 builder.Services.IoCDataAccessLayerRegister();
 builder.Services.IoCBusinessLogicLayerRegister();
 
-InstanceFactory.Provider = builder.Services.BuildServiceProvider();
+//InstanceFactory.Provider = builder.Services.BuildServiceProvider();
 
 DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
 DbSettings.HerkesYazarOlsunDbSQL = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb");
 DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDbTest");
 DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
 
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 
 var app = builder.Build();
 
@@ -105,21 +111,4 @@ app.MapControllers();
 
 app.Run();
 
-
-void ConfigureDb<TContext>(IServiceCollection services, IConfiguration configuration)
-    where TContext : DbContext
-{
-    services.AddDbContext<TContext>((sp, options) =>
-    {
-        var dbType = configuration["DbType"];
-
-        if (dbType == "Sql")
-        {
-            options.UseSqlServer(configuration.GetConnectionString($"{typeof(TContext).Name}SqlDb"));
-        }
-        else
-        {
-            options.UseNpgsql(configuration.GetConnectionString($"{typeof(TContext).Name}Db"));
-        }
-    });
-}
+ 

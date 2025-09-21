@@ -23,7 +23,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
             service.AddTransient<IUserAccessor, HttpUserAccessor>();
             service.AddTransient<IHttpContextAccessor, HttpContextAccessor>();         
             service.AddTransient<IBooksService, BooksBll>();
-            service.AddTransient< IBooksPagesService, BooksPagesBll>();
+            service.AddTransient<IBooksPagesService, BooksPagesBll>();
 
             service.AddTransient<IFtpService, FtpWebService>();
             
