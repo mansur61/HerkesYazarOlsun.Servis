@@ -7,14 +7,19 @@ using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
-// Logging
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-if (OperatingSystem.IsWindows())
+
+// Sadece Windows'ta ve runtime gerçekten Windows ise EventLog ekle
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 {
-    builder.Logging.AddEventLog(); // Sadece Windows'ta etkin
+    builder.Logging.AddEventLog();
+}
+else
+{
+    builder.Logging.ClearProviders();
+    builder.Logging.AddConsole(); // Linux / Hosting ortamý için
 }
 
 // IHttpContextAccessor servis olarak ekleniyor:
@@ -66,7 +71,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(HybridRepository<>));
 builder.Services.IoCDataAccessLayerRegister();
 builder.Services.IoCBusinessLogicLayerRegister();
 
-//InstanceFactory.Provider = builder.Services.BuildServiceProvider();
+
 
 DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
 DbSettings.HerkesYazarOlsunDbSQL = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb");
@@ -74,10 +79,9 @@ DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString
 DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
 
 
-
 var app = builder.Build();
 
-// Middleware ve routing ayarlarý
+InstanceFactory.Provider = app.Services;
 
 if (app.Environment.IsDevelopment())
 {
@@ -94,21 +98,13 @@ app.Use((context, next) =>
     return next();
 });
 
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-});
-
-app.UseHttpsRedirection();
 
 app.MapControllers();
 
 app.Run();
 
- 
+
