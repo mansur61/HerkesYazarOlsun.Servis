@@ -24,21 +24,7 @@ namespace HerkesYazarOlsun.BLL.Validation
             .When(x => !string.IsNullOrEmpty(x.User.EMAIL), ApplyConditionTo.CurrentValidator)
             .WithMessage("Geçerli Mail adresi giriniz");
         }
-
-        private bool AyniLoginUserNoVarmi(VM_AYARLAR ayr)
-        {
-            IAyarlarDal ayrDal = InstanceFactory.GetInstance<IAyarlarDal>();
-            var sonuc = ayrDal.GetAllQueryable(p => p.LoginUserId == ayr.LoginUserId).ToList();
-            if (sonuc.Any() && sonuc.Count() > 1)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
+ 
     }
 
 }

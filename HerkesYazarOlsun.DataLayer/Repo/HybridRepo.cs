@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Repo
 {
-    public class HybridRepo<T> : IRepo<T> where T : NewBaseEntity
+    public class HybridRepo<T> : IRepo<T> , IIncludeRepo<T> where T : NewBaseEntity
     {
         private readonly IRepo<T> _repo;
 
@@ -53,7 +53,17 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         {
            _repo.Delete(entity, tcNo);
         }
-         
+
+        public List<T> GetAllWithIncludes(params Expression<Func<T, object>>[] includes)
+        {
+            // _repo aslında SqlRepo<T> ise Include çalışır
+            if (_repo is IIncludeRepo<T> includeRepo)
+            {
+                return includeRepo.GetAllWithIncludes(includes);
+            }
+
+            throw new NotSupportedException("Include sadece SqlRepo üzerinde desteklenir.");
+        }
     }
 
 }

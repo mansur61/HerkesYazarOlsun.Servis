@@ -1,12 +1,8 @@
 ﻿using FluentValidation;
 using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Enums;
-using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using System.Drawing;
-using System.Net;
 
 namespace HerkesYazarOlsun.BLL.Validation
 {
@@ -20,14 +16,14 @@ namespace HerkesYazarOlsun.BLL.Validation
         private const int pageLenght = 1800;
         private const int pageWordLenght = 200;
         private const int kitapSiirIseWordLenght = 50;
+         
+        public CheckBooksValidator(IBooksPagesService booksPagesService, IBooksService bookservice, ICategoryService categoryService)
+        { 
 
-
-        public CheckBooksValidator()
-        {
             var validationMessages = new List<string>();
-            _booksPagesService = InstanceFactory.GetInstance<IBooksPagesService>();
-            _bookservice = InstanceFactory.GetInstance<IBooksService>();
-            _categoryService = InstanceFactory.GetInstance<ICategoryService>();
+            _booksPagesService = booksPagesService;
+            _bookservice = bookservice;
+            _categoryService = categoryService;
 
             RuleForEach(x => x.BooksPageList)
             .ChildRules(page =>
@@ -100,7 +96,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                     ? $"Yetersiz karakter sayısına sahip ilgili sayfalar: {string.Join(", ", insufficientPageIndex)}"
                     : string.Empty;
             });
-
+           
         }
 
         private bool HasMinimumPageCount(long bookId)

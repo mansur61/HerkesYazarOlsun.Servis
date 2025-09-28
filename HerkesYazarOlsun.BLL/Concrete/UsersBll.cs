@@ -9,14 +9,18 @@ namespace HerkesYazarOlsun.BLL.Concrete
     public class UsersBll : IUsersService
     {
         private readonly IUsersDal _kisilerDal;
-        public UsersBll(IUsersDal kisilerDal)
+        private readonly IWriterStarsDal _writerStarsDal;
+        public UsersBll(IUsersDal kisilerDal, IWriterStarsDal writerStarsDal)
         {
             _kisilerDal = kisilerDal;
+            _writerStarsDal = writerStarsDal;
         }
 
         public List<Users> GetKullanicilar()
         {
-            return _kisilerDal.GetAll();
+            // Profil dahil olarak çekmek
+            var users = _kisilerDal.GetAllWithIncludes(u => u.Profil); 
+            return users;
         }
 
         public VM_Stars GetMaxStarWriterById(long id)
@@ -25,7 +29,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
             VM_Stars vM_WriterSatars = new VM_Stars();
             List<int> _yildizlar = new List<int>();
 
-            IWriterStarsDal yazarStar = InstanceFactory.GetInstance<IWriterStarsDal>();
+            IWriterStarsDal yazarStar = _writerStarsDal;
 
             int yildiz1 = yazarStar.GetList(p => p.StarPuani == 1 && p.YazarId == id).Count();
             _yildizlar.Add(yildiz1);

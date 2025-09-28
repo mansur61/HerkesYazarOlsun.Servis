@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HerkesYazarOlsun.Model.Entity
 {
@@ -16,6 +11,7 @@ namespace HerkesYazarOlsun.Model.Entity
         public string? ProfilResimBase64 { get; set; }
         public string? ProfilResimName { get; set; }
         public long? LoginUserId { get; set; }
+        public Users? User { get; set; }
         public string? ProfilArkaplanResmi { get; set; }
         public string? ProfilArkaplanRenkKodu { get; set; }
     }

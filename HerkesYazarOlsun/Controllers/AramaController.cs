@@ -25,8 +25,8 @@ namespace HerkesYazarOlsun.Controllers
         [Route("TumAramalar")]
         public VM_ARAMA_SONUC TumAramalar(VM_ARAMA_INPUT arama)
         {
-            IBooksDal bookDal = InstanceFactory.GetInstance<IBooksDal>();
-            IUsersDal userDal = InstanceFactory.GetInstance<IUsersDal>();
+            IBooksDal bookDal = InstanceFactory.GetInstance<IBooksDal>().Service;
+            IUsersDal userDal = InstanceFactory.GetInstance<IUsersDal>().Service;
             var bookList =  bookDal.GetAll();
 
             if (arama.kategoriId.HasValue)

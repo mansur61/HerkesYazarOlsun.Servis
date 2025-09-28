@@ -6,7 +6,6 @@ using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.Model;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -93,11 +92,11 @@ namespace HerkesYazarOlsun.Controllers
             }
 
 
-            IAyarlarDal ayarDal = InstanceFactory.GetInstance<IAyarlarDal>();
-            IBildirimlerDal bildrmlerDal = InstanceFactory.GetInstance<IBildirimlerDal>();
-            IUsersDetailsDal usrDtlsDal = InstanceFactory.GetInstance<IUsersDetailsDal>();
-            IProfilDal prfDal = InstanceFactory.GetInstance<IProfilDal>();
-            IUsersDal usrDal = InstanceFactory.GetInstance<IUsersDal>();
+            IAyarlarDal ayarDal = InstanceFactory.GetInstance<IAyarlarDal>().Service;
+            IBildirimlerDal bildrmlerDal = InstanceFactory.GetInstance<IBildirimlerDal>().Service;
+            IUsersDetailsDal usrDtlsDal = InstanceFactory.GetInstance<IUsersDetailsDal>().Service;
+            IProfilDal prfDal = InstanceFactory.GetInstance<IProfilDal>().Service;
+            IUsersDal usrDal = InstanceFactory.GetInstance<IUsersDal>().Service;
 
             AyarlarValidator validationRules = new AyarlarValidator();
             var sonuc = validationRules.Validate(ayarlar);
@@ -145,7 +144,8 @@ namespace HerkesYazarOlsun.Controllers
                     var prflKayit = ctx.Profil.Where(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
                     if (prflKayit == null)
                     {
-                        prflKayit =  prfDal.Ekle(ayarlar.Profile, MAIL);
+                        var profil = ObjectMapper.Map(ayarlar.Profile, new Profil());
+                        prflKayit =  prfDal.Ekle(profil, MAIL);
 
                     }
                     else

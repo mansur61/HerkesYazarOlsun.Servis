@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Repo
 {
-    public class SqlRepo<T> : IRepo<T> where T : NewBaseEntity
+    public class SqlRepo<T> : IRepo<T> , IIncludeRepo<T>  where T : NewBaseEntity
     {
         private readonly BaseSqlDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
@@ -15,7 +15,17 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             _dbContext = dbContext;
             _dbSet = dbContext.Set<T>();
         }
+        public List<T> GetAllWithIncludes(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0);
 
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return query.ToList();
+        }
         public List<T> GetAll() => _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0).ToList();
 
         public T Get(long id) => _dbSet.AsNoTracking().FirstOrDefault(x => x.ID == id && x.IS_DELETED == 0);

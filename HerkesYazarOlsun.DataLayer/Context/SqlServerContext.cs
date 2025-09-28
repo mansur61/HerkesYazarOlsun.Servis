@@ -76,6 +76,11 @@ namespace HerkesYazarOlsun.DataLayer.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Users>()
+            .HasOne(u => u.Profil)
+            .WithOne(p => p.User)
+            .HasForeignKey<Profil>(p => p.LoginUserId);
+
         }
 
         public override IList<T> SqlQueryDapper<T>(string sql, object[] parameters = null)

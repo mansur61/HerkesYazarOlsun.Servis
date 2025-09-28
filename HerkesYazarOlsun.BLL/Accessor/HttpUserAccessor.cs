@@ -73,7 +73,7 @@ namespace HerkesYazarOlsun.BLL.Accessor
         {
             get
             {
-                IUsersDal kisiService = InstanceFactory.GetInstance<IUsersDal>();
+                IUsersDal kisiService = InstanceFactory.GetInstance<IUsersDal>().Service;
                 var kullanici = kisiService.GetAllQueryable(p=>p.EMAIL == MAIL).SingleOrDefault();
                 if (kullanici != null)
                 {

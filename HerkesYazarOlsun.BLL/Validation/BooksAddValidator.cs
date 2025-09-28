@@ -14,9 +14,9 @@ namespace HerkesYazarOlsun.BLL.Validation
         private const int kitapSiirIseWordLenght = 50;
 
         private IBooksService _bookservice;
-        public BooksAddValidator()
+        public BooksAddValidator(IBooksService bookservice)
         {
-            _bookservice = InstanceFactory.GetInstance<IBooksService>();
+            _bookservice = bookservice;
 
             RuleFor(x => x.ARKAKAPAKFOTO)
                     .NotEmpty().WithMessage("Arka Kapak Fotoğrafı boş olamaz");

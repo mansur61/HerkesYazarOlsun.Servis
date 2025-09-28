@@ -1,16 +1,11 @@
-
-using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Servis.Controllers;
-using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Controllers
@@ -22,14 +17,15 @@ namespace HerkesYazarOlsun.Controllers
         private IKartlarDal kartlarDal;
         private IOdemeDal odemeDal;
         private IOdemeSponsorlariDal odemeSpnsDal;
-
+        private OdemeSponsorlariValidator _odemeSponsorlariValidator;
         public OdemeController(IKartlarDal _kartlarDal, IOdemeDal odemeDal, IOdemeSponsorlariDal odemeSpnsDal,
-            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration, OdemeSponsorlariValidator odemeSponsorlariValidator)
             : base(userAccessor, unitOfWork, configuration)
         {
             kartlarDal = _kartlarDal;
             this.odemeDal = odemeDal;
             this.odemeSpnsDal = odemeSpnsDal;
+            _odemeSponsorlariValidator = odemeSponsorlariValidator;
         }
 
         [HttpPost]
@@ -71,9 +67,8 @@ namespace HerkesYazarOlsun.Controllers
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
             var odemeSpnsEntity = ObjectMapper.Map(odemeSponsorlar, new OdemeSponsorlari());
-
-            OdemeSponsorlariValidator validationRules = new OdemeSponsorlariValidator(); 
-            var sonuc = validationRules.Validate(odemeSponsorlar);
+             
+            var sonuc = _odemeSponsorlariValidator.Validate(odemeSponsorlar);
 
             if (!sonuc!.IsValid)
             {

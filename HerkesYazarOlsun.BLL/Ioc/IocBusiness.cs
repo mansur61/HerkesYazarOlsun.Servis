@@ -18,14 +18,14 @@ namespace HerkesYazarOlsun.BLL.Ioc
         /// <param name="service">The service.</param>
         public static void IoCBusinessLogicLayerRegister(this IServiceCollection service)
         {
-            service.AddTransient<IUsersService, UsersBll>();
-            service.AddTransient<ICategoryService, CategoryBll>();
-            service.AddTransient<IUserAccessor, HttpUserAccessor>();
-            service.AddTransient<IHttpContextAccessor, HttpContextAccessor>();         
-            service.AddTransient<IBooksService, BooksBll>();
-            service.AddTransient<IBooksPagesService, BooksPagesBll>();
+            service.AddScoped<IUsersService, UsersBll>();
+            service.AddScoped<ICategoryService, CategoryBll>();
+            service.AddScoped<IUserAccessor, HttpUserAccessor>();
+            service.AddScoped<IHttpContextAccessor, HttpContextAccessor>();         
+            service.AddScoped<IBooksService, BooksBll>();
+            service.AddScoped<IBooksPagesService, BooksPagesBll>();
 
-            service.AddTransient<IFtpService, FtpWebService>();
+            service.AddScoped<IFtpService, FtpWebService>();
             
         }
 

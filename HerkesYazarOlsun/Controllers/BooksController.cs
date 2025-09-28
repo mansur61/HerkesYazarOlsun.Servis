@@ -22,9 +22,16 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private IBooksPagesService booksPagesService;
         private readonly ILogger<BooksController> _logger;
         private IFtpService _ftpService;
+        private readonly BookDegerlendirmeValidator _bookDegerlendirmevalidator;
+        private readonly BooksCommentValidator _commentValidator;
+        private BooksAddValidator _booksAddValidator;
+        private CheckBooksValidator _checkBooksValidator;
+        private BooksStarsValidator _booksStarsValidator;
         public BooksController(IBooksService _booksService, IBooksPagesService _booksPagesService, ICategoryService categoryService,
             IFtpService ftpService, ILogger<BooksController> logger,
-            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, 
+            BookDegerlendirmeValidator bookDegerlendirmevalidator, BooksCommentValidator commentValidator,
+            BooksAddValidator booksAddValidator, CheckBooksValidator checkBooksValidator,BooksStarsValidator booksStarsValidator)
             : base(userAccessor, unitOfWork, httpContextAccessor)
         {
             booksService = _booksService;
@@ -32,6 +39,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
             _categoryService = categoryService;
             _ftpService = ftpService;
             _logger = logger;
+            _bookDegerlendirmevalidator = bookDegerlendirmevalidator;
+            _commentValidator = commentValidator;
+            _booksAddValidator = booksAddValidator;
+            _checkBooksValidator = checkBooksValidator;
+            _booksStarsValidator = booksStarsValidator;
         }
 
         [HttpGet]
@@ -90,10 +102,9 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public ServiceResult<BooksStars> PostBooksStars(BooksStars star)
         {
             ServiceResult<BooksStars> result = new ServiceResult<BooksStars>(state: MessageResultState.SUCCESS);
-            IBooksStarsDal bookStarDal = InstanceFactory.GetInstance<IBooksStarsDal>();
-
-            BooksStarsValidator validationRules = new BooksStarsValidator();
-            var sonuc = validationRules.Validate(star);
+            IBooksStarsDal bookStarDal = InstanceFactory.GetInstance<IBooksStarsDal>().Service;
+             
+            var sonuc = _booksStarsValidator.Validate(star);
 
             if (!sonuc!.IsValid)
             {
@@ -146,10 +157,9 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public ServiceResult PostBooksDegerlendirme(VM_BOOKS_DEGERLENDIRME degerlendirme)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            IBooksDegerlendirmeDal booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>();
-
-            BookDegerlendirmeValidator validationRules = new BookDegerlendirmeValidator();
-            var sonuc = validationRules.Validate(degerlendirme);
+            IBooksDegerlendirmeDal booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>().Service;
+             
+            var sonuc = _bookDegerlendirmevalidator.Validate(degerlendirme);
 
             if (!sonuc!.IsValid)
             {
@@ -199,10 +209,9 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public ServiceResult PostBooksComments(VM_BOOKS_COMMENT mesajlar)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            IBooksCommentDal booksCommentDal = InstanceFactory.GetInstance<IBooksCommentDal>();
-
-            BooksCommentValidator validationRules = new BooksCommentValidator();
-            var sonuc = validationRules.Validate(mesajlar);
+            IBooksCommentDal booksCommentDal = InstanceFactory.GetInstance<IBooksCommentDal>().Service;
+             
+            var sonuc = _commentValidator.Validate(mesajlar);
 
             if (!sonuc!.IsValid)
             {
@@ -265,7 +274,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("GetDegerlendirmelerBooksById")]
         public List<VM_BOOKS_DEGERLENDIRME> GetDegerlendirmelerBooksById(long kitapId)
         {
-            IBooksDegerlendirmeDal booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>();
+            IBooksDegerlendirmeDal booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>().Service;
             var bookDgrlnLst = booksDegerlendirmeDal.GetList(p => p.BookId == kitapId).ToList();
             List<VM_BOOKS_DEGERLENDIRME> vmDegerlendirmeList = ObjectMapper.MapList(bookDgrlnLst, new List<VM_BOOKS_DEGERLENDIRME>());
 
@@ -276,7 +285,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("GetCommenstBooksById")]
         public List<VM_BOOKS_COMMENT> GetCommenstBooksById(long kitapId)
         {
-            IBooksCommentDal booksCommentDal = InstanceFactory.GetInstance<IBooksCommentDal>();
+            IBooksCommentDal booksCommentDal = InstanceFactory.GetInstance<IBooksCommentDal>().Service;
             var bookCmmtLst = booksCommentDal.GetAllQueryable(p => p.BookId == kitapId).ToList();
             List<VM_BOOKS_COMMENT> vmCmmteList = ObjectMapper.MapList(bookCmmtLst, new List<VM_BOOKS_COMMENT>());
 
@@ -392,9 +401,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
             vmBooks.BookModel.ARKAKAPAKFOTO = VMbook.ARKAKAPAKFOTO;
             vmBooks.BookModel.ONKAPAKFOTO = VMbook.ONKAPAKFOTO;
             vmBooks.YazarId = vmBooks.BookModel.YazarId;
-
-            BooksAddValidator validationRules = new BooksAddValidator();
-            var sonuc = validationRules.Validate(vmBooks);
+             
+            var sonuc = _booksAddValidator.Validate(vmBooks);
 
             if (!sonuc!.IsValid)
             {
@@ -471,9 +479,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             var VM_BOOKS_PAGES = ObjectMapper.MapList(bookPages, new List<VM_BOOKS_PAGES>());
             vmBooks.BooksPageList = VM_BOOKS_PAGES;
-
-            CheckBooksValidator validationRules = new CheckBooksValidator();
-            var sonuc2 = validationRules.Validate(vmBooks);
+             
+            var sonuc2 = _checkBooksValidator.Validate(vmBooks);
 
             if (!sonuc2!.IsValid)
             {

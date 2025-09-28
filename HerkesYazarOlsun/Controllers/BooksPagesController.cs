@@ -14,13 +14,14 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksPagesController : BaseApiController
     {
         private IBooksPagesService _booksPagesService;
-       
+        private BooksPagesAddValidator _booksPagesAddValidator;
+
         public BooksPagesController(IBooksPagesService booksPagesService, IUserAccessor userAccessor, 
-            IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+            IUnitOfWork unitOfWork, IHttpContextAccessor configuration, BooksPagesAddValidator booksPagesAddValidator)
             : base(userAccessor, unitOfWork, configuration)
         {
             _booksPagesService = booksPagesService;
-           
+            _booksPagesAddValidator = booksPagesAddValidator;
         }
 
         [HttpGet]
@@ -60,9 +61,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
             ServiceResult<BooksPages> result = new ServiceResult<BooksPages>(state: MessageResultState.SUCCESS);
 
             if (!bookPages.isWordPDF) // bu durumu ve validasyoları kitap ekleme durumnu pdf veya word değilse yap
-            {
-                BooksPagesAddValidator validationRules = new BooksPagesAddValidator();
-                var sonuc = validationRules.Validate(bookPages);
+            { 
+                var sonuc = _booksPagesAddValidator.Validate(bookPages);
 
                 if (!sonuc!.IsValid)
                 {

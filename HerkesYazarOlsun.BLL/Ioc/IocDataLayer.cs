@@ -2,7 +2,6 @@
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Concrete;
 using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
-using HerkesYazarOlsun.Model.Entity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HerkesYazarOlsun.BLL.Ioc
@@ -12,29 +11,29 @@ namespace HerkesYazarOlsun.BLL.Ioc
         public static void IoCDataAccessLayerRegister(this IServiceCollection service)
         {
            
-            service.AddTransient<IUsersDal, UsersDal>();
-            service.AddTransient<IFavYazarDal, FavYazarDal>();
-            service.AddTransient<IKartlarDal, KartlarDal>();
-            service.AddTransient<IOdemeDal, OdemeDal>();
-            service.AddTransient<IYayinAyarlariDal, YayinAyarlariDal>();
+            service.AddScoped<IUsersDal, UsersDal>();
+            service.AddScoped<IFavYazarDal, FavYazarDal>();
+            service.AddScoped<IKartlarDal, KartlarDal>();
+            service.AddScoped<IOdemeDal, OdemeDal>();
+            service.AddScoped<IYayinAyarlariDal, YayinAyarlariDal>();
             
-            service.AddTransient<IAccountLoginDal, AccountLoginDal>();
-            service.AddTransient<IBildirimlerDal, BildirimlerDal>();
-            service.AddTransient<IUsersDetailsDal, UsersDetailsDal>();
-            service.AddTransient<IProfilDal, ProfilDal>();
-            service.AddTransient<IAyarlarDal, AyarlarDal>();
-            service.AddTransient<ICarouselDuyuruDal, CarouselDuyuruDal>();
-            service.AddTransient<ITaleplerDal, TaleplerDal>();
-            service.AddTransient<IOdemeSponsorlariDal, OdemeSponsorlariDal>();
-            service.AddTransient<ISponsorlarDal, SponsorlarDal>();
-            service.AddTransient<IBooksDegerlendirmeDal, BooksDegerlendirmeDal>();
-            service.AddTransient<IBooksCommentDal, BooksCommentDal>();
-            service.AddTransient<IWriterStarsDal, WriterStarsDal>();
-            service.AddTransient<IBooksStarsDal, BooksStarsDal>();
-            service.AddTransient<IWriterFollowDal, WriterFollowDal>();
-            service.AddTransient<IFavBookDal, FavBookDal>();
-            service.AddTransient<IBooksDal, BooksDal>();
-            service.AddTransient<IBooksPagesDal, BooksPagesDal>();
+            service.AddScoped<IAccountLoginDal, AccountLoginDal>();
+            service.AddScoped<IBildirimlerDal, BildirimlerDal>();
+            service.AddScoped<IUsersDetailsDal, UsersDetailsDal>();
+            service.AddScoped<IProfilDal, ProfilDal>();
+            service.AddScoped<IAyarlarDal, AyarlarDal>();
+            service.AddScoped<ICarouselDuyuruDal, CarouselDuyuruDal>();
+            service.AddScoped<ITaleplerDal, TaleplerDal>();
+            service.AddScoped<IOdemeSponsorlariDal, OdemeSponsorlariDal>();
+            service.AddScoped<ISponsorlarDal, SponsorlarDal>();
+            service.AddScoped<IBooksDegerlendirmeDal, BooksDegerlendirmeDal>();
+            service.AddScoped<IBooksCommentDal, BooksCommentDal>();
+            service.AddScoped<IWriterStarsDal, WriterStarsDal>();
+            service.AddScoped<IBooksStarsDal, BooksStarsDal>();
+            service.AddScoped<IWriterFollowDal, WriterFollowDal>();
+            service.AddScoped<IFavBookDal, FavBookDal>();
+            service.AddScoped<IBooksDal, BooksDal>();
+            service.AddScoped<IBooksPagesDal, BooksPagesDal>();
         }
     }
 }

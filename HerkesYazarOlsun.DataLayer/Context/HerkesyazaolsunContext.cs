@@ -60,13 +60,11 @@ namespace HerkesYazarOlsun.DataLayer.Context
         {
             string baglanti = 
                 ConnectionConncet.GetSqlConnect();
-            optionsBuilder.UseSqlServer(baglanti);
+            optionsBuilder.UseNpgsql(baglanti);
 
             // ConnectionConncet.GetPostgreSqlConnect();
             //optionsBuilder.UseNpgsql(baglanti);
             //"Host=localhost;Port=5432;Database=HERKESYAZAROLSUN;User Id=postgres;Password=12345;Integrated Security=true;Pooling=true;";
-
-
 
         }
 
@@ -77,6 +75,10 @@ namespace HerkesYazarOlsun.DataLayer.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Users>()
+                .HasOne(u => u.Profil)
+                .WithOne(p => p.User)
+                .HasForeignKey<Profil>(p => p.LoginUserId);  
         }
 
          
