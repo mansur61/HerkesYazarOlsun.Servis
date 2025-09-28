@@ -1,6 +1,6 @@
 ﻿using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore; 
 using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Repo
@@ -103,7 +103,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             entity.IS_DELETED = 1;
             entity.USER_MODIFIED_MAIL = mail;
             entity.MODIFIED_AT = DateTime.Now;
-
+            //_dbContext.Remove(entity);
             _dbContext.SaveChanges();
         }
 

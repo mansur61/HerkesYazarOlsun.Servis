@@ -59,7 +59,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string baglanti = 
-                ConnectionConncet.GetSqlConnect();
+                ConnectionConncet.GetPostgreSqlConnect();
             optionsBuilder.UseNpgsql(baglanti);
 
             // ConnectionConncet.GetPostgreSqlConnect();

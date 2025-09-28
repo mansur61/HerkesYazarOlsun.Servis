@@ -6,12 +6,10 @@ using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Servis.Controllers;
-using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Controllers
@@ -218,7 +216,7 @@ namespace HerkesYazarOlsun.Controllers
                          vmUser.Stars = GetMaxStarWriterById(u.ID);
                          return vmUser;
                      })
-                 .ToList(); 
+                 .ToList();
 
             return vmUserList;
         }
@@ -264,25 +262,21 @@ namespace HerkesYazarOlsun.Controllers
             var accountLogin = ObjectMapper.Map(vmLogni, new AccountLogin());
             try
             {
-                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-                {
-                    var mevcutKayit = ctx.AccountLogin.Where(p => p.LoginUserId == vmLogni.LoginUserId).FirstOrDefault();
-                    if (mevcutKayit == null)
-                    {
-                        accountLogin.OLUSTURAN_EMAIL = vmLogni.email;
-                        accountLogin = accLoginDal.Ekle(accountLogin, MAIL);
-                    }
-                    else
-                    {
-                        mevcutKayit.OLUSTURAN_EMAIL = vmLogni.email;
-                        mevcutKayit.benihatirla = vmLogni.benihatirla;
-                        mevcutKayit.RememberLogin = vmLogni.RememberLogin;
-                        mevcutKayit.LoginUserId = vmLogni.LoginUserId;
-                        mevcutKayit.email = vmLogni.email;
-                        ctx.AccountLogin.Update(mevcutKayit);
-                        ctx.SaveChanges();
-                    }
 
+                var mevcutKayit = accLoginDal.GetAllQueryable(p => p.LoginUserId == vmLogni.LoginUserId).FirstOrDefault();
+                if (mevcutKayit == null)
+                {
+                    accountLogin.OLUSTURAN_EMAIL = vmLogni.email;
+                    accountLogin = accLoginDal.Ekle(accountLogin, MAIL);
+                }
+                else
+                {
+                    mevcutKayit.OLUSTURAN_EMAIL = vmLogni.email;
+                    mevcutKayit.benihatirla = vmLogni.benihatirla;
+                    mevcutKayit.RememberLogin = vmLogni.RememberLogin;
+                    mevcutKayit.LoginUserId = vmLogni.LoginUserId;
+                    mevcutKayit.email = vmLogni.email;
+                    accLoginDal.Update(mevcutKayit, YETKILITCNO);
                 }
 
                 result.State = MessageResultState.SUCCESS;
@@ -304,7 +298,7 @@ namespace HerkesYazarOlsun.Controllers
         {
             ServiceResult<WriterStars> result = new ServiceResult<WriterStars>(state: MessageResultState.SUCCESS);
 
-            IWriterStarsDal yazarDal = InstanceFactory.GetInstance<IWriterStarsDal>().Service;
+            IWriterStarsDal starsDal = InstanceFactory.GetInstance<IWriterStarsDal>().Service;
             var sonuc = _writerStarsValidator.Validate(star);
 
             if (!sonuc!.IsValid)
@@ -321,21 +315,18 @@ namespace HerkesYazarOlsun.Controllers
 
             try
             {
-                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-                {
-                    var mevcutKayit = ctx.WriterStars.Where(p => p.LoginUserId == star.LoginUserId && p.YazarId == star.YazarId).FirstOrDefault();
-                    if (mevcutKayit == null)
-                    {
-                        star = yazarDal.Add(star);
-                    }
-                    else
-                    {
-                        mevcutKayit!.StarPuani = star.StarPuani;
-                        ctx.WriterStars.Update(mevcutKayit);
-                        ctx.SaveChanges();
-                    }
 
+                var mevcutKayit = starsDal.Get(p => p.LoginUserId == star.LoginUserId && p.YazarId == star.YazarId);
+                if (mevcutKayit == null)
+                {
+                    star = starsDal.Add(star);
                 }
+                else
+                {
+                    mevcutKayit!.StarPuani = star.StarPuani;
+                    starsDal.Update(mevcutKayit);
+                }
+
 
                 result.State = MessageResultState.SUCCESS;
                 return result;
@@ -346,9 +337,6 @@ namespace HerkesYazarOlsun.Controllers
                 result.State = MessageResultState.ERROR;
             }
 
-
-
-
             result.Result = star;
             return result;
         }
@@ -358,7 +346,7 @@ namespace HerkesYazarOlsun.Controllers
         public ServiceResult<WriterFollow> PostWriterFollow(WriterFollow follow)
         {
             ServiceResult<WriterFollow> result = new ServiceResult<WriterFollow>(state: MessageResultState.SUCCESS);
-            IWriterFollowDal yazarDal = InstanceFactory.GetInstance<IWriterFollowDal>().Service;
+            IWriterFollowDal followDal = InstanceFactory.GetInstance<IWriterFollowDal>().Service;
             var sonuc = _WriterFollowValidator.Validate(follow);
 
             if (!sonuc!.IsValid)
@@ -376,32 +364,28 @@ namespace HerkesYazarOlsun.Controllers
             try
             {
 
-                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+
+                var mevcutKayit = followDal.Get(p => p.LoginUserId == follow.LoginUserId && p.YazarId == follow.YazarId);
+                if (mevcutKayit == null)
                 {
-                    var mevcutKayit = ctx.WriterFollow.Where(p => p.LoginUserId == follow.LoginUserId && p.YazarId == follow.YazarId).FirstOrDefault();
-                    if (mevcutKayit == null)
+                    follow = followDal.Add(follow);
+                }
+                else
+                {
+                    if (follow.isFollow == 1)
                     {
-                        follow = yazarDal.Add(follow);
+                        mevcutKayit.isFollow = 1;
+                        result.Message = "Takipten Ediliyor.";
                     }
                     else
                     {
-                        if (follow.isFollow == 1)
-                        {
-                            mevcutKayit.isFollow = 1;
-                            result.Message = "Takipten Ediliyor.";
-                        }
-                        else
-                        {
-                            mevcutKayit.isFollow = 0;
-                            result.Message = "Takipten Çýkýldý.";
-                        }
-
-                        //yazarDal.Update(follow);
-                        ctx.WriterFollow.Update(mevcutKayit);
-                        ctx.SaveChanges();
+                        mevcutKayit.isFollow = 0;
+                        result.Message = "Takipten Çýkýldý.";
                     }
 
+                    followDal.Update(mevcutKayit);
                 }
+
 
             }
             catch (Exception)

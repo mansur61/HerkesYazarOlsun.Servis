@@ -5,7 +5,6 @@ using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -71,13 +70,17 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public List<VM_BOOKS> GetBooksList()
         {
             var getBookList = booksService.GetBooksList();
+            var list = getBookList.Where(p=>p.IS_DELETED == 0).ToList();
+             
             var lst = new List<VM_BOOKS_COMMENT>();
 
-            var vmBookList = ObjectMapper.MapList(getBookList, new List<VM_BOOKS>());
+            var vmBookList = ObjectMapper.MapList(list, new List<VM_BOOKS>());
             try
             {
                 foreach (var item in vmBookList)
                 {
+                    item.BooksList = list;
+                    item.VMBooksList = ObjectMapper.MapList(list, new List<VM_BOOKS>());
                     item.Stars = GetMaxStarBooksById(item.ID ?? 0);
                     item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID ?? 0);
                     var comments = GetCommenstBooksById(item.ID ?? 0);
@@ -121,22 +124,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             try
             {
                 star = bookStarDal.Add(star);
-                //using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-                //{
-                //    var mevcutKayit = ctx.BooksStars.Where(p => p.LoginUserId == star.LoginUserId && p.BookaId == star.BookaId).FirstOrDefault();
-                //    if (mevcutKayit == null)
-                //    {
-                //        star = bookStarDal.Add(star);
-                //    }
-                //    else
-                //    {
-                //        mevcutKayit!.StarPuani = star.StarPuani;
-
-                //        ctx.BooksStars.Update(mevcutKayit);
-                //        ctx.SaveChanges();
-                //    } 
-                //}
-
+             
                 result.State = MessageResultState.SUCCESS;
                 return result;
 
@@ -174,24 +162,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             BooksDegerlendirme booksDegerlendirme = ObjectMapper.Map(degerlendirme, new BooksDegerlendirme());
             try
             {
-                booksDegerlendirmeDal.Add(booksDegerlendirme);
-                //using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-                //{
-                //    var mevcutKayit = ctx.BooksDegerlendirme.Where(p => p.LoginUserId == degerlendirme.LoginUserId && p.BookId == degerlendirme.BookId).FirstOrDefault();
-                //    booksDegerlendirmeDal.Add(booksDegerlendirme);
-                //    if (mevcutKayit == null)
-                //    {
-                //        booksDegerlendirmeDal.Add(booksDegerlendirme);
-                //    }
-                //    else
-                //    {
-                //        mevcutKayit!.StarPuani = degerlendirme.StarPuani;
-                //        ctx.BooksDegerlendirme.Update(mevcutKayit);
-                //        ctx.SaveChanges();
-                //    }
-
-                //}
-
+                booksDegerlendirmeDal.Add(booksDegerlendirme); 
                 result.State = MessageResultState.SUCCESS;
                 return result;
             }
@@ -227,22 +198,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             try
             {
                 booksCommentDal.Ekle(booksDegerlendirme, MAIL ?? mesajlar.EMAIL ?? "");
-                //using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-                //{
-                //    var mevcutKayit = ctx.BooksComment.Where(p => p.LoginUserId == mesajlar.LoginUserId && p.BookId == mesajlar.BookId).FirstOrDefault();
-                //    booksCommentDal.Ekle(booksDegerlendirme, MAIL ?? mesajlar.EMAIL ?? "");
-                //    if (mevcutKayit == null)
-                //    {
-                //        booksCommentDal.Ekle(booksDegerlendirme, MAIL);
-                //    }
-                //    else
-                //    {
-                //        ctx.BooksComment.Update(mevcutKayit);
-                //        ctx.SaveChanges();
-                //    }
-
-                //}
-
+              
                 result.State = MessageResultState.SUCCESS;
                 return result;
             }
@@ -507,17 +463,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public void DeleteBook(Books book)
         {
             int kitapId = Convert.ToInt32(book.ID);
-            //booksService.DeleteBook(kitapId);
-
-            using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-            {
-                var kitap = ctx.Books.Where(p => p.ID == kitapId).FirstOrDefault();
-                if (kitap != null)
-                {
-                    ctx.Books.Remove(kitap); // Kitabı sil
-                    ctx.SaveChanges(); // Değişiklikleri kaydet
-                }
-            }
+            booksService.DeleteBook(kitapId); 
         }
 
     }

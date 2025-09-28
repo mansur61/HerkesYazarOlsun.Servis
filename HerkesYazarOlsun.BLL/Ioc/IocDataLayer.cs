@@ -1,4 +1,5 @@
 ﻿
+using HerkesYazarOlsun.BLL.Concrete;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.DataLayer.Concrete;
 using HerkesYazarOlsun.DataLayer.Concrete.EntityFramework;
@@ -12,6 +13,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
         {
            
             service.AddScoped<IUsersDal, UsersDal>();
+            service.AddScoped<ICategoryDal, CategoryDal>();
             service.AddScoped<IFavYazarDal, FavYazarDal>();
             service.AddScoped<IKartlarDal, KartlarDal>();
             service.AddScoped<IOdemeDal, OdemeDal>();

@@ -4,11 +4,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class CarouselDuyuruDal : HybridEntityRepositoryBase<CarouselDuyuru>, ICarouselDuyuruDal
+    public class CategoryDal : HybridEntityRepositoryBase<Category>, ICategoryDal
     {
-        public CarouselDuyuruDal(
-         EfSqlEntityRepositoryBase<CarouselDuyuru> sqlRepo,
-         EfNpSqlEntityRepositoryBase<CarouselDuyuru> npgsqlRepo,
+        public CategoryDal(
+         EfSqlEntityRepositoryBase<Category> sqlRepo,
+         EfNpSqlEntityRepositoryBase<Category> npgsqlRepo,
          IConfiguration config)
          : base(sqlRepo, npgsqlRepo, config)
         {
