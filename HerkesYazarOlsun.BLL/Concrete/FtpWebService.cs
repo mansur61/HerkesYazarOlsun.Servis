@@ -1,10 +1,9 @@
-﻿using System.Net;
-using AutoMapper;
-using HerkesYazarOlsun.BLL.Abstract;
+﻿using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Helper;
 using HerkesYazarOlsun.Model;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 using File = System.IO.File;
 namespace HerkesYazarOlsun.BLL.Concrete
 {

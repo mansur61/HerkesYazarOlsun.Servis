@@ -198,12 +198,12 @@ namespace HerkesYazarOlsun.Controllers
 
         private VM_Stars CalculateMaxStarFromMemory(Users user)
         {
-            if (user.WriterStars == null || !user.WriterStars.Any())
+            if (user.WriterStarsList == null || !user.WriterStarsList.Any())
                 return null;
 
             var vM_WriterStars = new VM_Stars();
 
-            var starsGrouped = user.WriterStars
+            var starsGrouped = user.WriterStarsList
                 .GroupBy(ws => ws.StarPuani)
                 .Select(g => new { Star = g.Key, Count = g.Count() })
                 .ToList();
