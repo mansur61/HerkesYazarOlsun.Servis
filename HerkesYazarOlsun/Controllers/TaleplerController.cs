@@ -2,7 +2,8 @@
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Model.Utils; 
+using HerkesYazarOlsun.Model.Utils;
+using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Servis.Controllers
@@ -20,12 +21,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("TalepKaydet")]
-        public ServiceResult TalepKaydet(TALEPLER talepler)
+        public ServiceResult TalepKaydet(VM_TALEPLER talepler)
         {
             ServiceResult resut = new ServiceResult(state:MessageResultState.SUCCESS);
             try
             {
-                var talep = _taleplerDal.Add(talepler);
+                var entity = ObjectMapper.Map<VM_TALEPLER, Talepler>(talepler);
+                var talep = _taleplerDal.Add(entity);
                 resut.Result = talep;
                 resut.Message = "Talebiniz Alınmıştır.";
             }

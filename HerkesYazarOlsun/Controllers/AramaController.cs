@@ -25,9 +25,8 @@ namespace HerkesYazarOlsun.Controllers
         [Route("TumAramalar")]
         public VM_ARAMA_SONUC TumAramalar(VM_ARAMA_INPUT arama)
         {
-            IBooksDal bookDal = InstanceFactory.GetInstance<IBooksDal>().Service;
-            IUsersDal userDal = InstanceFactory.GetInstance<IUsersDal>().Service;
-            var bookList =  bookDal.GetAll();
+             IUsersDal userDal = InstanceFactory.GetInstance<IUsersDal>().Service;
+            var bookList = booksService.GetBooksList();
 
             if (arama.kategoriId.HasValue)
             {
@@ -107,15 +106,20 @@ namespace HerkesYazarOlsun.Controllers
 
             VM_ARAMA_SONUC sonuc = new VM_ARAMA_SONUC();
             sonuc.vmBook = new VM_BOOKS(); 
-            sonuc.vmBook.BooksList = bookList;
-
+             
             var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
+          
+
             foreach (var item in vmBookList)
             {
-                item.Stars = booksService.GetMaxStarBooksById(item.ID ?? 0);
+                var bookEntity = bookList.First(b => b.ID == item.ID);
+                if (bookEntity == null) continue;
+
+                item.Stars = booksService.CalculateMaxStar(bookEntity);
+
+                //item.iSTATISTIK = booksService.CalculateBookIstatistic(bookEntity);
             }
-            sonuc.vmBook.VMBooksList = new List<VM_BOOKS>();
-            sonuc.vmBook.VMBooksList = vmBookList;
+            sonuc.vmBookList = vmBookList; 
             return sonuc;
         }
 

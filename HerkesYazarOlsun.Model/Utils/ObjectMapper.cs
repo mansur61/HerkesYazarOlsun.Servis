@@ -1,45 +1,48 @@
 ﻿using AutoMapper;
+
 namespace HerkesYazarOlsun.Model.Utils
 {
     public static class ObjectMapper
     {
         public static TDto Map<TEntity, TDto>(TEntity entity)
         {
-            //Create a map
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TEntity, TDto>();
+                cfg.CreateMap<TDto, TEntity>(); // ters map desteği
             });
 
             IMapper mapper = config.CreateMapper();
-
-            //Use the created map
-            var dest = mapper.Map<TEntity, TDto>(entity);
-            return dest;
+            return mapper.Map<TDto>(entity);
         }
 
         public static TDto Map<TEntity, TDto>(TEntity entity, TDto destination)
         {
-            //Create a map
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TEntity, TDto>();
+                cfg.CreateMap<TDto, TEntity>(); // ters map desteği
             });
 
             IMapper mapper = config.CreateMapper();
-
-            //Use the created map
-            var dest = mapper.Map<TEntity, TDto>(entity, destination);
-            return dest;
+            return mapper.Map(entity, destination);
         }
 
         public static List<TDto> MapList<TEntity, TDto>(List<TEntity> entity, List<TDto> destination)
         {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TEntity, TDto>();
+                cfg.CreateMap<TDto, TEntity>(); // ters map desteği
+            });
+
+            IMapper mapper = config.CreateMapper();
+
             foreach (var item in entity)
             {
-                destination.Add(Map<TEntity, TDto>(item));
+                destination.Add(mapper.Map<TDto>(item));
             }
-            //Create a map
+
             return destination;
         }
     }

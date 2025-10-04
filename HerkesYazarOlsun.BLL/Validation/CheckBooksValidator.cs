@@ -99,7 +99,7 @@ namespace HerkesYazarOlsun.BLL.Validation
            
         }
 
-        private bool HasMinimumPageCount(long bookId)
+        private bool HasMinimumPageCount(int bookId)
         {
             int pageCount = _booksPagesService.GetPagesByBooks(bookId).Count();
             return pageCount >= 50;
