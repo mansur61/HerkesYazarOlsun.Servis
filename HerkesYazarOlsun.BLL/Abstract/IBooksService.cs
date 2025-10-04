@@ -13,10 +13,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
         Books PostSaveBook(Books books);
 
         //FAVORILER PostFavoriSaveBook(FAVORILER fav);
-        FavoriBooks PostFavoriSaveBook(FavoriBooks fav);
-
-        VM_Stars GetMaxStarBooksById(long id);
-        VM_BOOK_ISTATISTIKLER GetISTATISTIKLERBooksById(long id);
+        FavoriBooks PostFavoriSaveBook(FavoriBooks fav); 
 
 
     }

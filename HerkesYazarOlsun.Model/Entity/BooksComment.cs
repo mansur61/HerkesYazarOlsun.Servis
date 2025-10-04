@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HerkesYazarOlsun.Model.Entity
 {
@@ -13,8 +8,10 @@ namespace HerkesYazarOlsun.Model.Entity
         public string NAME { get; set; }
         public string EMAIL { get; set; }
         public string ACIKLAMA { get; set; }
-        public long BookId { get; set; }
+        public int? BookId { get; set; }
+        public Books? Books { get; set; }
         public long LoginUserId { get; set; }
+        public int? StarPuani { get; set; }
 
     }
 }

@@ -69,37 +69,38 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("GetBooksList")]
         public List<VM_BOOKS> GetBooksList()
         {
+            VM_BOOKS_DETAIL vmBookDetay = new VM_BOOKS_DETAIL();
             var getBookList = booksService.GetBooksList();
-            var list = getBookList.Where(p=>p.IS_DELETED == 0).ToList();
-             
+            var list = getBookList.Where(p => p.IS_DELETED == 0).ToList();
+
             var lst = new List<VM_BOOKS_COMMENT>();
 
             var vmBookList = ObjectMapper.MapList(list, new List<VM_BOOKS>());
-            try
-            {
-                foreach (var item in vmBookList)
-                {
-                    item.BooksList = list;
-                    item.VMBooksList = ObjectMapper.MapList(list, new List<VM_BOOKS>());
-                    item.Stars = GetMaxStarBooksById(item.ID ?? 0);
-                    item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID ?? 0);
-                    var comments = GetCommenstBooksById(item.ID ?? 0);
-                    item.bookComments = comments;
-                    // Assign the comment count to the book
-                    item.CommentCount = comments.Count;
-                    var categoryModel = _categoryService.GetCategory(item.CategoriId ?? 0);
-                    item.CategoryName = categoryModel != null ? categoryModel.Name : "";
-                }
-            }
-            catch (Exception e)
-            {
-                var _ = e.Message;
-                return vmBookList;
-            }
+            //try
+            //{
+            //    foreach (var item in vmBookList)
+            //    {
+            //        item.BooksList = list;
+            //        item.VMBooksList = ObjectMapper.MapList(list, new List<VM_BOOKS>());
+            //        item.Stars = GetMaxStarBooksById(item.ID ?? 0);
+            //        item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID ?? 0);
+            //        var comments = GetCommenstBooksById(item.ID ?? 0);
+            //        item.bookComments = comments;
+            //        // Assign the comment count to the book
+            //        item.CommentCount = comments.Count;
+            //        var categoryModel = _categoryService.GetCategory(item.CategoriId ?? 0);
+            //        item.CategoryName = categoryModel != null ? categoryModel.Name : "";
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    var _ = e.Message;
+            //    return vmBookList;
+            //}
 
             return vmBookList;
         }
-
+ 
         [HttpPost]
         [Route("PostBooksStars")]
         public ServiceResult<BooksStars> PostBooksStars(BooksStars star)
@@ -209,22 +210,60 @@ namespace HerkesYazarOlsun.Servis.Controllers
             }
 
             return result;
-        }
+        }         
 
-
-        [HttpGet]
-        [Route("GetMaxStarBooksById")]
-        public VM_Stars GetMaxStarBooksById(long id)
+        private VM_Stars CalculateMaxStar(Books book)
         {
-            return booksService.GetMaxStarBooksById(id);
+            var vM_BooksStars = new VM_Stars();
+            if (book.BooksStars == null || !book.BooksStars.Any())
+                return vM_BooksStars;
+
+            var groups = book.BooksStars
+                .GroupBy(s => s.StarPuani)
+                .Select(g => new { Star = g.Key, Count = g.Count() })
+                .ToList();
+
+            vM_BooksStars.BirStarToplam = groups.FirstOrDefault(g => g.Star == 1)?.Count ?? 0;
+            vM_BooksStars.IkiStarToplam = groups.FirstOrDefault(g => g.Star == 2)?.Count ?? 0;
+            vM_BooksStars.UcStarToplam = groups.FirstOrDefault(g => g.Star == 3)?.Count ?? 0;
+            vM_BooksStars.DortStarToplam = groups.FirstOrDefault(g => g.Star == 4)?.Count ?? 0;
+            vM_BooksStars.BesStarToplam = groups.FirstOrDefault(g => g.Star == 5)?.Count ?? 0;
+
+            var maxGroup = groups.OrderByDescending(g => g.Count).FirstOrDefault();
+            if (maxGroup != null)
+            {
+                vM_BooksStars.HangiStar = $"yildiz{maxGroup.Star}";
+                vM_BooksStars.EnFazlaSitar = maxGroup.Count;
+            }
+
+            return vM_BooksStars;
         }
 
-        [HttpGet]
-        [Route("GetISTATISTIKLERBooksById")]
-        public VM_BOOK_ISTATISTIKLER GetISTATISTIKLERBooksById(long id)
+        private VM_BOOK_ISTATISTIKLER CalculateBookIstatistic(Books bookEntity)
         {
-            return booksService.GetISTATISTIKLERBooksById(id);
+            var istatistik = new VM_BOOK_ISTATISTIKLER
+            {
+                ToplamYildiz = bookEntity.BooksStars?
+            .GroupBy(s => s.LoginUserId)
+            .Count() ?? 0,
+
+                ToplamBegeni = bookEntity.FavoriBooks?
+            .GroupBy(f => f.USER_ID)
+            .Count() ?? 0,
+
+                ToplamYorum = bookEntity.BooksComments?
+            .GroupBy(c => c.LoginUserId)
+            .Count() ?? 0,
+
+                ToplamDegerlendirme = bookEntity.BooksDegerlendirme?
+            .GroupBy(d => d.LoginUserId)
+            .Count() ?? 0
+            };
+
+            return istatistik;
         }
+
+ 
 
         [HttpGet]
         [Route("GetDegerlendirmelerBooksById")]
@@ -253,7 +292,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("TumKitaplar")]
         public List<VM_BOOKS> TumKitaplar(VM_ARAMA_INPUT arama)
         {
-            List<Books> bookList = bookList = booksService.GetBooksList(); //new List < Books >();
+            List<Books> bookList = bookList = booksService.GetBooksList(); 
             if (!string.IsNullOrEmpty(arama.KITAP_ADI))
             {
                 bookList = bookList.Where(p => p.Name.Contains(arama.KITAP_ADI!)).ToList();
@@ -280,18 +319,21 @@ namespace HerkesYazarOlsun.Servis.Controllers
             }
 
             var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
+
             foreach (var item in vmBookList)
             {
-                item.Stars = GetMaxStarBooksById(item.ID ?? 0);
-                var categoryModel = _categoryService.GetCategory(item.CategoriId ?? 0);
-                item.CategoryName = categoryModel != null ? categoryModel.Name : "";
-                item.iSTATISTIK = GetISTATISTIKLERBooksById(item.ID ?? 0);
+                var bookEntity = bookList.First(b => b.ID == item.ID);
+                if (bookEntity == null) continue;
+
+                item.Stars = CalculateMaxStar(bookEntity);
+
+                item.iSTATISTIK = CalculateBookIstatistic(bookEntity);
             }
 
             return vmBookList;
         }
        
-        private async Task<VM_BOOKS> ModelIlgiliDosyalariDoldur(VM_BOOKS input, List<IFormFile> files)
+        private async Task<VM_BOOKS_DETAIL> ModelIlgiliDosyalariDoldur(VM_BOOKS_DETAIL input, List<IFormFile> files)
         {
             foreach (var item in files)
             {
@@ -337,28 +379,31 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("PostSaveBook")]
-        public async Task<ServiceResult<Books>> PostSaveBook([FromForm] VM_BOOKS VMbook)
+        public async Task<ServiceResult<Books>> PostSaveBook([FromForm] VM_BOOKS_DETAIL VMbookDetay)
         {
             ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
-            VM_BOOKS vmBooks = new VM_BOOKS();
-            
-            vmBooks = VMbook;
+            VM_BOOKS_DETAIL VMbook = new VM_BOOKS_DETAIL();
 
-            var files = VMbook.dosyalar;
+            //VMbook = VMbookDetay;
+            ObjectMapper.Map(VMbookDetay, VMbook);
+
+            var files = VMbookDetay.dosyalar;
             if (files?.Count != 0 && files != null)
             {
-                VMbook = await ModelIlgiliDosyalariDoldur(VMbook, files);
+                VMbookDetay = await ModelIlgiliDosyalariDoldur(VMbookDetay, files);
             }
 
-            vmBooks.BookModel = VMbook.BookModel;
-            vmBooks.BookModel.ARKAKAPAKFOTOPATH = VMbook.ARKAKAPAKFOTOPATH;
-            vmBooks.BookModel.ONKAPAKFOTOPATH = VMbook.ONKAPAKFOTOPATH;
+            ObjectMapper.Map(VMbookDetay, VMbook);
 
-            vmBooks.BookModel.ARKAKAPAKFOTO = VMbook.ARKAKAPAKFOTO;
-            vmBooks.BookModel.ONKAPAKFOTO = VMbook.ONKAPAKFOTO;
-            vmBooks.YazarId = vmBooks.BookModel.YazarId;
+            //VMbook.BookModel = VMbook.BookModel;
+            //VMbook.BookModel.ARKAKAPAKFOTOPATH = VMbook.ARKAKAPAKFOTOPATH;
+            //VMbook.BookModel.ONKAPAKFOTOPATH = VMbook.ONKAPAKFOTOPATH;
+
+            //VMbook.BookModel.ARKAKAPAKFOTO = VMbook.ARKAKAPAKFOTO;
+            //VMbook.BookModel.ONKAPAKFOTO = VMbook.ONKAPAKFOTO;
+            //VMbook.YazarId = VMbook.BookModel.YazarId;
              
-            var sonuc = _booksAddValidator.Validate(vmBooks);
+            var sonuc = _booksAddValidator.Validate(VMbook.BookModel);
 
             if (!sonuc!.IsValid)
             {
@@ -370,9 +415,10 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 return result;
             }
 
+            var book =   ObjectMapper.Map(VMbook.BookModel, new Books());
+            //var getBook = booksService.PostSaveBook(book);
+            //result.Result = getBook;
 
-            var getBook = booksService.PostSaveBook(VMbook.BookModel);
-            result.Result = getBook;
             return result;
         }
 

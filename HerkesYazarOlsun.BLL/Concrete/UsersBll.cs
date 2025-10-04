@@ -1,8 +1,8 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.ViewModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace HerkesYazarOlsun.BLL.Concrete
 {
@@ -19,8 +19,16 @@ namespace HerkesYazarOlsun.BLL.Concrete
         public List<Users> GetKullanicilar()
         {
             // Profil dahil olarak çekmek
-            var users = _kisilerDal.GetAllWithIncludes(u => u.Profil); 
-            return users;
+            //var users = _kisilerDal.GetAllWithIncludes(u => u.Profil); 
+            //return users;
+            var list = _kisilerDal
+                .GetAllQueryable()
+                .Include(b => b.Profil) 
+                .Include(b => b.WriterFollowList)
+                .Include(b => b.WriterStarsList)                 
+                .ToList();
+
+            return list;
         }
 
         public VM_Stars GetMaxStarWriterById(long id)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HerkesYazarOlsun.Model.Entity
 {
@@ -17,7 +12,7 @@ namespace HerkesYazarOlsun.Model.Entity
       
         // Kitap veritabanı id bilgisi
         public long BooksId { get; set; }
-
+        public Books Book { get; set; }
 
     }
 }

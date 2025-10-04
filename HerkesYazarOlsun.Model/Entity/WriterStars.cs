@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HerkesYazarOlsun.Model.Entity
 {
@@ -11,7 +6,9 @@ namespace HerkesYazarOlsun.Model.Entity
     public class WriterStars : BaseEntity
     {
         public int StarPuani { get; set; }
-        public int LoginUserId { get; set; }
-        public int YazarId { get; set; }
+        public long? LoginUserId { get; set; }
+        public Users? LoginUsers { get; set; }
+        public long? YazarId { get; set; }
+        public Users? YazarUsers { get; set; }
     }
 }

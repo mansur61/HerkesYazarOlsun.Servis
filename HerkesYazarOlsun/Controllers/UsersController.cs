@@ -196,6 +196,35 @@ namespace HerkesYazarOlsun.Controllers
 
         }
 
+        private VM_Stars CalculateMaxStarFromMemory(Users user)
+        {
+            if (user.WriterStars == null || !user.WriterStars.Any())
+                return null;
+
+            var vM_WriterStars = new VM_Stars();
+
+            var starsGrouped = user.WriterStars
+                .GroupBy(ws => ws.StarPuani)
+                .Select(g => new { Star = g.Key, Count = g.Count() })
+                .ToList();
+
+            vM_WriterStars.BirStarToplam = starsGrouped.FirstOrDefault(s => s.Star == 1)?.Count ?? 0;
+            vM_WriterStars.IkiStarToplam = starsGrouped.FirstOrDefault(s => s.Star == 2)?.Count ?? 0;
+            vM_WriterStars.UcStarToplam = starsGrouped.FirstOrDefault(s => s.Star == 3)?.Count ?? 0;
+            vM_WriterStars.DortStarToplam = starsGrouped.FirstOrDefault(s => s.Star == 4)?.Count ?? 0;
+            vM_WriterStars.BesStarToplam = starsGrouped.FirstOrDefault(s => s.Star == 5)?.Count ?? 0;
+
+            var maxStar = starsGrouped.OrderByDescending(s => s.Count).FirstOrDefault();
+            if (maxStar != null)
+            {
+                vM_WriterStars.HangiStar = $"yildiz{maxStar.Star}";
+                vM_WriterStars.EnFazlaSitar = maxStar.Count;
+            }
+
+            return vM_WriterStars;
+        }
+
+
         //Zamanla inner join yapýsýna geç. pl/sql de
         [HttpPost]
         [Route("GetKisiler")]
@@ -210,23 +239,23 @@ namespace HerkesYazarOlsun.Controllers
             }
 
             var vmUserList = getKisiler
-                     .Select(u =>
-                     {
-                         var vmUser = VM_USERS.MapToVM(u);
-                         vmUser.Stars = GetMaxStarWriterById(u.ID);
-                         return vmUser;
-                     })
-                 .ToList();
+             .Select(u =>
+             {
+                 var vmUser = VM_USERS.MapToVM(u);
+                 vmUser.Stars = CalculateMaxStarFromMemory(u);  
+                 return vmUser;
+             })
+             .ToList();
 
             return vmUserList;
         }
 
         [HttpPost]
         [Route("PostFavoriSaveWriter")]
-        public FAVORI_YAZARLAR PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav)
+        public FavoriYazarlar PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav)
         {
             IFavYazarDal yazarDal = InstanceFactory.GetInstance<IFavYazarDal>().Service;
-            var favYazar = ObjectMapper.Map(fav, new FAVORI_YAZARLAR());
+            var favYazar = ObjectMapper.Map(fav, new FavoriYazarlar());
             favYazar = yazarDal.Ekle(favYazar, MAIL);
             return favYazar;
         }

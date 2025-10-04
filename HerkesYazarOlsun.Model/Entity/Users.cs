@@ -22,9 +22,8 @@ namespace HerkesYazarOlsun.Model.Entity
 
         public int? isSozlesmeOnay { get; set; } 
         public Profil? Profil { get; set; }
-
-
-
+        public ICollection<WriterFollow> WriterFollowList { get; set; }
+        public ICollection<WriterStars> WriterStarsList { get; set; }
     }
 
 
