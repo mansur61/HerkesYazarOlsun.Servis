@@ -5,7 +5,7 @@ namespace HerkesYazarOlsun.Model.Entity
     [Table(name: "Category")]
     public class Category : IEntity
     {
-        public long? ID { get; set; }
+        public int? ID { get; set; }
         public string Name { get; set; } 
     }
 }

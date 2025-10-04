@@ -82,33 +82,34 @@ namespace HerkesYazarOlsun.DataLayer.Context
                 .WithOne(p => p.User)
                 .HasForeignKey<Profil>(p => p.LoginUserId);
 
-            // Users -> WriterFollowList (1 user, birden fazla follow)
+            // Users -> WriterFollow (takip ilişkileri)
             modelBuilder.Entity<WriterFollow>()
-                .HasOne(wf => wf.YazarUsers)   // WriterFollow içindeki referans User
-                .WithMany(u => u.WriterFollowList)  // User içindeki ICollection
+                .HasOne(wf => wf.YazarUsers) // takip edilen yazar
+                .WithMany(u => u.WriterFollowYazarList) // Users içindeki yazar listesi
                 .HasForeignKey(wf => wf.YazarId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<WriterFollow>()
-                .HasOne(wf => wf.LoginUsers)   // WriterFollow içindeki referans LoginUser
-                .WithMany(u => u.WriterFollowList) // User içindeki ICollection
+                .HasOne(wf => wf.LoginUsers) // takip eden kullanıcı
+                .WithMany(u => u.WriterFollowLoginList) // Users içindeki login listesi
                 .HasForeignKey(wf => wf.LoginUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Users -> WriterStarsList (1 user, birden fazla star)
+            // Users -> WriterStars (beğeni ilişkileri)
             modelBuilder.Entity<WriterStars>()
-                .HasOne(ws => ws.YazarUsers)
-                .WithMany(u => u.WriterStarsList)
+                .HasOne(ws => ws.YazarUsers) // beğenilen yazar
+                .WithMany(u => u.WriterStarsYazarList) // Users içindeki yazar listesi
                 .HasForeignKey(ws => ws.YazarId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<WriterStars>()
-                .HasOne(ws => ws.LoginUsers)
-                .WithMany(u => u.WriterStarsList)
+                .HasOne(ws => ws.LoginUsers) // beğenen kullanıcı
+                .WithMany(u => u.WriterStarsLoginList) // Users içindeki login listesi
                 .HasForeignKey(ws => ws.LoginUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-             
+
+
             modelBuilder.Entity<Books>()
                 .HasOne(b => b.Categories)              // her kitap bir kategoriye bağlı
                 .WithMany()                           // kategori tarafında navigation yok

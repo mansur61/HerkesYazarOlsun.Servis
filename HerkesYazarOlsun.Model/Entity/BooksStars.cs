@@ -7,7 +7,7 @@ namespace HerkesYazarOlsun.Model.Entity
     {
         public int StarPuani { get; set; }
         public int LoginUserId { get; set; }
-        public int? BookId { get; set; }
+        public long? BookId { get; set; }
         public Books? Books { get; set; }
     }
 }
