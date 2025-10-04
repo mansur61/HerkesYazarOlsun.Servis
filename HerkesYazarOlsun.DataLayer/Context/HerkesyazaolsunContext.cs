@@ -74,11 +74,13 @@ namespace HerkesYazarOlsun.DataLayer.Context
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Users>()
-                .HasOne(u => u.Profil)
-                .WithOne(p => p.User)
-                .HasForeignKey<Profil>(p => p.LoginUserId);
+            base.OnModelCreating(modelBuilder);           
+
+            modelBuilder.ApplyConfiguration(new UsersConfiguration());
+            modelBuilder.ApplyConfiguration(new WriterFollowConfiguration());
+            modelBuilder.ApplyConfiguration(new WriterStarsConfiguration());
+            modelBuilder.ApplyConfiguration(new BooksConfiguration());
+            modelBuilder.ApplyConfiguration(new BooksPagesConfiguration());
         }
 
 

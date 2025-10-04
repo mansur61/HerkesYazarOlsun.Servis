@@ -77,88 +77,11 @@ namespace HerkesYazarOlsun.DataLayer.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Users>()
-                .HasOne(u => u.Profil)
-                .WithOne(p => p.User)
-                .HasForeignKey<Profil>(p => p.LoginUserId);
-
-            // Users -> WriterFollow (takip ilişkileri)
-            modelBuilder.Entity<WriterFollow>()
-                .HasOne(wf => wf.YazarUsers) // takip edilen yazar
-                .WithMany(u => u.WriterFollowYazarList) // Users içindeki yazar listesi
-                .HasForeignKey(wf => wf.YazarId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<WriterFollow>()
-                .HasOne(wf => wf.LoginUsers) // takip eden kullanıcı
-                .WithMany(u => u.WriterFollowLoginList) // Users içindeki login listesi
-                .HasForeignKey(wf => wf.LoginUserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Users -> WriterStars (beğeni ilişkileri)
-            modelBuilder.Entity<WriterStars>()
-                .HasOne(ws => ws.YazarUsers) // beğenilen yazar
-                .WithMany(u => u.WriterStarsYazarList) // Users içindeki yazar listesi
-                .HasForeignKey(ws => ws.YazarId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<WriterStars>()
-                .HasOne(ws => ws.LoginUsers) // beğenen kullanıcı
-                .WithMany(u => u.WriterStarsLoginList) // Users içindeki login listesi
-                .HasForeignKey(ws => ws.LoginUserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-
-            modelBuilder.Entity<Books>()
-                .HasOne(b => b.Categories)              // her kitap bir kategoriye bağlı
-                .WithMany()                           // kategori tarafında navigation yok
-                .HasForeignKey(b => b.CategoriId)
-                .OnDelete(DeleteBehavior.Restrict);   // kategoriyi silerken kitapları silmesin
-
-
-            modelBuilder.Entity<Books>()
-               .HasOne(b => b.BookYayinAyari)              // her kitap bir kategoriye bağlı
-               .WithMany()                           // kategori tarafında navigation yok
-               .HasForeignKey(b => b.YayinAyarId)
-               .OnDelete(DeleteBehavior.Restrict);   // kategoriyi silerken kitapları silmesin
-
-            modelBuilder.Entity<Books>()
-                .HasMany(b => b.BooksPageList)      // kitap → birden çok sayfa
-                .WithOne(p => p.Book)            // her sayfa → bir kitap
-                .HasForeignKey(p => p.BooksId)    // FK BookId
-                .OnDelete(DeleteBehavior.Cascade); // Book silinirse, ona bağlı olan BooksPages
-
-
-            modelBuilder.Entity<BooksPages>()
-                .HasOne(b => b.Book)
-                .WithMany()
-                .HasForeignKey(b => b.BooksId)
-                .OnDelete(DeleteBehavior.Restrict); //BooksPages silmede Book silme
-
-            modelBuilder.Entity<Books>()
-                .HasOne(b => b.User)
-                .WithMany()
-                .HasForeignKey(b => b.YazarId)
-                .OnDelete(DeleteBehavior.Restrict); //Books silmede User/Yazarını silme
-
-            modelBuilder.Entity<Books>()
-               .HasMany(b => b.BooksComments)
-               .WithOne(p => p.Books)
-               .HasForeignKey(p => p.BookId)
-               .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Books>()
-               .HasMany(b => b.BooksDegerlendirme)
-               .WithOne(p => p.Books)
-               .HasForeignKey(p => p.BookId)
-               .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Books>()
-               .HasMany(b => b.BooksStars)
-               .WithOne(p => p.Books)
-               .HasForeignKey(p => p.BookId)
-               .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.ApplyConfiguration(new UsersConfiguration());
+            modelBuilder.ApplyConfiguration(new WriterFollowConfiguration());
+            modelBuilder.ApplyConfiguration(new WriterStarsConfiguration());
+            modelBuilder.ApplyConfiguration(new BooksConfiguration());
+            modelBuilder.ApplyConfiguration(new BooksPagesConfiguration());
 
         }
 
