@@ -16,6 +16,32 @@ namespace HerkesYazarOlsun.BLL.Concrete
             _writerStarsDal = writerStarsDal;
         }
 
+        public Users? Ekle(Users usr, string? mail)
+        {
+            return _kisilerDal.Ekle(usr, mail); ;
+        }
+
+        public Users? Guncelle(Users usr, long tck)
+        {
+            return _kisilerDal.Update(usr, tck);
+        }
+        public Users? Get(long LoginUserId)
+        {
+            var sonuc = _kisilerDal.GetAllQueryable(p => p.ID == LoginUserId).FirstOrDefault();
+            return sonuc;
+        }
+
+        public Users? GetMail(string mail)
+        {
+            var sonuc = _kisilerDal.GetAllQueryable(p => p.EMAIL == mail).SingleOrDefault();
+            return sonuc;
+        }
+
+        public Users? GetUserrName(string username)
+        {
+            var sonuc = _kisilerDal.GetAllQueryable(p => p.SURNAME == username).SingleOrDefault();
+            return sonuc;
+        }
         public List<Users> GetKullanicilar()
         {
             // Profil dahil olarak çekmek

@@ -4,7 +4,6 @@ using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
-using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -17,6 +16,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksController : BaseApiController
     {
         private IBooksService booksService;
+        private IBooksStarsService booksStarsService;
+        private IBooksDegerlendirmeService booksDegerlendirmeService;
         private ICategoryService _categoryService;
         private IBooksPagesService booksPagesService;
         private readonly ILogger<BooksController> _logger;
@@ -30,7 +31,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
             IFtpService ftpService, ILogger<BooksController> logger,
             IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, 
             BookDegerlendirmeValidator bookDegerlendirmevalidator, BooksCommentValidator commentValidator,
-            BooksAddValidator booksAddValidator, CheckBooksValidator checkBooksValidator,BooksStarsValidator booksStarsValidator)
+            BooksAddValidator booksAddValidator, CheckBooksValidator checkBooksValidator, BooksStarsValidator booksStarsValidator, 
+            IBooksStarsService booksStarsService, IBooksDegerlendirmeService booksDegerlendirmeService   )
             : base(userAccessor, unitOfWork, httpContextAccessor)
         {
             booksService = _booksService;
@@ -43,6 +45,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
             _booksAddValidator = booksAddValidator;
             _checkBooksValidator = checkBooksValidator;
             _booksStarsValidator = booksStarsValidator;
+            this.booksStarsService = booksStarsService;
+            this.booksDegerlendirmeService = booksDegerlendirmeService;
         }
 
         [HttpGet]
@@ -67,7 +71,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetBooksList")]
-        public List<VM_BOOKS> GetBooksList()
+        public VM_BOOKS_DETAIL GetBooksList()
         {
             VM_BOOKS_DETAIL vmBookDetay = new VM_BOOKS_DETAIL();
             var getBookList = booksService.GetBooksList();
@@ -82,16 +86,15 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 item.Stars = booksService.CalculateMaxStar(bookEntity);
                 item.iSTATISTIK = booksService.CalculateBookIstatistic(bookEntity);
             }
- 
-            return vmBookList;
+            vmBookDetay.VMBooksList = vmBookList;
+            return vmBookDetay;
         }
  
         [HttpPost]
         [Route("PostBooksStars")]
         public ServiceResult<BooksStars> PostBooksStars(BooksStars star)
         {
-            ServiceResult<BooksStars> result = new ServiceResult<BooksStars>(state: MessageResultState.SUCCESS);
-            IBooksStarsDal bookStarDal = InstanceFactory.GetInstance<IBooksStarsDal>().Service;
+            ServiceResult<BooksStars> result = new ServiceResult<BooksStars>(state: MessageResultState.SUCCESS); 
              
             var sonuc = _booksStarsValidator.Validate(star);
 
@@ -109,7 +112,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             try
             {
-                star = bookStarDal.Add(star);
+                star = booksStarsService.Ekle(star,MAIL);
              
                 result.State = MessageResultState.SUCCESS;
                 return result;
@@ -130,8 +133,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("PostBooksDegerlendirme")]
         public ServiceResult PostBooksDegerlendirme(VM_BOOKS_DEGERLENDIRME degerlendirme)
         {
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            IBooksDegerlendirmeDal booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>().Service;
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS); 
              
             var sonuc = _bookDegerlendirmevalidator.Validate(degerlendirme);
 
@@ -148,7 +150,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             BooksDegerlendirme booksDegerlendirme = ObjectMapper.Map(degerlendirme, new BooksDegerlendirme());
             try
             {
-                booksDegerlendirmeDal.Add(booksDegerlendirme); 
+                booksDegerlendirmeService.Ekle(booksDegerlendirme,MAIL); 
                 result.State = MessageResultState.SUCCESS;
                 return result;
             }
@@ -166,7 +168,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public ServiceResult PostBooksComments(VM_BOOKS_COMMENT mesajlar)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            IBooksCommentDal booksCommentDal = InstanceFactory.GetInstance<IBooksCommentDal>().Service;
+            IBooksCommentService booksCommentDal = InstanceFactory.GetInstance<IBooksCommentService>().Service;
              
             var sonuc = _commentValidator.Validate(mesajlar);
 
@@ -183,7 +185,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             BooksComment booksDegerlendirme = ObjectMapper.Map(mesajlar, new BooksComment());
             try
             {
-                booksCommentDal.Ekle(booksDegerlendirme, MAIL ?? mesajlar.EMAIL ?? "");
+                booksCommentDal.Add(booksDegerlendirme,YETKILITCNO);
               
                 result.State = MessageResultState.SUCCESS;
                 return result;
@@ -204,8 +206,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("GetDegerlendirmelerBooksById")]
         public List<VM_BOOKS_DEGERLENDIRME> GetDegerlendirmelerBooksById(long kitapId)
         {
-            IBooksDegerlendirmeDal booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeDal>().Service;
-            var bookDgrlnLst = booksDegerlendirmeDal.GetList(p => p.BookId == kitapId).ToList();
+            IBooksDegerlendirmeService booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeService>().Service;
+            var bookDgrlnLst = booksDegerlendirmeDal.GetList(kitapId);
             List<VM_BOOKS_DEGERLENDIRME> vmDegerlendirmeList = ObjectMapper.MapList(bookDgrlnLst, new List<VM_BOOKS_DEGERLENDIRME>());
 
             return vmDegerlendirmeList;
@@ -215,8 +217,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("GetCommenstBooksById")]
         public List<VM_BOOKS_COMMENT> GetCommenstBooksById(long kitapId)
         {
-            IBooksCommentDal booksCommentDal = InstanceFactory.GetInstance<IBooksCommentDal>().Service;
-            var bookCmmtLst = booksCommentDal.GetAllQueryable(p => p.BookId == kitapId).ToList();
+            IBooksCommentService booksCommentDal = InstanceFactory.GetInstance<IBooksCommentService>().Service;
+            var bookCmmtLst = booksCommentDal.GetList(kitapId);
             List<VM_BOOKS_COMMENT> vmCmmteList = ObjectMapper.MapList(bookCmmtLst, new List<VM_BOOKS_COMMENT>());
 
             return vmCmmteList;

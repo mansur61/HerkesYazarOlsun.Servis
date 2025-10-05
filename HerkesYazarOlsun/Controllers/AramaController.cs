@@ -15,17 +15,18 @@ namespace HerkesYazarOlsun.Controllers
     public class AramaController : ControllerBase
     {
         private IBooksService booksService;
+        private IUsersService usersService;
 
-        public AramaController(IBooksService _booksService)
+        public AramaController(IBooksService _booksService, IUsersService _usersService)
         {
             booksService = _booksService;
+            usersService = _usersService;
         }
 
         [HttpPost]
         [Route("TumAramalar")]
         public VM_ARAMA_SONUC TumAramalar(VM_ARAMA_INPUT arama)
-        {
-             IUsersDal userDal = InstanceFactory.GetInstance<IUsersDal>().Service;
+        { 
             var bookList = booksService.GetBooksList();
 
             if (arama.kategoriId.HasValue)
@@ -69,7 +70,7 @@ namespace HerkesYazarOlsun.Controllers
             {
                 List<long> yazarIdler = new List<long>();
                 List<Books> kitaplar = new List<Books>();
-                var kullanicilar =  userDal.GetAllQueryable(p => p.NAME.Contains(arama.YAZAR_ADI)).ToList();
+                var kullanicilar = usersService.GetKullanicilar().Where(p => p.NAME.Contains(arama.YAZAR_ADI)).ToList();
                 foreach (var item in kullanicilar)
                 {
                     yazarIdler.Add(item.ID);

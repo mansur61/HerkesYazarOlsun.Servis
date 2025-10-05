@@ -13,7 +13,9 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string ARKAKAPAKFOTOPATH { get; set; }
         public string ARKAKAPAKYAZISI { get; set; }
         public bool TAMAMLANDIMI { get; set; }
+
         public int? YazarId { get; set; }
+        public int? LoginUserId { get; set; }
         public Users? User { get; set; }
         public bool YAYINDAMI { get; set; }
         public int? CategoriId { get; set; }

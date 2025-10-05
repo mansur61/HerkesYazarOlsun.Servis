@@ -1,3 +1,4 @@
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.DataLayer;
@@ -14,17 +15,17 @@ namespace HerkesYazarOlsun.Controllers
     [ApiController]
     public class OdemeController : BaseApiController
     {
-        private IKartlarDal kartlarDal;
-        private IOdemeDal odemeDal;
-        private IOdemeSponsorlariDal odemeSpnsDal;
+        private IKartlarService kartlarSrv;
+        private IOdemeService odemeService;
+        private IOdemeSponsorlariService odemeSpnsSrv;
         private OdemeSponsorlariValidator _odemeSponsorlariValidator;
-        public OdemeController(IKartlarDal _kartlarDal, IOdemeDal odemeDal, IOdemeSponsorlariDal odemeSpnsDal,
+        public OdemeController(IKartlarService _kartlarSrv, IOdemeService odemeService, IOdemeSponsorlariService odemeSpnsSrv,
             IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration, OdemeSponsorlariValidator odemeSponsorlariValidator)
             : base(userAccessor, unitOfWork, configuration)
         {
-            kartlarDal = _kartlarDal;
-            this.odemeDal = odemeDal;
-            this.odemeSpnsDal = odemeSpnsDal;
+            kartlarSrv = _kartlarSrv;
+            this.odemeService = odemeService;
+            this.odemeSpnsSrv = odemeSpnsSrv;
             _odemeSponsorlariValidator = odemeSponsorlariValidator;
         }
 
@@ -41,12 +42,12 @@ namespace HerkesYazarOlsun.Controllers
             {
                 //Ödeme alt yapýsýna gider. (iyizico vs.) Baþarýlý ise Ödeme tablosuna kayýt atar. isOdeme durumu belilerlenir.
                 odeme.isOdeme = true; //örnek olarak ödeme baþarýlý olsun..
-                Odeme odemeEntity = odemeDal.Ekle(odeme, MAIL);
+                Odeme odemeEntity = odemeService.Ekle(odeme, MAIL);
 
                 kartEntity.Tutar = (long)Convert.ToInt32(kart.Tutar);
                 kartEntity.OdemeId = odemeEntity.ID;
                 kartEntity.KartTarihi = kart.KartTarihiAy.ToString() + "/" +kart.KartTarihiYil.ToString();
-                kartEntity =  kartlarDal.Ekle(kartEntity, MAIL);
+                kartEntity = kartlarSrv.Ekle(kartEntity, MAIL);
 
                 result.State = MessageResultState.SUCCESS;
                 return result;
@@ -82,7 +83,7 @@ namespace HerkesYazarOlsun.Controllers
 
             try
             {
-                odemeSpnsEntity = odemeSpnsDal.Add(odemeSpnsEntity, odemeSponsorlar.tck);
+                odemeSpnsEntity = odemeSpnsSrv.Add(odemeSpnsEntity, odemeSponsorlar.tck);
 
                 result.Message = "Sponsor seçiminiz baþarýlý þekilde yapýlmýþtýr. Paylaþtýðýnýz Mail veya Sms bilgiler ile sizlere en kýsa sürede iletiþim saðlanacaktýr.";
                 result.State = MessageResultState.SUCCESS;

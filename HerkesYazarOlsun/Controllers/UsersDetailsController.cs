@@ -1,4 +1,4 @@
-using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,18 +8,18 @@ namespace HerkesYazarOlsun.Controllers
     [ApiController]
     public class UsersDetailsController : ControllerBase
     {
-        private IUsersDetailsDal usrDtlsDal;
+        private IUsersDetailsService usrDtlsSrv;
 
-        public UsersDetailsController(IUsersDetailsDal usrDtlsDal)
+        public UsersDetailsController(IUsersDetailsService usrDtlsSrv)
         {
-            this.usrDtlsDal = usrDtlsDal;
+            this.usrDtlsSrv = usrDtlsSrv;
         }
 
         [HttpGet]
         [Route("GetUsersDetailsByLoginId")]
         public UsersDetails? GetUsersDetailsByLoginId(long loginId)
-        {            
-            var sonuc = usrDtlsDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
+        {
+            var sonuc = usrDtlsSrv.GetUsersDetailsByLoginId(loginId);
             return sonuc;
         }
 

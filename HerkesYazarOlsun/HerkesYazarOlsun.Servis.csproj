@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HerkesYazarOlsun.BLL\HerkesYazarOlsun.BLL.csproj" />
-    <ProjectReference Include="..\HerkesYazarOlsun.DataLayer\HerkesYazarOlsun.DataLayer.csproj" />
     <ProjectReference Include="..\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
   </ItemGroup>
 

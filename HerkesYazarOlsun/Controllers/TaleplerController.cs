@@ -1,6 +1,6 @@
-﻿using HerkesYazarOlsun.BLL.Accessor;
+﻿using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer;
-using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -12,11 +12,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
     [ApiController]
     public class TaleplerController : BaseApiController
     {
-        ITaleplerDal _taleplerDal;
-        public TaleplerController( ITaleplerDal taleplerDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+        ITaleplerService _talepleSrv;
+        public TaleplerController(ITaleplerService _talepleSrv, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
-            _taleplerDal = taleplerDal;
+            this._talepleSrv = _talepleSrv;
         }
 
         [HttpPost]
@@ -27,7 +27,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             try
             {
                 var entity = ObjectMapper.Map<VM_TALEPLER, Talepler>(talepler);
-                var talep = _taleplerDal.Add(entity);
+                var talep = _talepleSrv.Add(entity);
                 resut.Result = talep;
                 resut.Message = "Talebiniz Alınmıştır.";
             }

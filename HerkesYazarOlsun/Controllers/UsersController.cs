@@ -21,23 +21,31 @@ namespace HerkesYazarOlsun.Controllers
 
         private readonly ILogger<UsersController> _logger;
         private IUsersService userService;
-        private IUsersDal kisilerDal;
+        private IFavoriYazarlarService _favoriYazarlarService;
+        private IWriterFollowService _writerFollowService;
+        private IAccountLoginService _accountLoginService;
         private EmailValidator _emailValidator;
         private UsersValidator _usersValidator;
         private WriterFollowValidator _WriterFollowValidator;
         private WriterStarsValidator _writerStarsValidator;
+        private IWriterStarsService writerStarsService;
         public UsersController(ILogger<UsersController> logger, IUsersService _userService,
-            IUsersDal kisilerDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration,
-            EmailValidator emailValidator, UsersValidator usersValidator, WriterFollowValidator writerFollowValidator, WriterStarsValidator writerStarsValidator)
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration,
+            EmailValidator emailValidator, UsersValidator usersValidator, WriterFollowValidator writerFollowValidator, 
+            WriterStarsValidator writerStarsValidator, IAccountLoginService accountLoginService, IWriterFollowService writerFollowService, 
+            IFavoriYazarlarService favoriYazarlarService, IWriterStarsService writerStarsService)
             : base(userAccessor, unitOfWork, configuration)
         {
             _logger = logger;
-            userService = _userService;
-            this.kisilerDal = kisilerDal;
+            userService = _userService; 
             _emailValidator = emailValidator;
             _usersValidator = usersValidator;
             _WriterFollowValidator = writerFollowValidator;
             _writerStarsValidator = writerStarsValidator;
+            _accountLoginService = accountLoginService;
+            _writerFollowService = writerFollowService;
+            _favoriYazarlarService = favoriYazarlarService;
+            this.writerStarsService = writerStarsService;
         }
 
 
@@ -45,8 +53,7 @@ namespace HerkesYazarOlsun.Controllers
         [Route("PostKisiUpdate")]
         public ServiceResult PostKisiUpdate(VM_USERS kisi)
         {
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS, message: "");
-            IUsersDal kisilerDal = InstanceFactory.GetInstance<IUsersDal>().Service;
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS, message: ""); 
             var user = ObjectMapper.Map(kisi, new Users());
 
             var sonuc = _emailValidator.Validate(user);
@@ -63,11 +70,11 @@ namespace HerkesYazarOlsun.Controllers
 
             try
             {
-                var kayit = kisilerDal.GetAllQueryable(p => p.EMAIL == kisi.EMAIL).SingleOrDefault();
+                var kayit = userService.GetMail( kisi.EMAIL);
                 if (kayit != null)
                 {
                     kayit.isEmail = 1;
-                    kayit = kisilerDal.Guncelle(kayit, MAIL ?? kisi.EMAIL ?? "");
+                    kayit = userService.Guncelle(kayit,YETKILITCNO);
                 }
                 else
                 {
@@ -90,8 +97,7 @@ namespace HerkesYazarOlsun.Controllers
         [Route("PostKisiSave")]
         public ServiceResult PostKisiSave(VM_USERS kisi)
         {
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS, message: "");
-            IUsersDal kisilerDal = InstanceFactory.GetInstance<IUsersDal>().Service;
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS, message: ""); 
             var user = ObjectMapper.Map(kisi, new Users());
 
 
@@ -110,7 +116,7 @@ namespace HerkesYazarOlsun.Controllers
 
             try
             {
-                var kayit = kisilerDal.GetAllQueryable(p => p.EMAIL == kisi.EMAIL).SingleOrDefault();
+                var kayit = userService.GetMail(kisi.EMAIL);
                 if (kayit != null)
                 {
                     result.State = MessageResultState.WARNING;
@@ -119,7 +125,7 @@ namespace HerkesYazarOlsun.Controllers
                 }
                 else
                 {
-                    user = kisilerDal.Ekle(user, kisi.EMAIL ?? "");
+                    user = userService.Ekle(user, kisi.EMAIL ?? "");
                     result.Message = "Kayýt Alýndý";
                 }
 
@@ -145,17 +151,15 @@ namespace HerkesYazarOlsun.Controllers
         [Route("GetKisiById")]
         public Users? GetKisiById(long id)
         {
-            IUsersDal kisilerDal = InstanceFactory.GetInstance<IUsersDal>().Service;
-            var getKisi = kisilerDal.GetAllQueryable(p => p.ID == id).SingleOrDefault();
+            var getKisi = userService.Get(id);
             return getKisi;
         }
 
         [HttpGet]
         [Route("GetKisiByUsername")]
         public Users? GetKisiByUsername(string username)
-        {
-            IUsersDal kisilerDal = InstanceFactory.GetInstance<IUsersDal>().Service;
-            var getKisi = kisilerDal.GetAllQueryable(p => p.SURNAME == username).SingleOrDefault();
+        { 
+            var getKisi = userService.GetUserrName(username);
             return getKisi;
         }
 
@@ -165,8 +169,7 @@ namespace HerkesYazarOlsun.Controllers
         {
             ServiceResult<Users> result = new ServiceResult<Users>(state: MessageResultState.SUCCESS);
 
-            IUsersDal kisilerDal = InstanceFactory.GetInstance<IUsersDal>().Service;
-            var getKisi = kisilerDal.GetAllQueryable(p => p.EMAIL == mail).SingleOrDefault();
+            var getKisi = userService.GetMail(mail);
 
             if (getKisi != null)
             {
@@ -229,10 +232,9 @@ namespace HerkesYazarOlsun.Controllers
         [HttpPost]
         [Route("GetKisiler")]
         public List<VM_USERS> GetKisiler(VM_ARAMA_INPUT arama)
-        {
-            IUsersService kisilerBll = InstanceFactory.GetInstance<IUsersService>().Service;
+        { 
 
-            var getKisiler = kisilerBll.GetKullanicilar();
+            var getKisiler = userService.GetKullanicilar();
             if (!string.IsNullOrEmpty(arama.YAZAR_ADI))
             {
                 getKisiler = getKisiler.Where(p => p.NAME!.Contains(arama.YAZAR_ADI!)).ToList();
@@ -253,19 +255,17 @@ namespace HerkesYazarOlsun.Controllers
         [HttpPost]
         [Route("PostFavoriSaveWriter")]
         public FavoriYazarlar PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav)
-        {
-            IFavYazarDal yazarDal = InstanceFactory.GetInstance<IFavYazarDal>().Service;
+        { 
             var favYazar = ObjectMapper.Map(fav, new FavoriYazarlar());
-            favYazar = yazarDal.Ekle(favYazar, MAIL);
+            favYazar = _favoriYazarlarService.Ekle(favYazar, MAIL);
             return favYazar;
         }
 
         [HttpGet]
         [Route("GetWriterFollowById")]
         public VM_WriterFollow GetWriterFollowById(long yazar_id)
-        {
-            IWriterFollowDal yazarDal = InstanceFactory.GetInstance<IWriterFollowDal>().Service;
-            var follow = yazarDal.Get(p => p.YazarId == yazar_id);
+        { 
+            var follow = _writerFollowService.Get(yazar_id);
             var fllwYazar = ObjectMapper.Map(follow, new VM_WriterFollow());
 
             return fllwYazar;
@@ -275,7 +275,7 @@ namespace HerkesYazarOlsun.Controllers
         [Route("GetUsersByLoginId")]
         public Users? GetUserByLoginId(long loginId)
         {
-            var sonuc = kisilerDal.GetAllQueryable(p => p.ID == loginId).SingleOrDefault();
+            var sonuc = userService.Get(loginId);
             return sonuc;
         }
 
@@ -283,20 +283,18 @@ namespace HerkesYazarOlsun.Controllers
         [Route("SaveOrUpdateAccountLogin")]
         public ServiceResult SaveOrUpdateAccountLogin(VM_LOGIN vmLogni)
         {
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-
-            IAccountLoginDal accLoginDal = InstanceFactory.GetInstance<IAccountLoginDal>().Service;
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);             
 
             var bak = MAIL;
             var accountLogin = ObjectMapper.Map(vmLogni, new AccountLogin());
             try
             {
 
-                var mevcutKayit = accLoginDal.GetAllQueryable(p => p.LoginUserId == vmLogni.LoginUserId).FirstOrDefault();
+                var mevcutKayit = _accountLoginService.Get(vmLogni.LoginUserId);
                 if (mevcutKayit == null)
                 {
                     accountLogin.OLUSTURAN_EMAIL = vmLogni.email;
-                    accountLogin = accLoginDal.Ekle(accountLogin, MAIL);
+                    accountLogin = _accountLoginService.Ekle(accountLogin, MAIL);
                 }
                 else
                 {
@@ -305,7 +303,7 @@ namespace HerkesYazarOlsun.Controllers
                     mevcutKayit.RememberLogin = vmLogni.RememberLogin;
                     mevcutKayit.LoginUserId = vmLogni.LoginUserId;
                     mevcutKayit.email = vmLogni.email;
-                    accLoginDal.Update(mevcutKayit, YETKILITCNO);
+                    _accountLoginService.Guncelle(mevcutKayit, YETKILITCNO);
                 }
 
                 result.State = MessageResultState.SUCCESS;
@@ -327,7 +325,7 @@ namespace HerkesYazarOlsun.Controllers
         {
             ServiceResult<WriterStars> result = new ServiceResult<WriterStars>(state: MessageResultState.SUCCESS);
 
-            IWriterStarsDal starsDal = InstanceFactory.GetInstance<IWriterStarsDal>().Service;
+             
             var sonuc = _writerStarsValidator.Validate(star);
 
             if (!sonuc!.IsValid)
@@ -345,15 +343,15 @@ namespace HerkesYazarOlsun.Controllers
             try
             {
 
-                var mevcutKayit = starsDal.Get(p => p.LoginUserId == star.LoginUserId && p.YazarId == star.YazarId);
+                var mevcutKayit = writerStarsService.Get( star.LoginUserId ?? 0 ,star.YazarId ?? 0);
                 if (mevcutKayit == null)
                 {
-                    star = starsDal.Add(star);
+                    star = writerStarsService.Ekle(star,MAIL);
                 }
                 else
                 {
                     mevcutKayit!.StarPuani = star.StarPuani;
-                    starsDal.Update(mevcutKayit);
+                    writerStarsService.Guncelle(mevcutKayit,YETKILITCNO);
                 }
 
 

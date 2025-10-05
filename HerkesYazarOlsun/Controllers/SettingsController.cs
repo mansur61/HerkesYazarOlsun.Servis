@@ -1,9 +1,7 @@
 using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
-using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -17,21 +15,29 @@ namespace HerkesYazarOlsun.Controllers
     public class SettingsController : BaseApiController
     {
 
-        private IAyarlarDal ayrDal;
-        private IYayinAyarlariDal yayrDal;
+        private IAyarlarService ayrSrv;
+        private IUsersService usersSrv;
+        private IYayinAyarlariService yayrSrv;
+        private IUsersDetailsService UsersDetailsService;
+        private IBildirimlerService bildirimlerService;
+        private IProfilService profilSrv;
         private readonly ILogger<SettingsController> _logger;
         private IFtpService _ftpService;
         private AyarlarValidator _ayarlarValidator;
-        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IFtpService ftpService,
-            IUserAccessor userAccessor, IUnitOfWork unitOfWork,
-            IHttpContextAccessor configuration, ILogger<SettingsController> logger, AyarlarValidator ayarlarValidator)
+        public SettingsController(IAyarlarService ayrSrv, IYayinAyarlariService yayrSrv, IFtpService ftpService, IProfilService profilSrv,
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration, ILogger<SettingsController> logger,
+            AyarlarValidator ayarlarValidator, IUsersService usersSrv, IUsersDetailsService usersDetailsService, IBildirimlerService bildirimlerService)
             : base(userAccessor, unitOfWork, configuration)
         {
-            this.ayrDal = ayrDal;
-            yayrDal = _yayrDal;
+            this.ayrSrv = ayrSrv;
+            this.yayrSrv = yayrSrv;
             _logger = logger;
             _ftpService = ftpService;
             _ayarlarValidator = ayarlarValidator;
+            this.profilSrv = profilSrv;
+            this.usersSrv = usersSrv;
+            UsersDetailsService = usersDetailsService;
+            this.bildirimlerService = bildirimlerService;
         }
 
 
@@ -39,7 +45,7 @@ namespace HerkesYazarOlsun.Controllers
         [Route("GetAyarlarByLoginId")]
         public Ayarlar? GetProfilByLoginId(long loginId)
         {
-            var sonuc = ayrDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
+            var sonuc = ayrSrv.GetProfilByLoginId(loginId);
             return sonuc;
         }
 
@@ -47,7 +53,7 @@ namespace HerkesYazarOlsun.Controllers
         [Route("GetYyainAyarlari")]
         public YayinAyarlari? GetYayinAyarlari()
         {
-            var sonuc = yayrDal.GetList().SingleOrDefault();
+            var sonuc = yayrSrv.GetYayinAyarlari();
             return sonuc;
         }
         private async Task<VM_AYARLAR> ModelIlgiliDosyalariDoldur(VM_AYARLAR input)
@@ -90,13 +96,7 @@ namespace HerkesYazarOlsun.Controllers
             {
                 ayarlar = await ModelIlgiliDosyalariDoldur(ayarlar);
             }
-
-
-            IAyarlarDal ayarDal = InstanceFactory.GetInstance<IAyarlarDal>().Service;
-            IBildirimlerDal bildrmlerDal = InstanceFactory.GetInstance<IBildirimlerDal>().Service;
-            IUsersDetailsDal usrDtlsDal = InstanceFactory.GetInstance<IUsersDetailsDal>().Service;
-            IProfilDal prfDal = InstanceFactory.GetInstance<IProfilDal>().Service;
-            IUsersDal usrDal = InstanceFactory.GetInstance<IUsersDal>().Service;
+             
              
             var sonuc = _ayarlarValidator.Validate(ayarlar);
 
@@ -114,65 +114,65 @@ namespace HerkesYazarOlsun.Controllers
             {
 
                 //user 
-                var usrKayit = usrDal.Get(ayarlar.LoginUserId);
+                var usrKayit = usersSrv.Get(ayarlar.LoginUserId);
                 if (usrKayit == null)
                 {
-                    usrKayit = usrDal.Ekle(ayarlar.User, MAIL);
+                    usrKayit = usersSrv.Ekle(ayarlar.User, MAIL);
 
                 }
                 else
                 {
-                    usrDal.Update(usrKayit, YETKILITCNO);
+                    usersSrv.Guncelle(usrKayit, YETKILITCNO);
                 }
 
                 //user details
-                var usrDetlsKayit = usrDtlsDal.GetAllQueryable(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
+                var usrDetlsKayit = UsersDetailsService.Get(ayarlar.LoginUserId);
                 if (usrDetlsKayit == null)
                 {
-                    usrDetlsKayit = usrDtlsDal.Ekle(ayarlar.UserDetail, MAIL);
+                    usrDetlsKayit = UsersDetailsService.Ekle(ayarlar.UserDetail, MAIL);
                 }
                 else
                 {
-                    usrDtlsDal.Update(usrDetlsKayit, YETKILITCNO);
+                    UsersDetailsService.Guncelle(usrDetlsKayit, YETKILITCNO);
                 }
                 //profil
-                var prflKayit = prfDal.GetAllQueryable(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
+                var prflKayit = profilSrv.Get(ayarlar.LoginUserId);
                 if (prflKayit == null)
                 {
                     var profil = ObjectMapper.Map(ayarlar.Profile, new Profil());
-                    prflKayit = prfDal.Ekle(profil, MAIL);
+                    prflKayit = profilSrv.Ekle(profil, MAIL);
 
                 }
                 else
                 {
                     prflKayit.ProfilResimBase64 = ayarlar.Profile.ProfilResimBase64;
                     prflKayit.ProfilResimURl = ayarlar.Profile.ProfilResimURl;
-                    prfDal.Update(prflKayit, YETKILITCNO);
+                    profilSrv.Guncelle(prflKayit, YETKILITCNO);
                 }
 
                 //bildirimler
-                var bldrmlrKayit = bildrmlerDal.GetAllQueryable(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
+                var bldrmlrKayit = bildirimlerService.Get(ayarlar.LoginUserId);
                 if (bldrmlrKayit == null)
                 {
-                    bldrmlrKayit = bildrmlerDal.Ekle(ayarlar.Bildirim, MAIL);
+                    bldrmlrKayit = bildirimlerService.Ekle(ayarlar.Bildirim, MAIL);
 
                 }
                 else
                 {
-                    bildrmlerDal.Update(bldrmlrKayit, YETKILITCNO);
+                    bildirimlerService.Guncelle(bldrmlrKayit, YETKILITCNO);
                 }
 
-                var ayrKayit = ayarDal.GetAllQueryable(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
+                var ayrKayit = ayrSrv.GetAyar(ayarlar.LoginUserId);
                 if (ayrKayit == null)
                 {
-                    ayrKayit = ayarDal.Ekle(new Ayarlar()
+                    ayrKayit = ayrSrv.Ekle(new Ayarlar()
                     { UserDetailID = usrDetlsKayit.ID, ProfileID = prflKayit.ID, BildirimID = bldrmlrKayit.ID, LoginUserId = ayarlar.LoginUserId }, MAIL);
 
                 }
                 else
                 {
                     ayrKayit.isDegisiklik = 1;
-                    ayarDal.Update(ayrKayit, YETKILITCNO);
+                    ayrSrv.Guncelle(ayrKayit, YETKILITCNO);
                 }
 
                 result.Result = ayrKayit;
