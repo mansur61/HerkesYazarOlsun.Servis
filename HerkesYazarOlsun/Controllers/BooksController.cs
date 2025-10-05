@@ -51,13 +51,15 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetBooks")]
-        public Books GetBooks(long id)
+        public VM_BOOKS GetBooks(long id)
         {
-
             var getBook = booksService.GetBooks(id);
-            //var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
-            //vmBook.iSTATISTIK = GetISTATISTIKLERBooksById(id);
-            return getBook;
+            var vmGetBook = ObjectMapper.Map(getBook, new VM_BOOKS());
+            
+            vmGetBook.Stars = booksService.CalculateMaxStar(getBook);
+            vmGetBook.iSTATISTIK = booksService.CalculateBookIstatistic(getBook); 
+
+            return vmGetBook;
         }
 
         [HttpGet]

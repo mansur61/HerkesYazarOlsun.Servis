@@ -7,6 +7,8 @@
         public List<VM_BOOKS> vmBookList { get; set; }
         public int kalan { get; set; }
         public int sliderdaGosterilecekKayit { get; set; }
+        public string? kitapSliderYometimAdi { get; set; }
+        public VM_PAGINATION_BUTTON? vM_PAGINATION_BUTTONS { get; set; }
         public int Start { get; set; }
         public int End { get; set; }
         public string PageWrite { get; set; }

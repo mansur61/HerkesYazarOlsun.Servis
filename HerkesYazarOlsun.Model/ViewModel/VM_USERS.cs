@@ -41,6 +41,8 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string? TELNO { get; set; } 
         public VM_Stars? Stars { get; set; }
         public List<VM_WriterFollow>?  WriterFollowList { get; set; }
+        public VM_WriterFollow? VM_WriterFollow { get; set; }
+        public VM_WriterStars? VM_WriterStars { get; set; }
         public List<VM_WriterStars>? WriterStarsList { get; set; }        
         public string? PASSWORD { get; set; }
         public int isEmail { get; set; } 

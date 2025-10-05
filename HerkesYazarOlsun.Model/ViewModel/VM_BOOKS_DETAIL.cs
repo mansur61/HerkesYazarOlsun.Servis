@@ -6,7 +6,9 @@ namespace HerkesYazarOlsun.Model.ViewModel
     {
         public int? sliderdaGosterilecekKayit { get; set; }
         public int? kalan { get; set; }
-        public int? bolum { get; set; }        
+        public int? bolum { get; set; }
+        public string? kitap_id { get; set; }
+        public string? FDileName { get; set; }        
         public bool IsWowBookEdit { get; set; } = false;
         public string? profilKitapTuru { get; set; }
         public int? IlgiiSayfaSayisi { get; set; }
@@ -24,6 +26,8 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string? AktarilanDosya { get; set; } 
         public List<IFormFile>? dosyalar { get; set; }
         public List<VM_BOOKS>? VMBooksList { get; set; }
-        public VM_BOOKS? BookModel { get; set; } 
+        public VM_BOOKS? BookModel { get; set; }
+        public VM_BOOKS_PAGES? BookPagesModel { get; set; }        
+        public List<VM_CATEGORI>? Katergoriler { get; set; }
     }
 }

@@ -27,19 +27,23 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public Users? Get(long LoginUserId)
         {
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.ID == LoginUserId).FirstOrDefault();
+            var sonuc = _kisilerDal.GetAllQueryable(p => p.ID == LoginUserId).Include(b => b.Profil)
+                .Include(b => b.WriterStarsLoginList)
+                .Include(b => b.WriterFollowLoginList).FirstOrDefault();
             return sonuc;
         }
 
         public Users? GetMail(string mail)
         {
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.EMAIL == mail).SingleOrDefault();
+            var sonuc = _kisilerDal.GetAllQueryable(p => p.EMAIL == mail).Include(b => b.Profil)
+                .Include(b => b.WriterStarsLoginList)
+                .Include(b => b.WriterFollowLoginList).SingleOrDefault();
             return sonuc;
         }
 
         public Users? GetUserrName(string username)
         {
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.SURNAME == username).SingleOrDefault();
+            var sonuc = _kisilerDal.GetAllQueryable(p => p.SURNAME == username).Include(b => b.Profil).Include(b => b.WriterStarsLoginList).Include(b => b.WriterFollowLoginList).SingleOrDefault();
             return sonuc;
         }
         public List<Users> GetKullanicilar()
@@ -49,9 +53,9 @@ namespace HerkesYazarOlsun.BLL.Concrete
             //return users;
             var list = _kisilerDal
                 .GetAllQueryable()
-                .Include(b => b.Profil) 
+                .Include(b => b.Profil)
                 .Include(b => b.WriterStarsLoginList)
-                .Include(b => b.WriterFollowLoginList)                 
+                .Include(b => b.WriterFollowLoginList)
                 .ToList();
 
             return list;

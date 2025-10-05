@@ -35,7 +35,17 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public Books? GetBooks(long id)
         {
-            return _booksDal.GetAllQueryable(p => p.ID == id).FirstOrDefault();
+            return _booksDal.GetAllQueryable(p => p.ID == id).
+                Include(b => b.User)
+                    .ThenInclude(c => c.Profil)
+                .Include(b => b.Categories)
+                .Include(b => b.BookYayinAyari)
+                .Include(b => b.BooksPageList)
+                .Include(b => b.BooksComments)
+                .Include(b => b.BooksStars)
+                .Include(b => b.FavoriBooks)
+                .Include(b => b.BooksDegerlendirme)
+                . FirstOrDefault();
         }
 
         public VM_Stars CalculateMaxStar(Books book)

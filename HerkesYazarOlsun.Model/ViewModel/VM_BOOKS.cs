@@ -31,5 +31,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public List<VM_BOOK_STAR>? BooksStars { get; set; }
         public int? FavoriBookId { get; set; }
         public List<VM_FAVORI_BOOK>? FavoriBooks { get; set; }
+
+        public DateTime? CREATE_AT { get; set; }
     }
 }
