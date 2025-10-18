@@ -2,7 +2,7 @@ using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HerkesYazarOlsun.Controllers
+namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

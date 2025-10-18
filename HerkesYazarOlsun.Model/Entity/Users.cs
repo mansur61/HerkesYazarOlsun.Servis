@@ -20,7 +20,8 @@ namespace HerkesYazarOlsun.Model.Entity
         public int isTelno { get; set; }
         public string? PASSWORD { get; set; }
 
-        public int? isSozlesmeOnay { get; set; } 
+        public int? isSozlesmeOnay { get; set; }
+         
         public Profil? Profil { get; set; }
         public ICollection<WriterFollow> WriterFollowLoginList { get; set; } // takip edenler
         public ICollection<WriterFollow> WriterFollowYazarList { get; set; } // takip edilenler

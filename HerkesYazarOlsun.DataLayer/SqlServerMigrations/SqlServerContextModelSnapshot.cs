@@ -204,7 +204,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("BookStarId")
+                    b.Property<int?>("BooksStarsId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CREATE_AT")
@@ -213,7 +213,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<int?>("CategoriId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FavoriBookId")
+                    b.Property<int?>("FavoriBooksId")
                         .HasColumnType("int");
 
                     b.Property<long?>("IS_DELETED")
@@ -268,8 +268,6 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.HasKey("ID");
 
                     b.HasIndex("CategoriId");
-
-                    b.HasIndex("YayinAyarId");
 
                     b.HasIndex("YazarId");
 
@@ -384,10 +382,10 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
-                    b.Property<long?>("BooksID")
+                    b.Property<long>("BookId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("BooksId")
+                    b.Property<long?>("BooksID")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
@@ -428,9 +426,9 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("BooksID");
+                    b.HasIndex("BookId");
 
-                    b.HasIndex("BooksId");
+                    b.HasIndex("BooksID");
 
                     b.ToTable("BooksPages");
                 });
@@ -537,10 +535,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
-                    b.Property<long?>("BOOKS_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("BooksID")
+                    b.Property<long?>("BookId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
@@ -561,23 +556,20 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("USER_ID")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("UsersID")
+                    b.Property<long?>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("BooksID");
+                    b.HasIndex("BookId");
 
-                    b.HasIndex("UsersID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("FavoriBooks");
                 });
@@ -855,9 +847,6 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("LoginUserId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime?>("MODIFIED_AT")
                         .HasColumnType("datetime2");
 
@@ -891,11 +880,14 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<string>("USER_MODIFIED_MAIL")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("ID");
 
-                    b.HasIndex("LoginUserId")
+                    b.HasIndex("UserId")
                         .IsUnique()
-                        .HasFilter("[LoginUserId] IS NOT NULL");
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Profil");
                 });
@@ -1003,58 +995,6 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.HasKey("ID");
 
                     b.ToTable("Talepler");
-                });
-
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Test", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
-
-                    b.Property<long>("BildirimID")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("IS_DELETED")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IS_MODIFIED")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("LoginUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("ProfileID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("USER_CREATED_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("USER_MODIFIED_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UserDetailID")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("isDegisiklik")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Test");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>
@@ -1182,6 +1122,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("LoginUserId");
+
                     b.ToTable("UsersDetails");
                 });
 
@@ -1245,10 +1187,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int?>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("BooksID")
+                    b.Property<long?>("BookId")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("ToplamBegeni")
@@ -1265,102 +1204,106 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("BooksID");
+                    b.HasIndex("BookId")
+                        .IsUnique()
+                        .HasFilter("[BookId] IS NOT NULL");
 
                     b.ToTable("YayinAyarlari");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Books", b =>
                 {
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Category", "Categories")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Category", "Categori")
                         .WithMany()
                         .HasForeignKey("CategoriId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.YayinAyarlari", "BookYayinAyari")
-                        .WithMany()
-                        .HasForeignKey("YayinAyarId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "User")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "Yazar")
                         .WithMany()
                         .HasForeignKey("YazarId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("BookYayinAyari");
+                    b.Navigation("Categori");
 
-                    b.Navigation("Categories");
-
-                    b.Navigation("User");
+                    b.Navigation("Yazar");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksComment", b =>
                 {
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Books")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
                         .WithMany("BooksComments")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Books");
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksDegerlendirme", b =>
                 {
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Books")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
                         .WithMany("BooksDegerlendirme")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Books");
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksPages", b =>
                 {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("HerkesYazarOlsun.Model.Entity.Books", null)
                         .WithMany("BooksPageList")
                         .HasForeignKey("BooksID");
-
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
-                        .WithMany()
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
 
                     b.Navigation("Book");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksStars", b =>
                 {
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Books")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
                         .WithMany("BooksStars")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Books");
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriBooks", b =>
                 {
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Books")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
                         .WithMany("FavoriBooks")
-                        .HasForeignKey("BooksID");
+                        .HasForeignKey("BookId");
 
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "Users")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "User")
                         .WithMany()
-                        .HasForeignKey("UsersID");
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("Books");
+                    b.Navigation("Book");
 
-                    b.Navigation("Users");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Profil", b =>
                 {
                     b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "User")
                         .WithOne("Profil")
-                        .HasForeignKey("HerkesYazarOlsun.Model.Entity.Profil", "LoginUserId");
+                        .HasForeignKey("HerkesYazarOlsun.Model.Entity.Profil", "UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.UsersDetails", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUser")
+                        .WithMany()
+                        .HasForeignKey("LoginUserId");
+
+                    b.Navigation("LoginUser");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.WriterFollow", b =>
@@ -1368,42 +1311,43 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUsers")
                         .WithMany("WriterFollowLoginList")
                         .HasForeignKey("LoginUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "YazarUsers")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "Yazar")
                         .WithMany("WriterFollowYazarList")
                         .HasForeignKey("YazarId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("LoginUsers");
 
-                    b.Navigation("YazarUsers");
+                    b.Navigation("Yazar");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.WriterStars", b =>
                 {
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUsers")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUser")
                         .WithMany("WriterStarsLoginList")
                         .HasForeignKey("LoginUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "YazarUsers")
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "Yazar")
                         .WithMany("WriterStarsYazarList")
                         .HasForeignKey("YazarId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("LoginUsers");
+                    b.Navigation("LoginUser");
 
-                    b.Navigation("YazarUsers");
+                    b.Navigation("Yazar");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.YayinAyarlari", b =>
                 {
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Books")
-                        .WithMany()
-                        .HasForeignKey("BooksID");
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
+                        .WithOne("YayinAyar")
+                        .HasForeignKey("HerkesYazarOlsun.Model.Entity.YayinAyarlari", "BookId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Books");
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Books", b =>
@@ -1417,6 +1361,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Navigation("BooksStars");
 
                     b.Navigation("FavoriBooks");
+
+                    b.Navigation("YayinAyar");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>

@@ -20,8 +20,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
     }
 
     public class HerkesYazaOlsunContext : BaseNpSqlDbContext
-    {
-        public virtual DbSet<Test> Test { get; set; }
+    { 
         public virtual DbSet<Favoriler> Favoriler { get; set; }
         public virtual DbSet<CarouselDuyuru> CarouselDuyuru { get; set; }
 

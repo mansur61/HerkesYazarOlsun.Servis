@@ -1,6 +1,4 @@
-﻿
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace HerkesYazarOlsun.Model.Entity
@@ -17,6 +15,7 @@ namespace HerkesYazarOlsun.Model.Entity
         public string? LinkedinLink { get; set; }
         public string? InstagramLink { get; set; }
         public long? LoginUserId { get; set; }
+        public Users? LoginUser { get; set; }
 
     }
 

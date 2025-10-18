@@ -8,6 +8,6 @@ public class UsersConfiguration : IEntityTypeConfiguration<Users>
     {
         builder.HasOne(u => u.Profil)
                .WithOne(p => p.User)
-               .HasForeignKey<Profil>(p => p.LoginUserId);
+               .HasForeignKey<Profil>(p => p.UserId);
     }
 }

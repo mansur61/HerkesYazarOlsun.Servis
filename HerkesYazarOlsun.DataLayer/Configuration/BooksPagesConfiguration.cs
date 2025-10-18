@@ -8,7 +8,7 @@ public class BooksPagesConfiguration : IEntityTypeConfiguration<BooksPages>
     {
         builder.HasOne(bp => bp.Book)
                .WithMany()
-               .HasForeignKey(bp => bp.BooksId)
+               .HasForeignKey(bp => bp.BookId)
                .OnDelete(DeleteBehavior.Restrict);
     }
 }

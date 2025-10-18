@@ -5,14 +5,16 @@ public class WriterStarsConfiguration : IEntityTypeConfiguration<WriterStars>
 {
     public void Configure(EntityTypeBuilder<WriterStars> builder)
     {
-        builder.HasOne(ws => ws.YazarUsers)
+        // Yazar (beğenilenler) ↔ WriterStarsYazarList
+        builder.HasOne(ws => ws.Yazar)
                .WithMany(u => u.WriterStarsYazarList)
                .HasForeignKey(ws => ws.YazarId)
-               .OnDelete(DeleteBehavior.Cascade);
+               .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne(ws => ws.LoginUsers)
+        // LoginUser (beğenenler) ↔ WriterStarsLoginList
+        builder.HasOne(ws => ws.LoginUser)
                .WithMany(u => u.WriterStarsLoginList)
                .HasForeignKey(ws => ws.LoginUserId)
-               .OnDelete(DeleteBehavior.Cascade);
+               .OnDelete(DeleteBehavior.NoAction);
     }
 }

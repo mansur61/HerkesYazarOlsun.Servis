@@ -9,6 +9,7 @@ using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,7 +94,15 @@ DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString
 DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
 
 
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();  
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;//Preserve
+        opt.JsonSerializerOptions.WriteIndented = true;
+    });
 
 var app = builder.Build();
 

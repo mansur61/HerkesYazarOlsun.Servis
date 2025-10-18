@@ -24,7 +24,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public List<BooksPages> GetPagesByBooks(long bookID)
         {
-            return _booksPagesDal.GetAllQueryable(p => p.BooksId == bookID).ToList();
+            return _booksPagesDal.GetAllQueryable(p => p.BookId == bookID).ToList();
 
         }
         public List<BooksPages> GetBooksPagesList()

@@ -24,10 +24,8 @@ namespace HerkesYazarOlsun.DataLayer.Context
         public SqlServerContext(DbContextOptions options) : base(options)
         {
         }
-
-
-        public virtual DbSet<Favoriler> Favoriler { get; set; }
-        public virtual DbSet<Test> Test { get; set; }
+         
+        public virtual DbSet<Favoriler> Favoriler { get; set; } 
         public virtual DbSet<CarouselDuyuru> CarouselDuyuru { get; set; }
 
         public virtual DbSet<BooksDegerlendirme> BooksDegerlendirme { get; set; }

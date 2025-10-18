@@ -25,7 +25,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
                     ProfilResimName = user.Profil.ProfilResimName,
                     ProfilResimURl = user.Profil.ProfilResimURl,
                     MimeType = user.Profil.MimeType,
-                    LoginUserId = user.Profil.LoginUserId
+                    LoginUserId = user.Profil.UserId
                 }
             };
             return vmUser;

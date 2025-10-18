@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 {
     [DbContext(typeof(SqlServerContext))]
-    [Migration("20250920152540_booksdcategoryrevize")]
-    partial class booksdcategoryrevize
+    [Migration("20251018204022_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -207,11 +207,17 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("BooksStarsId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("CategoriId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("CategoriId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FavoriBooksId")
+                        .HasColumnType("int");
 
                     b.Property<long?>("IS_DELETED")
                         .HasColumnType("bigint");
@@ -256,10 +262,17 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<bool>("YAYINDAMI")
                         .HasColumnType("bit");
 
-                    b.Property<long>("YazarId")
+                    b.Property<int?>("YayinAyarId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("YazarId")
                         .HasColumnType("bigint");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CategoriId");
+
+                    b.HasIndex("YazarId");
 
                     b.ToTable("Books");
                 });
@@ -276,7 +289,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("BookId")
+                    b.Property<long?>("BookId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
@@ -305,6 +318,9 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<string>("OLUSTURAN_EMAIL")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("StarPuani")
+                        .HasColumnType("int");
+
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
@@ -315,6 +331,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("BookId");
 
                     b.ToTable("BooksComment");
                 });
@@ -331,7 +349,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("BookId")
+                    b.Property<long?>("BookId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("EMAIL")
@@ -349,10 +367,12 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StarPuani")
+                    b.Property<int?>("StarPuani")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("BookId");
 
                     b.ToTable("BooksDegerlendirme");
                 });
@@ -365,7 +385,10 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
-                    b.Property<long>("BooksId")
+                    b.Property<long>("BookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("BooksID")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
@@ -406,6 +429,10 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("BooksID");
+
                     b.ToTable("BooksPages");
                 });
 
@@ -417,8 +444,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
-                    b.Property<int>("BookaId")
-                        .HasColumnType("int");
+                    b.Property<long?>("BookId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("LoginUserId")
                         .HasColumnType("int");
@@ -427,6 +454,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("BookId");
 
                     b.ToTable("BooksStars");
                 });
@@ -486,14 +515,11 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Category", b =>
                 {
-                    b.Property<long>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
-
-                    b.Property<int?>("BooksId")
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -504,7 +530,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FAVORILER", b =>
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriBooks", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -512,7 +538,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
-                    b.Property<long>("BOOKS_ID")
+                    b.Property<long?>("BookId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CREATE_AT")
@@ -533,21 +559,25 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<long?>("USER_CREATED_ID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("USER_ID")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("USER_MODIFIED_ID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("USER_MODIFIED_MAIL")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("ID");
 
-                    b.ToTable("FAVORILER");
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavoriBooks");
                 });
 
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FAVORI_YAZARLAR", b =>
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriYazarlar", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -587,10 +617,10 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("FAVORI_YAZARLAR");
+                    b.ToTable("FavoriYazarlar");
                 });
 
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriBooks", b =>
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Favoriler", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -630,7 +660,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("FavoriBooks");
+                    b.ToTable("Favoriler");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Kartlar", b =>
@@ -820,9 +850,6 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<long?>("IS_MODIFIED")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("LoginUserId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime?>("MODIFIED_AT")
                         .HasColumnType("datetime2");
 
@@ -856,7 +883,14 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<string>("USER_MODIFIED_MAIL")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Profil");
                 });
@@ -910,7 +944,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.ToTable("Sponsorlar");
                 });
 
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.TALEPLER", b =>
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Talepler", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -963,59 +997,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("TALEPLER");
-                });
-
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Test", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
-
-                    b.Property<long>("BildirimID")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("CREATE_AT")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("IS_DELETED")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IS_MODIFIED")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("LoginUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("MODIFIED_AT")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OLUSTURAN_EMAIL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("ProfileID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("USER_CREATED_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("USER_MODIFIED_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("USER_MODIFIED_MAIL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UserDetailID")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("isDegisiklik")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Test");
+                    b.ToTable("Talepler");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>
@@ -1143,6 +1125,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("LoginUserId");
+
                     b.ToTable("UsersDetails");
                 });
 
@@ -1154,16 +1138,20 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
-                    b.Property<int>("LoginUserId")
-                        .HasColumnType("int");
+                    b.Property<long?>("LoginUserId")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("YazarId")
-                        .HasColumnType("int");
+                    b.Property<long?>("YazarId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("isFollow")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("LoginUserId");
+
+                    b.HasIndex("YazarId");
 
                     b.ToTable("WriterFollow");
                 });
@@ -1176,27 +1164,34 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
-                    b.Property<int>("LoginUserId")
-                        .HasColumnType("int");
+                    b.Property<long?>("LoginUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("StarPuani")
                         .HasColumnType("int");
 
-                    b.Property<int>("YazarId")
-                        .HasColumnType("int");
+                    b.Property<long?>("YazarId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("LoginUserId");
+
+                    b.HasIndex("YazarId");
 
                     b.ToTable("WriterStars");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.YayinAyarlari", b =>
                 {
-                    b.Property<long>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<long?>("BookId")
+                        .HasColumnType("bigint");
 
                     b.Property<int?>("ToplamBegeni")
                         .HasColumnType("int");
@@ -1212,7 +1207,178 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("BookId")
+                        .IsUnique()
+                        .HasFilter("[BookId] IS NOT NULL");
+
                     b.ToTable("YayinAyarlari");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Books", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Category", "Categori")
+                        .WithMany()
+                        .HasForeignKey("CategoriId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "Yazar")
+                        .WithMany()
+                        .HasForeignKey("YazarId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Categori");
+
+                    b.Navigation("Yazar");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksComment", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
+                        .WithMany("BooksComments")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksDegerlendirme", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
+                        .WithMany("BooksDegerlendirme")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksPages", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", null)
+                        .WithMany("BooksPageList")
+                        .HasForeignKey("BooksID");
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksStars", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
+                        .WithMany("BooksStars")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriBooks", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
+                        .WithMany("FavoriBooks")
+                        .HasForeignKey("BookId");
+
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Profil", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "User")
+                        .WithOne("Profil")
+                        .HasForeignKey("HerkesYazarOlsun.Model.Entity.Profil", "UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.UsersDetails", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUser")
+                        .WithMany()
+                        .HasForeignKey("LoginUserId");
+
+                    b.Navigation("LoginUser");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.WriterFollow", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUsers")
+                        .WithMany("WriterFollowLoginList")
+                        .HasForeignKey("LoginUserId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "Yazar")
+                        .WithMany("WriterFollowYazarList")
+                        .HasForeignKey("YazarId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("LoginUsers");
+
+                    b.Navigation("Yazar");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.WriterStars", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUser")
+                        .WithMany("WriterStarsLoginList")
+                        .HasForeignKey("LoginUserId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "Yazar")
+                        .WithMany("WriterStarsYazarList")
+                        .HasForeignKey("YazarId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("LoginUser");
+
+                    b.Navigation("Yazar");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.YayinAyarlari", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
+                        .WithOne("YayinAyar")
+                        .HasForeignKey("HerkesYazarOlsun.Model.Entity.YayinAyarlari", "BookId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Books", b =>
+                {
+                    b.Navigation("BooksComments");
+
+                    b.Navigation("BooksDegerlendirme");
+
+                    b.Navigation("BooksPageList");
+
+                    b.Navigation("BooksStars");
+
+                    b.Navigation("FavoriBooks");
+
+                    b.Navigation("YayinAyar");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>
+                {
+                    b.Navigation("Profil");
+
+                    b.Navigation("WriterFollowLoginList");
+
+                    b.Navigation("WriterFollowYazarList");
+
+                    b.Navigation("WriterStarsLoginList");
+
+                    b.Navigation("WriterStarsYazarList");
                 });
 #pragma warning restore 612, 618
         }

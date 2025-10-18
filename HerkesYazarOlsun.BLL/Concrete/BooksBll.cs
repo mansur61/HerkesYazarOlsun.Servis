@@ -36,10 +36,10 @@ namespace HerkesYazarOlsun.BLL.Concrete
         public Books? GetBooks(long id)
         {
             return _booksDal.GetAllQueryable(p => p.ID == id).
-                Include(b => b.User)
+                Include(b => b.Yazar)
                     .ThenInclude(c => c.Profil)
-                .Include(b => b.Categories)
-                .Include(b => b.BookYayinAyari)
+                .Include(b => b.Categori)
+                .Include(b => b.YayinAyar)
                 .Include(b => b.BooksPageList)
                 .Include(b => b.BooksComments)
                 .Include(b => b.BooksStars)
@@ -84,7 +84,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
             .Count() ?? 0,
 
                 ToplamBegeni = bookEntity.FavoriBooks?
-            .GroupBy(f => f.USER_ID)
+            .GroupBy(f => f.UserId)
             .Count() ?? 0,
 
                 ToplamYorum = bookEntity.BooksComments?
@@ -103,10 +103,10 @@ namespace HerkesYazarOlsun.BLL.Concrete
         {
             var list = _booksDal
                 .GetAllQueryable()
-                .Include(b => b.User)
+                .Include(b => b.Yazar)
                     .ThenInclude(c => c.Profil)
-                .Include(b => b.Categories)
-                .Include(b => b.BookYayinAyari)
+                .Include(b => b.Categori)
+                .Include(b => b.YayinAyar)
                 .Include(b => b.BooksPageList)
                 .Include(b => b.BooksComments)
                 .Include(b => b.BooksStars)

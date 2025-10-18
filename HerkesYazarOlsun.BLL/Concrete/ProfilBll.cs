@@ -16,7 +16,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public VM_PROFILE? GetProfilByLoginId(long loginId)
         {
-            var sonuc = _prflDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
+            var sonuc = _prflDal.GetAllQueryable(p => p.UserId == loginId).SingleOrDefault();
             var vmProfil = ObjectMapper.Map(sonuc, new VM_PROFILE());
             return vmProfil;
         }
@@ -32,7 +32,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public Profil? Get(long LoginUserId)
         {
-            var sonuc = _prflDal.GetAllQueryable(p => p.LoginUserId == LoginUserId).FirstOrDefault();
+            var sonuc = _prflDal.GetAllQueryable(p => p.UserId == LoginUserId).FirstOrDefault();
             return sonuc;
         }
 

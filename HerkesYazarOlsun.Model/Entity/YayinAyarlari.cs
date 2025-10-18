@@ -12,7 +12,7 @@ namespace HerkesYazarOlsun.Model.Entity
         public int? ToplamBegeni { get; set; }
         public int? ToplamYorum { get; set; }
         public int? ToplamDegerlendirme { get; set; }
-        public int? BookId { get; set; }
-        public Books? Books { get; set; }
+        public long? BookId { get; set; }
+        public Books? Book  { get; set; }
     }
 }
