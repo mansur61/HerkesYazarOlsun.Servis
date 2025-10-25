@@ -19,7 +19,7 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
             get
             {
                 if (ctx == null)
-                    ctx = new HerkesYazaOlsunContext();  
+                    ctx = new PostgreSqlContext();  
                 return ctx;
             }
         }

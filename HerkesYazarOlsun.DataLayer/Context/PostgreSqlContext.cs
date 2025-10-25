@@ -7,19 +7,19 @@ using System.Dynamic;
 
 namespace HerkesYazarOlsun.DataLayer.Context
 {
-    public class HerkesYazaOlsunContextFactory : IDesignTimeDbContextFactory<HerkesYazaOlsunContext>
+    public class HerkesYazaOlsunContextFactory : IDesignTimeDbContextFactory<PostgreSqlContext>
     {
-        public HerkesYazaOlsunContext CreateDbContext(string[] args)
+        public PostgreSqlContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<HerkesYazaOlsunContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<PostgreSqlContext>();
             string baglanti = ConnectionConncet.GetPostgreSqlConnect();
             optionsBuilder.UseNpgsql(baglanti);
 
-            return new HerkesYazaOlsunContext();
+            return new PostgreSqlContext();
         }
     }
 
-    public class HerkesYazaOlsunContext : BaseNpSqlDbContext
+    public class PostgreSqlContext : BaseNpSqlDbContext
     { 
         public virtual DbSet<Favoriler> Favoriler { get; set; }
         public virtual DbSet<CarouselDuyuru> CarouselDuyuru { get; set; }

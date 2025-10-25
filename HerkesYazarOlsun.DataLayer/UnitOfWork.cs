@@ -27,11 +27,11 @@ namespace HerkesYazarOlsun.DataLayer
             }
             else if (dbType == "Postgre")
             {
-                var options = new DbContextOptionsBuilder<HerkesYazaOlsunContext>()
+                var options = new DbContextOptionsBuilder<PostgreSqlContext>()
                     .UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"))
                     .Options;
 
-                _dbContext = new HerkesYazaOlsunContext();
+                _dbContext = new PostgreSqlContext();
             }
             else
             {
@@ -49,9 +49,9 @@ namespace HerkesYazarOlsun.DataLayer
             {
                 repo = new RepositorySql<T>((SqlServerContext)_dbContext);
             }
-            else if (_dbContext is HerkesYazaOlsunContext)
+            else if (_dbContext is PostgreSqlContext)
             {
-                repo = new RepositoryNpgsql<T>((HerkesYazaOlsunContext)_dbContext);
+                repo = new RepositoryNpgsql<T>((PostgreSqlContext)_dbContext);
             }
             else
             {

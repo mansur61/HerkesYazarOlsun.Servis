@@ -41,9 +41,9 @@ if (dbType == "Sql")
 }
 else
 {
-    builder.Services.AddDbContext<HerkesYazaOlsunContext>((serviceProvider, options) =>
+    builder.Services.AddDbContext<PostgreSqlContext>((serviceProvider, options) =>
     {
-        options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"));
+        options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunPostgreDb"));
     });
 
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -54,7 +54,7 @@ builder.Services.AddScoped(typeof(SqlRepo<>));
 builder.Services.AddScoped(typeof(BaseSqlDbContext), typeof(SqlServerContext));
 
 builder.Services.AddScoped(typeof(NpgsqlRepo<>));
-builder.Services.AddScoped(typeof(BaseNpSqlDbContext), typeof(HerkesYazaOlsunContext));
+builder.Services.AddScoped(typeof(BaseNpSqlDbContext), typeof(PostgreSqlContext));
 
 builder.Services.AddScoped(typeof(EfSqlEntityRepositoryBase<>));
 builder.Services.AddScoped(typeof(EfNpSqlEntityRepositoryBase<>));

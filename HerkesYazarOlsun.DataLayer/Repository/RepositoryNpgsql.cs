@@ -9,7 +9,7 @@ namespace HerkesYazarOlsun.DataLayer.Repository
 {
     public class RepositoryNpgsql<T> : RepositoryBase<T> where T : BaseEntity
     {
-        public RepositoryNpgsql(HerkesYazaOlsunContext context) : base(context) { }
+        public RepositoryNpgsql(PostgreSqlContext context) : base(context) { }
 
         public override long GetSequneceNextVal(string sequneceName)
         {

@@ -10,9 +10,7 @@ namespace HerkesYazarOlsun.DataLayer
            .Build();
 
             string baglanti = config.GetConnectionString("HerkesYazarOlsunSQLDb");
-
-            //"Server=localhost\\SQLEXPRESS;Database=HERKESYAZAROLSUN_TEST;User Id=sa;Password=1234;TrustServerCertificate=True;";
-            //"Server=localhost\\SQLEXPRESS;Database=HERKESYAZAROLSUN;User Id=sa;Password=1234;TrustServerCertificate=True;"
+             
 
             return baglanti;
         }
@@ -24,7 +22,7 @@ namespace HerkesYazarOlsun.DataLayer
            .AddJsonFile("appsettings.json")
            .Build();
 
-            string baglanti = config.GetConnectionString("HerkesYazarOlsunDb"); 
+            string baglanti = config.GetConnectionString("HerkesYazarOlsunPostgreDb"); 
 
             return baglanti;
         }
