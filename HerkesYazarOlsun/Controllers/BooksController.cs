@@ -323,25 +323,14 @@ namespace HerkesYazarOlsun.Servis.Controllers
             ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
             VM_BOOKS_DETAIL VMbook = new VM_BOOKS_DETAIL();
 
-            //VMbook = VMbookDetay;
-            //ObjectMapper.Map(VMbookDetay, VMbook);
-
             var files = VMbookDetay.dosyalar;
             if (files?.Count != 0 && files != null)
             {
                 VMbookDetay.BookModel = await ModelIlgiliDosyalariDoldur(VMbookDetay.BookModel, files);
             }
+            VMbook = VMbookDetay;
+            // ObjectMapper.Map(VMbookDetay, VMbook);
 
-            ObjectMapper.Map(VMbookDetay, VMbook);
-
-            //VMbook.BookModel = VMbook.BookModel;
-            //VMbook.BookModel.ARKAKAPAKFOTOPATH = VMbook.ARKAKAPAKFOTOPATH;
-            //VMbook.BookModel.ONKAPAKFOTOPATH = VMbook.ONKAPAKFOTOPATH;
-
-            //VMbook.BookModel.ARKAKAPAKFOTO = VMbook.ARKAKAPAKFOTO;
-            //VMbook.BookModel.ONKAPAKFOTO = VMbook.ONKAPAKFOTO;
-            //VMbook.YazarId = VMbook.BookModel.YazarId;
-             
             var sonuc = _booksAddValidator.Validate(VMbook.BookModel);
 
             if (!sonuc!.IsValid)
@@ -355,8 +344,8 @@ namespace HerkesYazarOlsun.Servis.Controllers
             }
 
             var book =   ObjectMapper.Map(VMbook.BookModel, new Books());
-            //var getBook = booksService.PostSaveBook(book);
-            //result.Result = getBook;
+            var getBook = booksService.PostSaveBook(book);
+            result.Result = getBook;
 
             return result;
         }

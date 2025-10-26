@@ -96,7 +96,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
 
         public void Sil(int id, string mail)
         {
-            var entity = _dbSet.Find(id);
+            var entity = _dbSet.Find((long)id);
             if (entity == null || entity.IS_DELETED == 1)
                 throw new Exception("Entity not found or already deleted.");
 

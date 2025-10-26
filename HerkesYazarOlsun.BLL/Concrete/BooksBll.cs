@@ -51,7 +51,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
         public VM_Stars CalculateMaxStar(Books book)
         {
             var vM_BooksStars = new VM_Stars();
-            if (book.BooksStars == null || !book.BooksStars.Any())
+            if (book == null || book.BooksStars == null || !book.BooksStars.Any())
                 return vM_BooksStars;
 
             var groups = book.BooksStars
@@ -77,6 +77,10 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public VM_BOOK_ISTATISTIKLER CalculateBookIstatistic(Books bookEntity)
         {
+            if(bookEntity == null)
+            {
+                return new VM_BOOK_ISTATISTIKLER();
+            }
             var istatistik = new VM_BOOK_ISTATISTIKLER
             {
                 ToplamYildiz = bookEntity.BooksStars?

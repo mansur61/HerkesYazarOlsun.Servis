@@ -15,6 +15,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string? kitapSliderYometimAdi { get; set; }
         public bool? isWordPDF { get; set; }
         public bool? isAnaSayfa { get; set; }
+        public bool? isYazmayaDevamEt { get; set; }
         public int? pdfVeyaWord { get; set; }
         public bool? isPdfVeyaWordTamalama { get; set; }
         public bool? isTamalama { get; set; }
