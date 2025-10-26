@@ -4,6 +4,7 @@ using HerkesYazarOlsun.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 {
     [DbContext(typeof(SqlServerContext))]
-    partial class SqlServerContextModelSnapshot : ModelSnapshot
+    [Migration("20251026170127_cateyayinayartableadded")]
+    partial class cateyayinayartableadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -552,9 +555,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CategoryId")
-                        .IsUnique()
-                        .HasFilter("[CategoryId] IS NOT NULL");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("CategoryYayinAyarlari");
                 });
@@ -1308,8 +1309,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.CategoryYayinAyarlari", b =>
                 {
                     b.HasOne("HerkesYazarOlsun.Model.Entity.Category", "Category")
-                        .WithOne("CategoryYayinAyarlari")
-                        .HasForeignKey("HerkesYazarOlsun.Model.Entity.CategoryYayinAyarlari", "CategoryId");
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
@@ -1404,11 +1405,6 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Navigation("FavoriBooks");
 
                     b.Navigation("YayinAyar");
-                });
-
-            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Category", b =>
-                {
-                    b.Navigation("CategoryYayinAyarlari");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>

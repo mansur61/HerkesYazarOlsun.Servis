@@ -33,6 +33,8 @@ namespace HerkesYazarOlsun.DataLayer.Context
         public virtual DbSet<Talepler> Talepler { get; set; }
         public virtual DbSet<AccountLogin> AccountLogin { get; set; }
         public virtual DbSet<YayinAyarlari> YayinAyarlari { get; set; }
+        public virtual DbSet<CategoryYayinAyarlari> CategoryYayinAyarlari { get; set; }
+        
 
         public virtual DbSet<Bildirimler> Bildirimler { get; set; }
         public virtual DbSet<UsersDetails> UsersDetails { get; set; }
@@ -80,7 +82,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
             modelBuilder.ApplyConfiguration(new WriterStarsConfiguration());
             modelBuilder.ApplyConfiguration(new BooksConfiguration());
             modelBuilder.ApplyConfiguration(new BooksPagesConfiguration());
-
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
         }
 
         public override IList<T> SqlQueryDapper<T>(string sql, object[] parameters = null)

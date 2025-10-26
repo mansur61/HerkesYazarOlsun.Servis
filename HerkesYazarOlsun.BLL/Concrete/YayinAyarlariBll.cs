@@ -12,9 +12,15 @@ namespace HerkesYazarOlsun.BLL.Concrete
             this.yayrDal = yayrDal;
         }
 
-        public YayinAyarlari? GetYayinAyarlari()
+        public List<YayinAyarlari>? GetYayinAyarlari()
         {
-            var sonuc = yayrDal.GetList().SingleOrDefault();
+            var sonuc = yayrDal.GetList().ToList();
+            return sonuc;
+        }
+
+        public YayinAyarlari? GetYayinAyarlariByBookId(long id)
+        {
+            var sonuc = yayrDal.Get(p => p.BookId == id);
             return sonuc;
         }
 

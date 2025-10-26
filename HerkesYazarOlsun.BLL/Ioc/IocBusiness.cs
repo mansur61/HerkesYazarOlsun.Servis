@@ -43,7 +43,11 @@ namespace HerkesYazarOlsun.BLL.Ioc
             service.AddScoped<IBooksStarsService, BooksStarsBll>();
             service.AddScoped<IBooksDegerlendirmeService, BooksDegerlendirmeBll>();
             service.AddScoped<IBooksCommentService, BooksCommentBl>();
-        
+            service.AddScoped<ICategoryYayinAyarlariService, CategoryYayinAyarlariBll>();
+
+            
+
+
         }
 
         public static T GetService<T>(IServiceProvider serviceProvider)

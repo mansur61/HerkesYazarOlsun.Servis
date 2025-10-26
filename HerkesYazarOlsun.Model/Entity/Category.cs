@@ -6,6 +6,8 @@ namespace HerkesYazarOlsun.Model.Entity
     public class Category : IEntity
     {
         public int? ID { get; set; }
-        public string Name { get; set; } 
+        public string Name { get; set; }         
+        public CategoryYayinAyarlari? CategoryYayinAyarlari { get; set; }
+
     }
 }

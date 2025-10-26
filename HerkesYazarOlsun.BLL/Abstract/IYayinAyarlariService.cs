@@ -4,6 +4,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
 {
     public interface IYayinAyarlariService
     {
-        YayinAyarlari? GetYayinAyarlari();
+        List<YayinAyarlari>? GetYayinAyarlari();
+        YayinAyarlari? GetYayinAyarlariByBookId(long id);
     }
 }

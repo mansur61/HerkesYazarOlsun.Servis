@@ -16,7 +16,7 @@ namespace HerkesYazarOlsun.Model.Entity
          
         public long? YazarId { get; set; }
         public Users? Yazar { get; set; }
-
+       
         public bool YAYINDAMI { get; set; }
          
         public int? CategoriId { get; set; }

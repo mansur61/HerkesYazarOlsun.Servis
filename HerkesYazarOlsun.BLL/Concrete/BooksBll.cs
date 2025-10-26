@@ -35,9 +35,12 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public Books? GetBooks(long id)
         {
+            
             return _booksDal.GetAllQueryable(p => p.ID == id).
                 Include(b => b.Yazar)
                     .ThenInclude(c => c.Profil)
+                .Include(b => b.Categori)
+                    .ThenInclude(c => c.CategoryYayinAyarlari)
                 .Include(b => b.Categori)
                 .Include(b => b.YayinAyar)
                 .Include(b => b.BooksPageList)
@@ -110,6 +113,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
                 .Include(b => b.Yazar)
                     .ThenInclude(c => c.Profil)
                 .Include(b => b.Categori)
+                     .ThenInclude(c => c.CategoryYayinAyarlari)
                 .Include(b => b.YayinAyar)
                 .Include(b => b.BooksPageList)
                 .Include(b => b.BooksComments)

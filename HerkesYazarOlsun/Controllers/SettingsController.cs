@@ -51,11 +51,20 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetYyainAyarlari")]
-        public YayinAyarlari? GetYayinAyarlari()
+        public List<YayinAyarlari>? GetYayinAyarlari()
         {
             var sonuc = yayrSrv.GetYayinAyarlari();
             return sonuc;
         }
+
+        [HttpGet]
+        [Route("GetYayinAyarlariByBookId")]
+        public YayinAyarlari? GetYayinAyarlariByBookId(long id)
+        {
+            var sonuc = yayrSrv.GetYayinAyarlariByBookId(id);
+            return sonuc;
+        }
+
         private async Task<VM_AYARLAR> ModelIlgiliDosyalariDoldur(VM_AYARLAR input)
         {
             foreach (var item in input.dosyalar)

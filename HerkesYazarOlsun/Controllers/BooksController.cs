@@ -346,7 +346,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             var book =   ObjectMapper.Map(VMbook.BookModel, new Books());
             var getBook = booksService.PostSaveBook(book);
             result.Result = getBook;
-
+             
             return result;
         }
 
