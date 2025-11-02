@@ -5,6 +5,8 @@ namespace HerkesYazarOlsun.Model.ViewModel
     public class VM_BOOKS_DETAIL
     {
         public int? sliderdaGosterilecekKayit { get; set; }
+        public MemoryStream? DocMemoryStream { get; set; }
+        public MemoryStream? PdfMemoryStream { get; set; }
         public int? kalan { get; set; }
         public int? bolum { get; set; }
         public string? kitap_id { get; set; }
