@@ -15,8 +15,8 @@ namespace HerkesYazarOlsun.BLL.Abstract
         Books PostSaveBook(Books books);
 
         //FAVORILER PostFavoriSaveBook(FAVORILER fav);
-        FavoriBooks PostFavoriSaveBook(FavoriBooks fav); 
-
+        FavoriBooks PostFavoriSaveBook(FavoriBooks fav);
+        List<FavoriBooks> GetFavoriBooksByuserId(long? userId);
 
     }
 }

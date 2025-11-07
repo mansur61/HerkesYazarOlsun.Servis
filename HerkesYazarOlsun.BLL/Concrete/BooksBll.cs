@@ -133,8 +133,12 @@ namespace HerkesYazarOlsun.BLL.Concrete
         {
             return _favoriBookDal.Add(fav, 0);
         }
+        public List<FavoriBooks> GetFavoriBooksByuserId(long? userId)
+        {
+            return _favoriBookDal.GetAllQueryable(p => p.UserId == userId).ToList();
+        }
+        
 
-     
         public Books UpdateBook(Books book)
         {
             return _booksDal.Guncelle(book, _userAccessor.MAIL);

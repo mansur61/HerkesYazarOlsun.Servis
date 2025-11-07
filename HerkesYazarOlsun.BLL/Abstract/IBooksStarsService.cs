@@ -8,6 +8,8 @@ namespace HerkesYazarOlsun.BLL.Abstract
         BooksStars? Guncelle(BooksStars usr, long tck);
         BooksStars? Ekle(BooksStars usr, string? mail);
         BooksStars? Get(long LoginUserId, long YazarId);
+        List<BooksStars> GetBooksStarsByuserId(int userId);       
+
     }
 
 }

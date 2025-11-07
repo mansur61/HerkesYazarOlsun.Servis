@@ -190,6 +190,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 booksCommentDal.Add(booksDegerlendirme,YETKILITCNO);
               
                 result.State = MessageResultState.SUCCESS;
+                result.Message = "Yorum başarıyla yapıldı";
                 return result;
             }
             catch (Exception)
@@ -357,8 +358,24 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public ServiceResult<FavoriBooks> PostFavoriBookSave(FavoriBooks fav)
         {
             ServiceResult<FavoriBooks> result = new ServiceResult<FavoriBooks>(state: MessageResultState.SUCCESS);
-            var getFav = booksService.PostFavoriSaveBook(fav);
-            result.Result = getFav;
+            try
+            {
+                var getFavUserList = booksService.GetFavoriBooksByuserId(fav.UserId);
+                var check = getFavUserList.Where(p => p.BookId == fav.BookId).ToList();
+                if (check.Count > 0)
+                {
+                    result.Message = "Bu kitap zaten favorilerinizde mevcut.";
+                    result.State = MessageResultState.WARNING;
+                    return result;
+                }
+                var getFav = booksService.PostFavoriSaveBook(fav);
+                result.Result = getFav;
+            }
+            catch (Exception ex )
+            {
+                result.State = MessageResultState.ERROR;
+                result.Message = ex.Message;
+            }
             return result;
         }
 
