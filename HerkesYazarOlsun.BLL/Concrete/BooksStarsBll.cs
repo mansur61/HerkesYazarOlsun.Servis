@@ -26,7 +26,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
             var sonuc = starsDal.Get(p => p.LoginUserId == LoginUserId);
             return sonuc;
         }
-        public List<BooksStars> GetBooksStarsByuserId(int userId)
+        public List<BooksStars> GetBooksStarsByuserId(long userId)
         {
             return starsDal.GetList(p => p.LoginUserId == userId).ToList();
         }

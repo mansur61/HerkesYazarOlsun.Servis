@@ -83,6 +83,8 @@ namespace HerkesYazarOlsun.DataLayer.Context
             modelBuilder.ApplyConfiguration(new BooksConfiguration());
             modelBuilder.ApplyConfiguration(new BooksPagesConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new BooksStarsConfiguration());
+            
         }
 
         public override IList<T> SqlQueryDapper<T>(string sql, object[] parameters = null)

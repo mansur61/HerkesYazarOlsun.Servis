@@ -6,7 +6,8 @@ namespace HerkesYazarOlsun.Model.Entity
     public class BooksStars : BaseEntity
     {
         public int StarPuani { get; set; }
-        public int LoginUserId { get; set; }
+        public long LoginUserId { get; set; }
+        public Users? LoginUser { get; set; }
         public long? BookId { get; set; }
         public Books? Book { get; set; }
     }
