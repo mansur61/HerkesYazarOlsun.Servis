@@ -23,6 +23,12 @@ namespace HerkesYazarOlsun.Model.Utils
                     .ForMember(dest => dest.FavoriBooks, opt => opt.MapFrom(src => src.FavoriBooks))
                     .ReverseMap(); // ters map
 
+                // Users -> VM_USERS
+                cfg.CreateMap<VM_USERS, Users>().ReverseMap();
+
+                // VM_USERS -> Users
+                cfg.CreateMap<Users, VM_USERS>().ReverseMap();
+
                 // Category -> VM_CATEGORI
                 cfg.CreateMap<Category, VM_CATEGORI>().ReverseMap();
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 {
     [DbContext(typeof(SqlServerContext))]
-    [Migration("20251107184708_bookstartiliskiller")]
-    partial class bookstartiliskiller
+    [Migration("20251108162118_addedforeignkeyFromBooksPages")]
+    partial class addedforeignkeyFromBooksPages
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

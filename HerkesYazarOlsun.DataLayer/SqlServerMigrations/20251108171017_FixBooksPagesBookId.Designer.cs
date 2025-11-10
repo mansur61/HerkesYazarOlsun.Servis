@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 {
     [DbContext(typeof(SqlServerContext))]
-    [Migration("20251026173808_categortconfig2")]
-    partial class categortconfig2
+    [Migration("20251108171017_FixBooksPagesBookId")]
+    partial class FixBooksPagesBookId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -447,8 +447,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<long?>("BookId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("LoginUserId")
-                        .HasColumnType("int");
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("StarPuani")
                         .HasColumnType("int");
@@ -456,6 +456,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.HasKey("ID");
 
                     b.HasIndex("BookId");
+
+                    b.HasIndex("LoginUserId");
 
                     b.ToTable("BooksStars");
                 });
@@ -1305,7 +1307,15 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUser")
+                        .WithMany("BooksStarsList")
+                        .HasForeignKey("LoginUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Book");
+
+                    b.Navigation("LoginUser");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.CategoryYayinAyarlari", b =>
@@ -1416,6 +1426,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>
                 {
+                    b.Navigation("BooksStarsList");
+
                     b.Navigation("Profil");
 
                     b.Navigation("WriterFollowLoginList");

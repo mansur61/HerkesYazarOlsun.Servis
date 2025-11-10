@@ -83,8 +83,13 @@ namespace HerkesYazarOlsun.DataLayer.Context
             modelBuilder.ApplyConfiguration(new BooksConfiguration());
             modelBuilder.ApplyConfiguration(new BooksPagesConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new BooksStarsConfiguration());
-            
+            modelBuilder.ApplyConfiguration(new BooksStarsConfiguration());              
+       
+            modelBuilder.Entity<BooksPages>()
+               .HasOne(bp => bp.Book)
+               .WithMany(b => b.BooksPageList)
+               .HasForeignKey(bp => bp.BookId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
 
         public override IList<T> SqlQueryDapper<T>(string sql, object[] parameters = null)

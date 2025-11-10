@@ -327,6 +327,28 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CategoryYayinAyarlari",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ToplamYildiz = table.Column<int>(type: "int", nullable: true),
+                    ToplamBegeni = table.Column<int>(type: "int", nullable: true),
+                    ToplamYorum = table.Column<int>(type: "int", nullable: true),
+                    ToplamDegerlendirme = table.Column<int>(type: "int", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryYayinAyarlari", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_CategoryYayinAyarlari_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Books",
                 columns: table => new
                 {
@@ -588,7 +610,7 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StarPuani = table.Column<int>(type: "int", nullable: false),
-                    LoginUserId = table.Column<int>(type: "int", nullable: false),
+                    LoginUserId = table.Column<long>(type: "bigint", nullable: false),
                     BookId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
@@ -598,6 +620,12 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         name: "FK_BooksStars_Books_BookId",
                         column: x => x.BookId,
                         principalTable: "Books",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BooksStars_Users_LoginUserId",
+                        column: x => x.LoginUserId,
+                        principalTable: "Users",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -693,6 +721,18 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BooksStars_LoginUserId",
+                table: "BooksStars",
+                column: "LoginUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryYayinAyarlari_CategoryId",
+                table: "CategoryYayinAyarlari",
+                column: "CategoryId",
+                unique: true,
+                filter: "[CategoryId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FavoriBooks_BookId",
                 table: "FavoriBooks",
                 column: "BookId");
@@ -768,6 +808,9 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
             migrationBuilder.DropTable(
                 name: "CarouselDuyuru");
+
+            migrationBuilder.DropTable(
+                name: "CategoryYayinAyarlari");
 
             migrationBuilder.DropTable(
                 name: "FavoriBooks");

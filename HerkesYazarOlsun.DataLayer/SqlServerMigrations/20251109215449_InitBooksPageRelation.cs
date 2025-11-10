@@ -5,7 +5,7 @@
 namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 {
     /// <inheritdoc />
-    public partial class categortconfig2 : Migration
+    public partial class InitBooksPageRelation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

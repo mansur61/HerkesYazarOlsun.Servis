@@ -386,6 +386,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
             int sayfaCount = booksPagesService.GetPagesByBooks(book.ID)!.Count();
+            //sayfaCount = 60; test içindi
             if (sayfaCount < 50)
             {
                 result.Message = "Kitap en az 50 ve üzeri sayfadan fazla olmalıdır.";

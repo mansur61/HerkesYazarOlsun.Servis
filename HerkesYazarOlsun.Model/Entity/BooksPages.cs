@@ -12,6 +12,7 @@ namespace HerkesYazarOlsun.Model.Entity
 
         // Kitap veritabanı id bilgisi 
         public long BookId { get; set; }
+        [ForeignKey(nameof(BookId))]
         public Books Book { get; set; }
 
     }

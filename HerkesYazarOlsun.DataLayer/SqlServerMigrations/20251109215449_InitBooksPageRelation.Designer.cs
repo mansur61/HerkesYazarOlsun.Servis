@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 {
     [DbContext(typeof(SqlServerContext))]
-    [Migration("20251018204022_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20251109215449_InitBooksPageRelation")]
+    partial class InitBooksPageRelation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -388,9 +388,6 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<long>("BookId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("BooksID")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime?>("CREATE_AT")
                         .HasColumnType("datetime2");
 
@@ -431,8 +428,6 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
 
                     b.HasIndex("BookId");
 
-                    b.HasIndex("BooksID");
-
                     b.ToTable("BooksPages");
                 });
 
@@ -447,8 +442,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Property<long?>("BookId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("LoginUserId")
-                        .HasColumnType("int");
+                    b.Property<long>("LoginUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("StarPuani")
                         .HasColumnType("int");
@@ -456,6 +451,8 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.HasKey("ID");
 
                     b.HasIndex("BookId");
+
+                    b.HasIndex("LoginUserId");
 
                     b.ToTable("BooksStars");
                 });
@@ -528,6 +525,38 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.HasKey("ID");
 
                     b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.CategoryYayinAyarlari", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToplamBegeni")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToplamDegerlendirme")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToplamYildiz")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToplamYorum")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CategoryId")
+                        .IsUnique()
+                        .HasFilter("[CategoryId] IS NOT NULL");
+
+                    b.ToTable("CategoryYayinAyarlari");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriBooks", b =>
@@ -1254,14 +1283,10 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.BooksPages", b =>
                 {
                     b.HasOne("HerkesYazarOlsun.Model.Entity.Books", "Book")
-                        .WithMany()
+                        .WithMany("BooksPageList")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("HerkesYazarOlsun.Model.Entity.Books", null)
-                        .WithMany("BooksPageList")
-                        .HasForeignKey("BooksID");
 
                     b.Navigation("Book");
                 });
@@ -1273,7 +1298,24 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Users", "LoginUser")
+                        .WithMany("BooksStarsList")
+                        .HasForeignKey("LoginUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Book");
+
+                    b.Navigation("LoginUser");
+                });
+
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.CategoryYayinAyarlari", b =>
+                {
+                    b.HasOne("HerkesYazarOlsun.Model.Entity.Category", "Category")
+                        .WithOne("CategoryYayinAyarlari")
+                        .HasForeignKey("HerkesYazarOlsun.Model.Entity.CategoryYayinAyarlari", "CategoryId");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.FavoriBooks", b =>
@@ -1368,8 +1410,15 @@ namespace HerkesYazarOlsun.DataLayer.SqlServerMigrations
                     b.Navigation("YayinAyar");
                 });
 
+            modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Category", b =>
+                {
+                    b.Navigation("CategoryYayinAyarlari");
+                });
+
             modelBuilder.Entity("HerkesYazarOlsun.Model.Entity.Users", b =>
                 {
+                    b.Navigation("BooksStarsList");
+
                     b.Navigation("Profil");
 
                     b.Navigation("WriterFollowLoginList");
