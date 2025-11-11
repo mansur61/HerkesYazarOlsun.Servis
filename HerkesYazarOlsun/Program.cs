@@ -85,7 +85,7 @@ builder.Services.AddScoped<OdemeSponsorlariValidator>();
 builder.Services.AddScoped<BooksPagesAddValidator>();
 builder.Services.AddScoped<WriterFollowValidator>();
 builder.Services.AddScoped<WriterStarsValidator>();
-
+builder.Services.AddScoped<FavoriYazarlarValidator>();
 
 // DbSettings
 DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
