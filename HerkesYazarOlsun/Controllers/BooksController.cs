@@ -258,6 +258,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 bookList = bookList.Where(p => p.YAYINDAMI == arama.YayinlananKitaplar.Value).ToList();
             }
 
+            if (arama.FavoriKitaplar.HasValue)
+            {
+                bookList = bookList.Where(p => p.FavoriBooks.Any()).ToList();
+            }
+             
             var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
 
             foreach (var item in vmBookList)

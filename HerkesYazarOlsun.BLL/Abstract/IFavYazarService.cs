@@ -8,6 +8,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
         FavoriYazarlar? Guncelle(FavoriYazarlar ayar, long tck);
         FavoriYazarlar? Ekle(FavoriYazarlar ayar, string mail);
         FavoriYazarlar? Get(long LoginUserId);
+        List<FavoriYazarlar> GetFavoriYazarlarByuserId(long userId);
     }
 
 }

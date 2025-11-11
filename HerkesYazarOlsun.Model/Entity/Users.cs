@@ -23,12 +23,13 @@ namespace HerkesYazarOlsun.Model.Entity
         public int? isSozlesmeOnay { get; set; }
          
         public Profil? Profil { get; set; }
-        public ICollection<BooksStars>? BooksStarsList { get; set; }
-        public ICollection<WriterFollow>? WriterFollowLoginList { get; set; } // takip edenler
+        public ICollection<BooksStars>? BooksStarsList { get; set; } // yıldız verilen kitaplar
+        public ICollection<FavoriYazarlar>? FavoriYazarlarList { get; set; }
+        public ICollection<WriterFollow>? WriterFollowLoginList { get; set; } // beni takip edenler
         public ICollection<WriterFollow>? WriterFollowYazarList { get; set; } // takip edilenler
 
-        public ICollection<WriterStars>? WriterStarsLoginList { get; set; } // beğenenler
-        public ICollection<WriterStars>? WriterStarsYazarList { get; set; } // beğenilenler
+        public ICollection<WriterStars>? WriterStarsLoginList { get; set; } // bana yıldız verenler
+        public ICollection<WriterStars>? WriterStarsYazarList { get; set; } // yıldız verdiklerim
     }
 
 

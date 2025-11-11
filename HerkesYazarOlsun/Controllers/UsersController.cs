@@ -27,12 +27,15 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private UsersValidator _usersValidator;
         private WriterFollowValidator _WriterFollowValidator;
         private WriterStarsValidator _writerStarsValidator;
+        private FavoriYazarlarValidator _favYazarValidato; 
         private IWriterStarsService writerStarsService;
+
+        private BooksStarsValidator _booksStarsValidator;
         public UsersController(ILogger<UsersController> logger, IUsersService _userService,
             IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration,
             EmailValidator emailValidator, UsersValidator usersValidator, WriterFollowValidator writerFollowValidator, 
             WriterStarsValidator writerStarsValidator, IAccountLoginService accountLoginService, IWriterFollowService writerFollowService, 
-            IFavoriYazarlarService favoriYazarlarService, IWriterStarsService writerStarsService)
+            IFavoriYazarlarService favoriYazarlarService, IWriterStarsService writerStarsService, FavoriYazarlarValidator  favYazarValidato)
             : base(userAccessor, unitOfWork, configuration)
         {
             _logger = logger;
@@ -45,6 +48,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             _writerFollowService = writerFollowService;
             _favoriYazarlarService = favoriYazarlarService;
             this.writerStarsService = writerStarsService;
+            _favYazarValidato = favYazarValidato;
         }
 
 
@@ -227,7 +231,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         }
 
 
-        //Zamanla inner join yapýsýna geç. pl/sql de
+        
         [HttpPost]
         [Route("GetKisiler")]
         public List<VM_USERS> GetKisiler(VM_ARAMA_INPUT arama)
@@ -239,11 +243,22 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 getKisiler = getKisiler.Where(p => p.NAME!.Contains(arama.YAZAR_ADI!)).ToList();
             }
 
+            if (arama.yazarIId.HasValue)
+            {
+                getKisiler = getKisiler.Where(p => p.ID == arama.yazarIId).ToList();
+            }
+
+            if (arama.FavoriYazarlar.HasValue)
+            {
+                getKisiler = getKisiler.Where(p => p.FavoriYazarlarList.Any()).ToList();
+            }
+            
+
             var vmUserList = getKisiler
              .Select(u =>
              {
                  var vmUser = VM_USERS.MapToVM(u);
-                 vmUser.Stars = CalculateMaxStarFromMemory(u);  
+                 vmUser.Stars = CalculateMaxStarFromMemory(u);   // Zamanla inner join yapýsýna geç. pl/sql de
                  return vmUser;
              })
              .ToList();
@@ -253,11 +268,38 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("PostFavoriSaveWriter")]
-        public FavoriYazarlar PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav)
-        { 
-            var favYazar = ObjectMapper.Map(fav, new FavoriYazarlar());
-            favYazar = _favoriYazarlarService.Ekle(favYazar, MAIL);
-            return favYazar;
+        public ServiceResult PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav)
+        {
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
+            try
+            {
+                var favYazar = ObjectMapper.Map(fav, new FavoriYazarlar());
+                var sonuc = _favYazarValidato.Validate(favYazar);
+
+                if (!sonuc!.IsValid)
+                {
+                    foreach (var item in sonuc.Errors)
+                    {
+                        result.Message += item.ErrorMessage + ",";
+                    }
+
+                    result.State = MessageResultState.ERROR;
+                    return result;
+                }
+
+                
+                favYazar = _favoriYazarlarService.Ekle(favYazar, MAIL);
+                result.Result = favYazar;
+                result.Message = "Yazar Favorilere Eklendi";
+                
+            }
+            catch (Exception)
+            {
+                result.Result = null;
+                result.State = MessageResultState.ERROR;
+                result.Message = "Yazar Favorilere Eklenemeddi";
+            }
+            return result;
         }
 
         [HttpGet]

@@ -9,5 +9,11 @@ public class UsersConfiguration : IEntityTypeConfiguration<Users>
         builder.HasOne(u => u.Profil)
                .WithOne(p => p.User)
                .HasForeignKey<Profil>(p => p.UserId);
+         
+        builder.HasMany(b => b.FavoriYazarlarList)
+            .WithOne(p => p.Yazar)
+            .HasForeignKey(p => p.YazarId)
+            .OnDelete(DeleteBehavior.Cascade);
+         
     }
 }

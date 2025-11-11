@@ -23,6 +23,30 @@ namespace HerkesYazarOlsun.Model.Utils
                     .ForMember(dest => dest.FavoriBooks, opt => opt.MapFrom(src => src.FavoriBooks))
                     .ReverseMap(); // ters map
 
+                cfg.CreateMap<VM_WriterFollow, WriterFollow>().ReverseMap();
+                cfg.CreateMap<VM_ODEME_SPONSORLARI, OdemeSponsorlari>().ReverseMap();
+                cfg.CreateMap<VM_ODEME, Odeme>().ReverseMap();
+                cfg.CreateMap<VM_CAROUSEL_DUYURU, CarouselDuyuru>().ReverseMap();
+                cfg.CreateMap<VM_AYARLAR, Ayarlar>().ReverseMap();
+                
+
+                cfg.CreateMap<VM_KARTLAR, Kartlar>().ReverseMap();
+                cfg.CreateMap<VM_WriterStars, WriterStars>().ReverseMap();
+
+                cfg.CreateMap<VM_WriterStars, WriterStars>().ReverseMap();
+                cfg.CreateMap<VM_TALEPLER, Talepler>().ReverseMap();
+                cfg.CreateMap<VM_TALEPLER, Talepler>().ReverseMap();
+
+
+                cfg.CreateMap<VM_PROFILE, Profile>().ReverseMap();
+
+                cfg.CreateMap<VM_PROFILE, Profile>().ReverseMap();
+
+
+                cfg.CreateMap<VM_SPONSORLAR, Sponsorlar>().ReverseMap();
+
+                cfg.CreateMap<VM_FAVORI_YAZARLAR, FavoriYazarlar>().ReverseMap();
+
                 // Users -> VM_USERS
                 cfg.CreateMap<VM_USERS, Users>().ReverseMap();
 

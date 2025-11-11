@@ -54,6 +54,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
             var list = _kisilerDal
                 .GetAllQueryable()
                 .Include(b => b.Profil)
+                .Include(b => b.FavoriYazarlarList)
                 .Include(b => b.WriterStarsLoginList)
                 .Include(b => b.WriterFollowLoginList)
                 .ToList();

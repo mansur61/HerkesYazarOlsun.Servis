@@ -1,6 +1,4 @@
-﻿using HerkesYazarOlsun.Model.Entity;
-
-namespace HerkesYazarOlsun.Model.ViewModel
+﻿namespace HerkesYazarOlsun.Model.ViewModel
 {
 
     public class VM_TALEPLER

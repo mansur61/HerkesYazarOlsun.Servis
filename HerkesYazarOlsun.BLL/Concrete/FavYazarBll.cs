@@ -26,6 +26,11 @@ namespace HerkesYazarOlsun.BLL.Concrete
             var sonuc = yazarDal.Get( LoginUserId);
             return sonuc;
         }
-        
+
+        public List<FavoriYazarlar> GetFavoriYazarlarByuserId(long userId)
+        {
+            return yazarDal.GetAllQueryable(p => p.LoginUserId == userId).ToList();
+        }
+
     }
 }

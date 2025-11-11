@@ -11,6 +11,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
 
             var vmUser = new VM_USERS
             {
+                ID = user.ID,
                 NAME = user.NAME,
                 SURNAME = user.SURNAME,
                 USERNAME = user.USERNAME,
