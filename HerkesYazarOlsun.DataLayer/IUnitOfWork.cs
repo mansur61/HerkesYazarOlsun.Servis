@@ -10,6 +10,7 @@ namespace HerkesYazarOlsun.DataLayer
         IRepo<T> Repo<T>() where T : NewBaseEntity;
         int Save();
         void OpenTransaction();
-        void CloseTransaction();
+        void CommitTransaction();
+        void RollbackTransaction();
     }
 }

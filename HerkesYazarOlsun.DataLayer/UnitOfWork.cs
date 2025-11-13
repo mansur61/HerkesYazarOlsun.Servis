@@ -3,6 +3,7 @@ using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace HerkesYazarOlsun.DataLayer
@@ -10,7 +11,8 @@ namespace HerkesYazarOlsun.DataLayer
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly DbContext _dbContext;
-         
+        private IDbContextTransaction _transaction;
+
         private readonly Dictionary<Type, object> _repositories = new(); 
 
         public UnitOfWork(IConfiguration configuration)  
@@ -80,14 +82,7 @@ namespace HerkesYazarOlsun.DataLayer
         {
             return _dbContext.Database.ExecuteSqlRaw(sql);
         }
-
-        // Transaction örnekleri (gerektiğinde implement et)
-        public void OpenTransaction()
-        {
-            // Örnek: _dbContext.Database.BeginTransaction();
-            throw new NotImplementedException();
-        }
-
+  
         public void CloseTransaction()
         {
             // Örnek: Commit ya da Rollback işlemleri burada yapılır.
@@ -108,7 +103,7 @@ namespace HerkesYazarOlsun.DataLayer
                 _disposed = true;
             }
         }
-
+         
         public void Dispose()
         {
             Dispose(true);
@@ -118,6 +113,25 @@ namespace HerkesYazarOlsun.DataLayer
         public IRepo<T> Repo<T>() where T : NewBaseEntity
         {
             throw new NotImplementedException();
+        }
+
+        public void CommitTransaction()
+        {
+            _transaction?.Commit();
+            _transaction?.Dispose();
+            _transaction = null;
+        }
+
+        public void RollbackTransaction()
+        {
+            _transaction?.Rollback();
+            _transaction?.Dispose();
+            _transaction = null;
+        }
+        public void OpenTransaction()
+        {
+            if (_transaction == null)
+                _transaction = _dbContext.Database.BeginTransaction();
         }
         #endregion
     }

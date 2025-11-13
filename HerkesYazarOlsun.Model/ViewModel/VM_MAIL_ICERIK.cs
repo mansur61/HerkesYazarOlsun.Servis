@@ -1,9 +1,12 @@
-﻿namespace HerkesYazarOlsun.Model.ViewModel
+﻿using Microsoft.AspNetCore.Http;
+
+namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_MAIL_ICERIK
     {
         public int? Port { get; set; }
-        public Boolean EnableSSL { get; set; } = true;
+        public bool EnableSSL { get; set; } = true;
+        public List<IFormFile>? dosyalar { get; set; }
         public string? kime { get; set; }
         public string? sifre { get; set; }
         public string? password { get; set; }

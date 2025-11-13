@@ -5,7 +5,6 @@ using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using HerkesYazarOlsun.Servis.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Servis.Controllers
@@ -17,6 +16,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private IKartlarService kartlarSrv;
         private IOdemeService odemeService;
         private IOdemeSponsorlariService odemeSpnsSrv;
+        private IUnitOfWork _unitOfWork;
         private OdemeSponsorlariValidator _odemeSponsorlariValidator;
         public OdemeController(IKartlarService _kartlarSrv, IOdemeService odemeService, IOdemeSponsorlariService odemeSpnsSrv,
             IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration, OdemeSponsorlariValidator odemeSponsorlariValidator)
@@ -26,8 +26,9 @@ namespace HerkesYazarOlsun.Servis.Controllers
             this.odemeService = odemeService;
             this.odemeSpnsSrv = odemeSpnsSrv;
             _odemeSponsorlariValidator = odemeSponsorlariValidator;
+            _unitOfWork = unitOfWork;
         }
-
+ 
         [HttpPost]
         [Route("PostOdeme")]
         public ServiceResult PostOdeme(VM_KARTLAR kart)
@@ -36,30 +37,37 @@ namespace HerkesYazarOlsun.Servis.Controllers
             var kartEntity = ObjectMapper.Map(kart, new Kartlar());
             var odeme = new Odeme() { KitapId = kart.KitapId, LoginUserId = kart.LoginUserId };
 
-
             try
             {
-                //Ödeme alt yapýsýna gider. (iyizico vs.) Baþarýlý ise Ödeme tablosuna kayýt atar. isOdeme durumu belilerlenir.
-                odeme.isOdeme = true; //örnek olarak ödeme baþarýlý olsun..
-                Odeme odemeEntity = odemeService.Ekle(odeme, MAIL);
+                 _unitOfWork.OpenTransaction();
 
+                // 1. Ödeme ekle
+                var odemeEntity = odemeService.Ekle(odeme, MAIL);
+
+                // 2. Kart ekle
                 kartEntity.Tutar = (long)Convert.ToInt32(kart.Tutar);
                 kartEntity.OdemeId = odemeEntity.ID;
-                kartEntity.KartTarihi = kart.KartTarihiAy.ToString() + "/" +kart.KartTarihiYil.ToString();
+                kartEntity.KartTarihi = kart.KartTarihiAy + "/" + kart.KartTarihiYil;
+
                 kartEntity = kartlarSrv.Ekle(kartEntity, MAIL);
 
+                
+                _unitOfWork.Save();
+                _unitOfWork.CommitTransaction();
+
                 result.State = MessageResultState.SUCCESS;
+                result.Result = kartEntity;
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                result.Message = "";
+                _unitOfWork.RollbackTransaction();
+                result.Message = ex.Message;
                 result.State = MessageResultState.ERROR;
+                return result;
             }
-
-            result.Result = kartEntity;
-            return result;
         }
+
 
         [HttpPost]
         [Route("SaveSponsorlukBildir")]
