@@ -419,16 +419,18 @@ namespace HerkesYazarOlsun.Servis.Controllers
             return result;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("CheckBook")]
-        public ServiceResult<Books> CheckBook(Books book)
+        public ServiceResult<Books> CheckBook(long id)
         {
 
             ServiceResult<Books> result = new ServiceResult<Books>(state: MessageResultState.SUCCESS);
-            var bookPages = booksPagesService.GetPagesByBooks(book.ID);
+            var bookPages = booksPagesService.GetPagesByBooks(id);
             int sayfaCount = bookPages!.Count();
 
-            var vmBooks = ObjectMapper.Map(book, new VM_BOOKS());
+            var getBook = booksService.GetBooks(id); 
+
+            var vmBooks = ObjectMapper.Map(getBook, new VM_BOOKS());
 
             var VM_BOOKS_PAGES = ObjectMapper.MapList(bookPages, new List<VM_BOOKS_PAGES>());
             vmBooks.BooksPageList = VM_BOOKS_PAGES;
@@ -451,7 +453,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 return result;
             }
 
-            result.Result = book;
+            result.Result = getBook;
             return result;
         }
 

@@ -37,7 +37,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                 page.RuleFor(x => x.PageWrite)
                     .Must((parent, context) =>
                     {
-                        var book = _bookservice.GetBooks(parent.BooksId);
+                        var book = _bookservice.GetBooks(parent.BookId);
                         int minWordCount = book.CategoriId == (int)BookCategory.Siir
                             ? kitapSiirIseWordLenght
                             : pageLenght;
@@ -47,7 +47,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                     })
                     .WithMessage((parent, context) =>
                     {
-                        var book = _bookservice.GetBooks(parent.BooksId);
+                        var book = _bookservice.GetBooks(parent.BookId);
                         int minWordCount = book.CategoriId == (int)BookCategory.Siir
                             ? kitapSiirIseWordLenght
                             : pageLenght;

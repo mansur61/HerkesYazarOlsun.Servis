@@ -21,7 +21,27 @@ namespace HerkesYazarOlsun.Model.Utils
                     .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.Yazar))
                     .ForMember(dest => dest.BooksStars, opt => opt.MapFrom(src => src.BooksStars))
                     .ForMember(dest => dest.FavoriBooks, opt => opt.MapFrom(src => src.FavoriBooks))
-                    .ReverseMap(); // ters map
+                    
+                    //.AfterMap((src, dest) =>
+                    //{
+                    //    Eğer hedefte BooksPageList doluysa
+                    //    if (src.BooksPageList != null)
+                    //    {
+                    //        foreach (var page in src.BooksPageList)
+                    //        {
+                    //            Kaynak kitap ID'sini kullanarak BooksId doldur
+                    //            page.BookId = src.ID;
+                    //        }
+                    //    }
+                    //})
+                    .ReverseMap();
+                    //ForMember(dest => dest.Yazar, opt => opt.Ignore())
+                    //.ForMember(dest => dest.Categori, opt => opt.Ignore())
+                    //.ForMember(dest => dest.BooksPageList, opt => opt.Ignore())
+                    //.ForMember(dest => dest.BooksComments, opt => opt.Ignore())
+                    //.ForMember(dest => dest.BooksDegerlendirme, opt => opt.Ignore())
+                    //.ForMember(dest => dest.BooksStars, opt => opt.Ignore())
+                    //.ForMember(dest => dest.FavoriBooks, opt => opt.Ignore()); // ters map
 
                 cfg.CreateMap<VM_WriterFollow, WriterFollow>().ReverseMap();
                 cfg.CreateMap<VM_ODEME_SPONSORLARI, OdemeSponsorlari>().ReverseMap();

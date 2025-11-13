@@ -8,7 +8,7 @@
         public string PageWriteBase64 { get; set; }
         public bool isWordPDF { get; set; } 
         // Kitap veritabanı id bilgisi
-        public long BooksId { get; set; }
+        public long BookId { get; set; }
     }
 
 }
