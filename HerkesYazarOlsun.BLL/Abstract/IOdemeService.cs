@@ -3,6 +3,7 @@
 namespace HerkesYazarOlsun.BLL.Abstract
 {
     public interface IOdemeService
-    {        Odeme Ekle(Odeme kart, string? mail);
+    {       
+        Odeme Ekle(Odeme kart, string? mail); 
     }
 }

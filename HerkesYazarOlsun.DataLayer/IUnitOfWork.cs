@@ -7,6 +7,8 @@ namespace HerkesYazarOlsun.DataLayer
     public interface IUnitOfWork : IDisposable
     {
         IRepository<T> GetRepository<T>() where T : BaseEntity;
+        T GetWriteRepositoryWithBaseEntity<T>(T entity) where T : BaseEntity;
+        T GetWriteRepositoryWithNewBaseEntity<T>(T entity) where T : NewBaseEntity;
         IRepo<T> Repo<T>() where T : NewBaseEntity;
         int Save();
         void OpenTransaction();

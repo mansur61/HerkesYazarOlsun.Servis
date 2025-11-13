@@ -6,6 +6,7 @@ using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
@@ -31,7 +32,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
  
         [HttpPost]
         [Route("PostOdeme")]
-        public ServiceResult PostOdeme(VM_KARTLAR kart)
+        public async Task<ServiceResult> PostOdeme(VM_KARTLAR kart)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
             var kartEntity = ObjectMapper.Map(kart, new Kartlar());
@@ -42,16 +43,19 @@ namespace HerkesYazarOlsun.Servis.Controllers
                  _unitOfWork.OpenTransaction();
 
                 // 1. Ödeme ekle
-                var odemeEntity = odemeService.Ekle(odeme, MAIL);
+                //var odemeEntity = odemeService.Ekle(odeme, MAIL);
+
+                var odemeEntity = _unitOfWork.GetWriteRepositoryWithNewBaseEntity<Odeme>(odeme);
 
                 // 2. Kart ekle
                 kartEntity.Tutar = (long)Convert.ToInt32(kart.Tutar);
                 kartEntity.OdemeId = odemeEntity.ID;
                 kartEntity.KartTarihi = kart.KartTarihiAy + "/" + kart.KartTarihiYil;
 
-                kartEntity = kartlarSrv.Ekle(kartEntity, MAIL);
+                //kartEntity = kartlarSrv.Ekle(kartEntity, MAIL);
 
-                
+                kartEntity = _unitOfWork.GetWriteRepositoryWithNewBaseEntity<Kartlar>(kartEntity);
+
                 _unitOfWork.Save();
                 _unitOfWork.CommitTransaction();
 

@@ -39,7 +39,8 @@ namespace HerkesYazarOlsun.DataLayer
             {
                 throw new NotSupportedException($"Unsupported DbType: {dbType}");
             }
-        } 
+        }
+        
         public IRepository<T> GetRepository<T>() where T : BaseEntity
         {
             if (_repositories.ContainsKey(typeof(T)))
@@ -133,6 +134,27 @@ namespace HerkesYazarOlsun.DataLayer
             if (_transaction == null)
                 _transaction = _dbContext.Database.BeginTransaction();
         }
+
+        public T GetWriteRepositoryWithBaseEntity<T>(T entity) where T : BaseEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            _dbContext.Add(entity);
+            return entity;
+            // SaveChanges çağrısı ayrı yapılacak (_unitOfWork.Save())
+        }
+
+        public T GetWriteRepositoryWithNewBaseEntity<T>(T entity) where T : NewBaseEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+              _dbContext.Add(entity);
+            return entity;
+            // SaveChanges çağrısı ayrı yapılacak (_unitOfWork.Save())
+        }
+
         #endregion
     }
 
