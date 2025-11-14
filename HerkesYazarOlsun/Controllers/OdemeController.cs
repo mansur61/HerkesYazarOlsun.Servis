@@ -6,7 +6,6 @@ using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {

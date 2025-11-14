@@ -18,6 +18,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
 
         public long IS_DELETED { get; set; }
         public long KitapId { get; set; }
+        public string KitapIdENC { get; set; }
 
         public long SponsorId { get; set; }
         public long LoginUserId { get; set; }
