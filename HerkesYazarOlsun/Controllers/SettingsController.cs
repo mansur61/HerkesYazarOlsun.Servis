@@ -5,7 +5,6 @@ using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using HerkesYazarOlsun.Servis.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Servis.Controllers
@@ -73,8 +72,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 {
                     await item.CopyToAsync(memoryStream);
                     byte[] fileBytes = memoryStream.ToArray();
-
-                    // Ön kapak
+                     
                     if (!string.IsNullOrEmpty(input.Profile.ProfilResimName) && input.Profile.ProfilResimName == item.FileName)
                     {
                         input.Profile.ProfilResimBase64 = Convert.ToBase64String(fileBytes);
@@ -149,6 +147,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 if (prflKayit == null)
                 {
                     var profil = ObjectMapper.Map(ayarlar.Profile, new Profil());
+                    profil.UserId = ayarlar.Profile.LoginUserId;
                     prflKayit = profilSrv.Ekle(profil, MAIL);
 
                 }
@@ -191,7 +190,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex )
             {
                 result.Message = "Deðiþiklikler Kaydedilmemiþtir.";
                 result.State = MessageResultState.ERROR;

@@ -40,11 +40,16 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string? USERNAME { get; set; }       
         public string? EMAIL { get; set; }
         public string? TELNO { get; set; } 
-        public VM_Stars? Stars { get; set; }
-        public List<VM_WriterFollow>?  WriterFollowList { get; set; }
-        public VM_WriterFollow? VM_WriterFollow { get; set; }
-        public VM_WriterStars? VM_WriterStars { get; set; }
-        public List<VM_WriterStars>? WriterStarsList { get; set; }        
+        public VM_Stars? Stars { get; set; } 
+
+        public ICollection<BooksStars>? BooksStarsList { get; set; } // yıldız verilen kitaplar
+        public ICollection<FavoriYazarlar>? FavoriYazarlarList { get; set; }
+        public ICollection<WriterFollow>? WriterFollowLoginList { get; set; } // beni takip edenler
+        public ICollection<WriterFollow>? WriterFollowYazarList { get; set; } // takip edilenler
+
+        public ICollection<WriterStars>? WriterStarsLoginList { get; set; } // bana yıldız verenler
+        public ICollection<WriterStars>? WriterStarsYazarList { get; set; } // yıldız verdiklerim
+
         public string? PASSWORD { get; set; }
         public int isEmail { get; set; } 
         public int isTelno { get; set; }  
