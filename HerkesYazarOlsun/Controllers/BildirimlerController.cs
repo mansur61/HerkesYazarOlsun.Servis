@@ -19,7 +19,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("GetBildirimlerByLoginId")]
         public Bildirimler? GetBildirimlerByLoginId(long loginId)
         {            
-            var sonuc = bildrmlerDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
+            var sonuc = bildrmlerDal.GetAllQueryableNoTracking(p => p.LoginUserId == loginId).SingleOrDefault();
             return sonuc;
         }
 

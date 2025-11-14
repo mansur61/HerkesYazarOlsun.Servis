@@ -29,7 +29,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public List<FavoriYazarlar> GetFavoriYazarlarByuserId(long userId)
         {
-            return yazarDal.GetAllQueryable(p => p.LoginUserId == userId).ToList();
+            return yazarDal.GetAllQueryableNoTracking(p => p.LoginUserId == userId).ToList();
         }
 
     }

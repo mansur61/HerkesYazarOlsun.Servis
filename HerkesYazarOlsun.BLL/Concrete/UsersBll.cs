@@ -35,7 +35,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public Users? GetMail(string mail)
         {
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.EMAIL == mail).Include(b => b.Profil)
+            var sonuc = _kisilerDal.GetAllQueryableNoTracking(p => p.EMAIL == mail).Include(b => b.Profil)
                 .Include(b => b.WriterStarsLoginList)
                 .Include(b => b.WriterFollowLoginList).SingleOrDefault();
             return sonuc;
@@ -43,7 +43,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public Users? GetUserrName(string username)
         {
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.SURNAME == username).Include(b => b.Profil).Include(b => b.WriterStarsLoginList).Include(b => b.WriterFollowLoginList).SingleOrDefault();
+            var sonuc = _kisilerDal.GetAllQueryableNoTracking(p => p.SURNAME == username).Include(b => b.Profil).Include(b => b.WriterStarsLoginList).Include(b => b.WriterFollowLoginList).SingleOrDefault();
             return sonuc;
         }
         public List<Users> GetKullanicilar()

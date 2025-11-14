@@ -24,6 +24,129 @@ namespace HerkesYazarOlsun.Model.Utils
                     
                     .ReverseMap();
 
+                
+                 cfg.CreateMap<UsersDetails, UsersDetails>()
+               .ForAllMembers(opt =>
+                   opt.Condition((src, dest, srcMember, destMember) =>
+                   {
+                       // Sistem alanlarını atla
+                       if (opt.DestinationMember.Name == nameof(NewBaseEntity.ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.CREATE_AT) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.MODIFIED_AT) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_CREATED_ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_MODIFIED_ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.OLUSTURAN_EMAIL) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_MODIFIED_MAIL) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.IS_DELETED) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.IS_MODIFIED))
+                       {
+                           return false;
+                       }
+
+                       // srcMember null değilse ve string ise boş string değilse
+                       if (srcMember is string str)
+                           return !string.IsNullOrWhiteSpace(str);
+
+                       // nullable değer tipleri için null kontrolü
+                       if (srcMember == null)
+                           return false;
+
+                       // diğer durumlarda (int, bool vb.) src değerini al
+                       return true;
+                   }));
+                
+
+                cfg.CreateMap<Bildirimler, Bildirimler>()
+               .ForAllMembers(opt =>
+                   opt.Condition((src, dest, srcMember, destMember) =>
+                   {
+                       // Sistem alanlarını atla
+                       if (opt.DestinationMember.Name == nameof(NewBaseEntity.ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.CREATE_AT) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.MODIFIED_AT) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_CREATED_ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_MODIFIED_ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.OLUSTURAN_EMAIL) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_MODIFIED_MAIL) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.IS_DELETED) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.IS_MODIFIED))
+                       {
+                           return false;
+                       }
+
+                       // srcMember null değilse ve string ise boş string değilse
+                       if (srcMember is string str)
+                           return !string.IsNullOrWhiteSpace(str);
+
+                       // nullable değer tipleri için null kontrolü
+                       if (srcMember == null)
+                           return false;
+
+                       // diğer durumlarda (int, bool vb.) src değerini al
+                       return true;
+                   }));
+
+                cfg.CreateMap<Users, Users>()
+               .ForAllMembers(opt =>
+                   opt.Condition((src, dest, srcMember, destMember) =>
+                   {
+                       // Sistem alanlarını atla
+                       if (opt.DestinationMember.Name == nameof(NewBaseEntity.ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.CREATE_AT) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.MODIFIED_AT) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_CREATED_ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_MODIFIED_ID) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.OLUSTURAN_EMAIL) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.USER_MODIFIED_MAIL) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.IS_DELETED) ||
+                           opt.DestinationMember.Name == nameof(NewBaseEntity.IS_MODIFIED))
+                       {
+                           return false;
+                       }
+
+                       // srcMember null değilse ve string ise boş string değilse
+                       if (srcMember is string str)
+                           return !string.IsNullOrWhiteSpace(str);
+
+                       // nullable değer tipleri için null kontrolü
+                       if (srcMember == null)
+                           return false;
+
+                       // diğer durumlarda (int, bool vb.) src değerini al
+                       return true;
+                   }));
+
+                cfg.CreateMap<Profile, Profile>()
+            .ForAllMembers(opt =>
+                opt.Condition((src, dest, srcMember, destMember) =>
+                {
+                    // Sistem alanlarını atla
+                    if (opt.DestinationMember.Name == nameof(NewBaseEntity.ID) ||
+                        opt.DestinationMember.Name == nameof(NewBaseEntity.CREATE_AT) ||
+                        opt.DestinationMember.Name == nameof(NewBaseEntity.MODIFIED_AT) ||
+                        opt.DestinationMember.Name == nameof(NewBaseEntity.USER_CREATED_ID) ||
+                        opt.DestinationMember.Name == nameof(NewBaseEntity.USER_MODIFIED_ID) ||
+                        opt.DestinationMember.Name == nameof(NewBaseEntity.OLUSTURAN_EMAIL) ||
+                        opt.DestinationMember.Name == nameof(NewBaseEntity.USER_MODIFIED_MAIL) ||
+                        opt.DestinationMember.Name == nameof(NewBaseEntity.IS_DELETED) ||
+                        opt.DestinationMember.Name == nameof(NewBaseEntity.IS_MODIFIED))
+                    {
+                        return false;
+                    }
+
+                    // srcMember null değilse ve string ise boş string değilse
+                    if (srcMember is string str)
+                        return !string.IsNullOrWhiteSpace(str);
+
+                    // nullable değer tipleri için null kontrolü
+                    if (srcMember == null)
+                        return false;
+
+                    // diğer durumlarda (int, bool vb.) src değerini al
+                    return true;
+                }));
+
+
                 cfg.CreateMap<VM_WriterFollow, WriterFollow>().ReverseMap();
                 cfg.CreateMap<VM_ODEME_SPONSORLARI, OdemeSponsorlari>().ReverseMap();
                 cfg.CreateMap<VM_ODEME, Odeme>().ReverseMap();

@@ -17,7 +17,7 @@ namespace HerkesYazarOlsun.BLL.Validation
 
         private bool EmailVarmi(Users user)
         { 
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.EMAIL == user.EMAIL).ToList();
+            var sonuc = _kisilerDal.GetAllQueryableNoTracking(p => p.EMAIL == user.EMAIL).ToList();
             if(!sonuc.Any())
             {
                 return false;

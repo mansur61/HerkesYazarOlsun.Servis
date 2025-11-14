@@ -18,13 +18,13 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public BooksPages? GetBooksPages(long id)
         {
-            return _booksPagesDal.GetAllQueryable(p => p.ID == id).FirstOrDefault();
+            return _booksPagesDal.GetAllQueryableNoTracking(p => p.ID == id).FirstOrDefault();
 
         }
 
         public List<BooksPages> GetPagesByBooks(long bookID)
         {
-            return _booksPagesDal.GetAllQueryable(p => p.BookId == bookID).ToList();
+            return _booksPagesDal.GetAllQueryableNoTracking(p => p.BookId == bookID).ToList();
 
         }
         public List<BooksPages> GetBooksPagesList()

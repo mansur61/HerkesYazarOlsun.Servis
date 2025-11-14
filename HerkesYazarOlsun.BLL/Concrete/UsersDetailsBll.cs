@@ -29,7 +29,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public UsersDetails? GetUsersDetailsByLoginId(long loginId)
         {
-            var sonuc = usrDtlsDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
+            var sonuc = usrDtlsDal.GetAllQueryableNoTracking(p => p.LoginUserId == loginId).SingleOrDefault();
             return sonuc;
         }
 

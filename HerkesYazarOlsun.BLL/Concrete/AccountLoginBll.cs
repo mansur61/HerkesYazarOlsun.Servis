@@ -23,7 +23,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public AccountLogin? Get(long LoginUserId)
         { 
-            var sonuc = accLoginDal.GetAllQueryable(p => p.LoginUserId == LoginUserId).FirstOrDefault();
+            var sonuc = accLoginDal.GetAllQueryableNoTracking(p => p.LoginUserId == LoginUserId).FirstOrDefault();
             return sonuc;
         }
         

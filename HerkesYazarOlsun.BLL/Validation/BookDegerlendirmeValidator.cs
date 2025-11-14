@@ -21,7 +21,7 @@ namespace HerkesYazarOlsun.BLL.Validation
         private bool EmailVarmi(VM_BOOKS_DEGERLENDIRME  degerlendirme)
         {
             IUsersDal kisilerDal = _usersDal;
-            var sonuc = kisilerDal.GetAllQueryable(p => p.EMAIL == degerlendirme.EMAIL).ToList();
+            var sonuc = kisilerDal.GetAllQueryableNoTracking(p => p.EMAIL == degerlendirme.EMAIL).ToList();
             if(sonuc.Any())
             {
                 return true;

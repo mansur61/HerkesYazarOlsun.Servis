@@ -144,6 +144,35 @@ namespace HerkesYazarOlsun.DataLayer
             return entity;
             // SaveChanges çağrısı ayrı yapılacak (_unitOfWork.Save())
         }
+       
+        public T GetWriteUpdateRepositoryWithBaseEntity<T>(T entity) where T : BaseEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var entry = _dbContext.Entry(entity);
+
+            if (entry.State == EntityState.Detached)
+            {
+                // önce context içinde bu ID var mı kontrol et
+                var trackedEntity = _dbContext.Set<T>().Local
+                    .FirstOrDefault(e => e.ID == entity.ID);
+
+                if (trackedEntity != null)
+                {
+                    // gelen değerleri tracked entity'e map et
+                    _dbContext.Entry(trackedEntity).CurrentValues.SetValues(entity);
+                    return trackedEntity;
+                }
+
+                // değilse attach et
+                _dbContext.Attach(entity);
+            }
+
+            entry.State = EntityState.Modified;
+            return entity;
+        }
+
 
         public T GetWriteRepositoryWithNewBaseEntity<T>(T entity) where T : NewBaseEntity
         {
@@ -154,6 +183,35 @@ namespace HerkesYazarOlsun.DataLayer
             return entity;
             // SaveChanges çağrısı ayrı yapılacak (_unitOfWork.Save())
         }
+
+        public T GetWriteUpdateRepositoryWithNewBaseEntity<T>(T entity) where T : NewBaseEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var entry = _dbContext.Entry(entity);
+
+            if (entry.State == EntityState.Detached)
+            {
+                // önce context içinde bu ID var mı kontrol et
+                var trackedEntity = _dbContext.Set<T>().Local
+                    .FirstOrDefault(e => e.ID == entity.ID);
+
+                if (trackedEntity != null)
+                {
+                    // gelen değerleri tracked entity'e map et
+                    _dbContext.Entry(trackedEntity).CurrentValues.SetValues(entity);
+                    return trackedEntity;
+                }
+
+                // değilse attach et
+                _dbContext.Attach(entity);
+            }
+
+            entry.State = EntityState.Modified;
+            return entity;
+        }
+
 
         #endregion
     }

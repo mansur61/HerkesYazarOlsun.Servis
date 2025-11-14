@@ -36,7 +36,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
         public Books? GetBooks(long id)
         {
             
-            return _booksDal.GetAllQueryable(p => p.ID == id).
+            return _booksDal.GetAllQueryableNoTracking(p => p.ID == id).
                 Include(b => b.Yazar)
                     .ThenInclude(c => c.Profil)
                 .Include(b => b.Categori)
@@ -135,7 +135,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public List<FavoriBooks> GetFavoriBooksByuserId(long? userId)
         {
-            return _favoriBookDal.GetAllQueryable(p => p.UserId == userId).ToList();
+            return _favoriBookDal.GetAllQueryableNoTracking(p => p.UserId == userId).ToList();
         }
         
 

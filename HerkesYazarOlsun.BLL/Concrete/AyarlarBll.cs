@@ -14,7 +14,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public Ayarlar? GetProfilByLoginId(long loginId)
         {
-            var sonuc = ayrDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
+            var sonuc = ayrDal.GetAllQueryableNoTracking(p => p.LoginUserId == loginId).SingleOrDefault();
             return sonuc;
         }
 
@@ -29,7 +29,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public Ayarlar? GetAyar(long LoginUserId)
         {
-            var sonuc = ayrDal.GetAllQueryable(p => p.LoginUserId == LoginUserId).FirstOrDefault();
+            var sonuc = ayrDal.GetAllQueryableNoTracking(p => p.LoginUserId == LoginUserId).FirstOrDefault();
             return sonuc;
         }
         

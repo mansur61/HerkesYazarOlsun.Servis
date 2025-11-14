@@ -16,7 +16,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public VM_PROFILE? GetProfilByLoginId(long loginId)
         {
-            var sonuc = _prflDal.GetAllQueryable(p => p.UserId == loginId).SingleOrDefault();
+            var sonuc = _prflDal.GetAllQueryableNoTracking(p => p.UserId == loginId).SingleOrDefault();
             var vmProfil = ObjectMapper.Map(sonuc, new VM_PROFILE());
             return vmProfil;
         }

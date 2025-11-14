@@ -9,6 +9,9 @@ namespace HerkesYazarOlsun.DataLayer
         IRepository<T> GetRepository<T>() where T : BaseEntity;
         T GetWriteRepositoryWithBaseEntity<T>(T entity) where T : BaseEntity;
         T GetWriteRepositoryWithNewBaseEntity<T>(T entity) where T : NewBaseEntity;
+        T GetWriteUpdateRepositoryWithNewBaseEntity<T>(T entity) where T : NewBaseEntity;
+        T GetWriteUpdateRepositoryWithBaseEntity<T>(T entity) where T : BaseEntity;
+
         IRepo<T> Repo<T>() where T : NewBaseEntity;
         int Save();
         void OpenTransaction();

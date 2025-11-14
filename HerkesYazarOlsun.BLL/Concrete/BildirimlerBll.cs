@@ -23,7 +23,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public Bildirimler? Get(long LoginUserId)
         { 
-            var sonuc = usrDtlsDal.GetAllQueryable(p => p.LoginUserId == LoginUserId).FirstOrDefault();
+            var sonuc = usrDtlsDal.GetAllQueryableNoTracking(p => p.LoginUserId == LoginUserId).FirstOrDefault();
             return sonuc;
         }
         

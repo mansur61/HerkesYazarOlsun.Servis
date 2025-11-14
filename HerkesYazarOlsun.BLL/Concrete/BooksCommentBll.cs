@@ -25,7 +25,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public List<BooksComment> GetList(long kitapId)
         {
-            return BooksCommentDal.GetAllQueryable(p => p.BookId == kitapId).ToList();
+            return BooksCommentDal.GetAllQueryableNoTracking(p => p.BookId == kitapId).ToList();
         }
 
     }

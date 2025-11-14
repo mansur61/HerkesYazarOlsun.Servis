@@ -18,7 +18,7 @@ namespace HerkesYazarOlsun.BLL.Validation
 
         private bool EmailVarmi(VM_BOOKS_COMMENT mesaj)
         { 
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.EMAIL == mesaj.EMAIL).ToList();
+            var sonuc = _kisilerDal.GetAllQueryableNoTracking(p => p.EMAIL == mesaj.EMAIL).ToList();
             if(sonuc.Any())
             {
                 return true;

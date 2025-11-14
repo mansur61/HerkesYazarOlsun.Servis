@@ -48,12 +48,21 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         }
         public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>> predicate)
         {
-            return _dbSet.AsNoTracking().Where(predicate).Where(x => x.IS_DELETED == 0);
+            return _dbSet.Where(predicate)
+                         .Where(x => x.IS_DELETED == 0); // Tracking açık
         }
+
+        public IQueryable<T> GetAllQueryableNoTracking(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.AsNoTracking() // Tracking kapalı
+                         .Where(predicate)
+                         .Where(x => x.IS_DELETED == 0);
+        }
+
 
         public IQueryable<T> GetAllQueryable()
         {
-            return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0);
+            return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0); // Tracking açık
         }
 
         public T Ekle(T entity, string mail)
