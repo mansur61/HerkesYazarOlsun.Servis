@@ -7,6 +7,7 @@ using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Enums;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -27,19 +28,19 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private UsersValidator _usersValidator;
         private WriterFollowValidator _WriterFollowValidator;
         private WriterStarsValidator _writerStarsValidator;
-        private FavoriYazarlarValidator _favYazarValidato; 
+        private FavoriYazarlarValidator _favYazarValidato;
         private IWriterStarsService writerStarsService;
 
         private BooksStarsValidator _booksStarsValidator;
         public UsersController(ILogger<UsersController> logger, IUsersService _userService,
             IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration,
-            EmailValidator emailValidator, UsersValidator usersValidator, WriterFollowValidator writerFollowValidator, 
-            WriterStarsValidator writerStarsValidator, IAccountLoginService accountLoginService, IWriterFollowService writerFollowService, 
-            IFavoriYazarlarService favoriYazarlarService, IWriterStarsService writerStarsService, FavoriYazarlarValidator  favYazarValidato)
+            EmailValidator emailValidator, UsersValidator usersValidator, WriterFollowValidator writerFollowValidator,
+            WriterStarsValidator writerStarsValidator, IAccountLoginService accountLoginService, IWriterFollowService writerFollowService,
+            IFavoriYazarlarService favoriYazarlarService, IWriterStarsService writerStarsService, FavoriYazarlarValidator favYazarValidato)
             : base(userAccessor, unitOfWork, configuration)
         {
             _logger = logger;
-            userService = _userService; 
+            userService = _userService;
             _emailValidator = emailValidator;
             _usersValidator = usersValidator;
             _WriterFollowValidator = writerFollowValidator;
@@ -56,7 +57,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("PostKisiUpdate")]
         public ServiceResult PostKisiUpdate(VM_USERS kisi)
         {
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS, message: ""); 
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS, message: "");
             var user = ObjectMapper.Map(kisi, new Users());
 
             var sonuc = _emailValidator.Validate(user);
@@ -73,11 +74,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             try
             {
-                var kayit = userService.GetMail( kisi.EMAIL);
+                var kayit = userService.GetMail(kisi.EMAIL);
                 if (kayit != null)
                 {
                     kayit.isEmail = 1;
-                    kayit = userService.Guncelle(kayit,YETKILITCNO);
+                    kayit = userService.Guncelle(kayit, YETKILITCNO);
                 }
                 else
                 {
@@ -100,7 +101,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("PostKisiSave")]
         public ServiceResult PostKisiSave(VM_USERS kisi)
         {
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS, message: ""); 
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS, message: "");
             var user = ObjectMapper.Map(kisi, new Users());
 
 
@@ -161,7 +162,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [HttpGet]
         [Route("GetKisiByUsername")]
         public Users? GetKisiByUsername(string username)
-        { 
+        {
             var getKisi = userService.GetUserrName(username);
             return getKisi;
         }
@@ -231,11 +232,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
         }
 
 
-        
+
         [HttpPost]
         [Route("GetKisiler")]
         public List<VM_USERS> GetKisiler(VM_ARAMA_INPUT arama)
-        { 
+        {
 
             var getKisiler = userService.GetKullanicilar();
             if (!string.IsNullOrEmpty(arama.YAZAR_ADI))
@@ -252,7 +253,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             {
                 getKisiler = getKisiler.Where(p => p.FavoriYazarlarList.Any()).ToList();
             }
-            
+
 
             var vmUserList = getKisiler
              .Select(u =>
@@ -287,11 +288,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     return result;
                 }
 
-                
+
                 favYazar = _favoriYazarlarService.Ekle(favYazar, MAIL);
                 result.Result = favYazar;
                 result.Message = "Yazar Favorilere Eklendi";
-                
+
             }
             catch (Exception)
             {
@@ -305,7 +306,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [HttpGet]
         [Route("GetWriterFollowById")]
         public VM_WriterFollow GetWriterFollowById(long yazar_id)
-        { 
+        {
             var follow = _writerFollowService.Get(yazar_id);
             var fllwYazar = ObjectMapper.Map(follow, new VM_WriterFollow());
 
@@ -324,7 +325,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("SaveOrUpdateAccountLogin")]
         public ServiceResult SaveOrUpdateAccountLogin(VM_LOGIN vmLogni)
         {
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);             
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
 
             var bak = MAIL;
             var accountLogin = ObjectMapper.Map(vmLogni, new AccountLogin());
@@ -366,7 +367,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         {
             ServiceResult<WriterStars> result = new ServiceResult<WriterStars>(state: MessageResultState.SUCCESS);
 
-             
+
             var sonuc = _writerStarsValidator.Validate(star);
 
             if (!sonuc!.IsValid)
@@ -384,15 +385,15 @@ namespace HerkesYazarOlsun.Servis.Controllers
             try
             {
 
-                var mevcutKayit = writerStarsService.Get( star.LoginUserId ?? 0 ,star.YazarId ?? 0);
+                var mevcutKayit = writerStarsService.Get(star.LoginUserId ?? 0, star.YazarId ?? 0);
                 if (mevcutKayit == null)
                 {
-                    star = writerStarsService.Ekle(star,MAIL);
+                    star = writerStarsService.Ekle(star, MAIL);
                 }
                 else
                 {
                     mevcutKayit!.StarPuani = star.StarPuani;
-                    writerStarsService.Guncelle(mevcutKayit,YETKILITCNO);
+                    writerStarsService.Guncelle(mevcutKayit, YETKILITCNO);
                 }
 
 
@@ -431,23 +432,23 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             try
             {
-
-
-                var mevcutKayit = followDal.Get(p => p.LoginUserId == follow.LoginUserId && p.YazarId == follow.YazarId);
+                var mevcutKayit = followDal.GetTrackingYok(p => p.LoginUserId == follow.LoginUserId && p.YazarId == follow.YazarId);
                 if (mevcutKayit == null)
                 {
                     follow = followDal.Add(follow);
+
+                    result.Message = "Takip Ediliyor.";
                 }
                 else
                 {
-                    if (follow.isFollow == 1)
+                    if (follow.isFollow == (int)Takip.TakipEt)
                     {
-                        mevcutKayit.isFollow = 1;
-                        result.Message = "Takipten Ediliyor.";
+                        mevcutKayit.isFollow = (int)Takip.TakipEt;
+                        result.Message = "Takip Ediliyor.";
                     }
                     else
                     {
-                        mevcutKayit.isFollow = 0;
+                        mevcutKayit.isFollow = (int)Takip.TakiptenCikar;
                         result.Message = "Takipten Çýkýldý.";
                     }
 
@@ -456,9 +457,9 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                result.Message = "";
+                result.Message = ex.Message;
                 result.State = MessageResultState.ERROR;
             }
 

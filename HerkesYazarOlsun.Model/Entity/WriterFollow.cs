@@ -15,5 +15,7 @@ namespace HerkesYazarOlsun.Model.Entity
 
         [DefaultValue(0)]
         public int isFollow { get; set; }
+         
+        public int? IsOnay { get; set; }
     }
 }

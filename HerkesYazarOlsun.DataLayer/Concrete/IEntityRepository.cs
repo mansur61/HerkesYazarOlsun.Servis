@@ -6,6 +6,9 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
     public interface IEntityRepository<T> where T : class, IEntity, new()
     {
         T Get(Expression<Func<T, bool>> filter);
+
+        T GetTrackingYok(Expression<Func<T, bool>> filter);
+
         IList<T> GetList(Expression<Func<T, bool>> filter = null);
         T Add(T entity);
         void Update(T entity);

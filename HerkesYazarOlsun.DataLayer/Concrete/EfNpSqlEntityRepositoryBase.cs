@@ -80,6 +80,11 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
             return _ctx.Set<TEntity>().AsNoTracking().FirstOrDefault(filter);
         }
 
+        public TEntity GetTrackingYok(Expression<Func<TEntity, bool>> filter)
+        {
+            return _ctx.Set<TEntity>().FirstOrDefault(filter);
+        }
+
         public GenericResult<TEntity> PagedList(Expression<Func<TEntity, bool>> filter = null, int pNumber = 0, int pSize = 10)
         {
             var query = _ctx.Set<TEntity>().AsNoTracking();

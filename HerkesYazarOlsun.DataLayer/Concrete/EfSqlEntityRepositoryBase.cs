@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions; 
-using HerkesYazarOlsun.DataLayer.Context;
-using HerkesYazarOlsun.Model.Utils;
+﻿using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model; 
+using HerkesYazarOlsun.Model.Utils;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions; 
 
 namespace HerkesYazarOlsun.DataLayer.Concrete
 {
@@ -49,6 +49,11 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
         {
             return _ctx.Set<TEntity>().AsNoTracking().FirstOrDefault(filter);
         }
+        public TEntity GetTrackingYok(Expression<Func<TEntity, bool>> filter)
+        {
+            return _ctx.Set<TEntity>().FirstOrDefault(filter);
+        }
+
 
         public IList<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null)
         {

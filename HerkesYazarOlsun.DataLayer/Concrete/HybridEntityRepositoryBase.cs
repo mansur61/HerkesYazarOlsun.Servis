@@ -21,6 +21,9 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
             => _repo.Get(filter);
 
+        public TEntity GetTrackingYok(Expression<Func<TEntity, bool>> filter)
+           => _repo.GetTrackingYok(filter);
+
         public IList<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null)
             => _repo.GetList(filter);
 

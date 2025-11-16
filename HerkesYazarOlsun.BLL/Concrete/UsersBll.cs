@@ -27,9 +27,12 @@ namespace HerkesYazarOlsun.BLL.Concrete
         }
         public Users? Get(long LoginUserId)
         {
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.ID == LoginUserId).Include(b => b.Profil)
+            var sonuc = _kisilerDal.GetAllQueryable(p => p.ID == LoginUserId)
+                .Include(b => b.Profil)
                 .Include(b => b.WriterStarsLoginList)
-                .Include(b => b.WriterFollowLoginList).FirstOrDefault();
+                .Include(b => b.WriterFollowYazarList)
+                .Include(b => b.WriterFollowLoginList)                
+                .FirstOrDefault();
             return sonuc;
         }
 
