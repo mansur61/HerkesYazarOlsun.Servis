@@ -5,9 +5,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class FavorilerDal : HybridRepo<FAVORILER>, IFavorilerDal
+    public class FavorilerDal : HybridRepo<Favoriler>, IFavorilerDal
     {
-        public FavorilerDal(SqlRepo<FAVORILER> sqlRepo, NpgsqlRepo<FAVORILER> npgsqlRepo, IConfiguration config)
+        public FavorilerDal(SqlRepo<Favoriler> sqlRepo, NpgsqlRepo<Favoriler> npgsqlRepo, IConfiguration config)
        : base(sqlRepo, npgsqlRepo, config)
         {
         }

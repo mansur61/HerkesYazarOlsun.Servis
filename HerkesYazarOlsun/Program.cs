@@ -9,6 +9,7 @@ using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,9 +41,9 @@ if (dbType == "Sql")
 }
 else
 {
-    builder.Services.AddDbContext<HerkesYazaOlsunContext>((serviceProvider, options) =>
+    builder.Services.AddDbContext<PostgreSqlContext>((serviceProvider, options) =>
     {
-        options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"));
+        options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunPostgreDb"));
     });
 
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -53,7 +54,7 @@ builder.Services.AddScoped(typeof(SqlRepo<>));
 builder.Services.AddScoped(typeof(BaseSqlDbContext), typeof(SqlServerContext));
 
 builder.Services.AddScoped(typeof(NpgsqlRepo<>));
-builder.Services.AddScoped(typeof(BaseNpSqlDbContext), typeof(HerkesYazaOlsunContext));
+builder.Services.AddScoped(typeof(BaseNpSqlDbContext), typeof(PostgreSqlContext));
 
 builder.Services.AddScoped(typeof(EfSqlEntityRepositoryBase<>));
 builder.Services.AddScoped(typeof(EfNpSqlEntityRepositoryBase<>));
@@ -84,7 +85,7 @@ builder.Services.AddScoped<OdemeSponsorlariValidator>();
 builder.Services.AddScoped<BooksPagesAddValidator>();
 builder.Services.AddScoped<WriterFollowValidator>();
 builder.Services.AddScoped<WriterStarsValidator>();
-
+builder.Services.AddScoped<FavoriYazarlarValidator>();
 
 // DbSettings
 DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
@@ -93,7 +94,15 @@ DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString
 DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
 
 
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();  
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;//Preserve
+        opt.JsonSerializerOptions.WriteIndented = true;
+    });
 
 var app = builder.Build();
 

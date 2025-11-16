@@ -48,12 +48,21 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         }
         public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>> predicate)
         {
-            return _dbSet.AsNoTracking().Where(predicate).Where(x => x.IS_DELETED == 0);
+            return _dbSet.Where(predicate)
+                         .Where(x => x.IS_DELETED == 0); // Tracking açık
         }
+
+        public IQueryable<T> GetAllQueryableNoTracking(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.AsNoTracking() // Tracking kapalı
+                         .Where(predicate)
+                         .Where(x => x.IS_DELETED == 0);
+        }
+
 
         public IQueryable<T> GetAllQueryable()
         {
-            return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0);
+            return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0); // Tracking açık
         }
 
         public T Ekle(T entity, string mail)
@@ -96,7 +105,7 @@ namespace HerkesYazarOlsun.DataLayer.Repo
 
         public void Sil(int id, string mail)
         {
-            var entity = _dbSet.Find(id);
+            var entity = _dbSet.Find((long)id);
             if (entity == null || entity.IS_DELETED == 1)
                 throw new Exception("Entity not found or already deleted.");
 

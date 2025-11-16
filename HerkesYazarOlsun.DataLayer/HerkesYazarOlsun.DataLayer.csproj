@@ -39,16 +39,15 @@
   <ItemGroup>
     <ProjectReference Include="..\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="SqlServerMigrations\" />
-  </ItemGroup>
 <!---publish sırasında appsettings.json çaıkşmayı önlemek için eklendi.-->
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SqlServerMigrations\" />
   </ItemGroup>
 
 

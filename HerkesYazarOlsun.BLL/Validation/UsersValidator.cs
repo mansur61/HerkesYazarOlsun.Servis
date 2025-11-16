@@ -38,7 +38,7 @@ namespace HerkesYazarOlsun.BLL.Validation
 
         private bool BaskaEmailVarmi(Users user)
         { 
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.USERNAME == user.USERNAME).ToList();
+            var sonuc = _kisilerDal.GetAllQueryableNoTracking(p => p.USERNAME == user.USERNAME).ToList();
             if (sonuc.Any() && sonuc.Count() > 1)
             {
                 return false;
@@ -49,7 +49,7 @@ namespace HerkesYazarOlsun.BLL.Validation
         }
         private bool BaskaTelNoVarmi(Users user)
         {  
-            var sonuc = _kisilerDal.GetAllQueryable(p => p.TELNO == user.TELNO).ToList();
+            var sonuc = _kisilerDal.GetAllQueryableNoTracking(p => p.TELNO == user.TELNO).ToList();
             if (sonuc.Any() && sonuc.Count() > 1)
             {
                 return false;

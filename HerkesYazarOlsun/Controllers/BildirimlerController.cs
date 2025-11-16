@@ -2,7 +2,7 @@ using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HerkesYazarOlsun.Controllers
+namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,7 +19,7 @@ namespace HerkesYazarOlsun.Controllers
         [Route("GetBildirimlerByLoginId")]
         public Bildirimler? GetBildirimlerByLoginId(long loginId)
         {            
-            var sonuc = bildrmlerDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
+            var sonuc = bildrmlerDal.GetAllQueryableNoTracking(p => p.LoginUserId == loginId).SingleOrDefault();
             return sonuc;
         }
 

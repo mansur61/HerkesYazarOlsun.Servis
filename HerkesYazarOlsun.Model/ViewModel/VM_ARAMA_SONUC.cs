@@ -1,18 +1,14 @@
-﻿using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HerkesYazarOlsun.Model.ViewModel
+﻿namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_ARAMA_SONUC
     {
 
         public VM_BOOKS vmBook { get; set; }
+        public List<VM_BOOKS> vmBookList { get; set; }
         public int kalan { get; set; }
         public int sliderdaGosterilecekKayit { get; set; }
+        public string? kitapSliderYometimAdi { get; set; }
+        public VM_PAGINATION_BUTTON? vM_PAGINATION_BUTTONS { get; set; }
         public int Start { get; set; }
         public int End { get; set; }
         public string PageWrite { get; set; }

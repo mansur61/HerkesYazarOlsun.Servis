@@ -27,3 +27,19 @@ dotnet ef database update --context SqlServerContext --project HerkesYazarOlsun.
 
  DLL’ler nerede oluþuyor
  <ProjeKlasörü>\bin\Release\net8.0\win-x64\publish\
+
+
+ eðer ki 
+
+ örneðin BooksPages tablosunda olduðu gibi BooksID kolonu yok modelde ama snapshot modelde eski migration da halen daha var gözüküyorsa
+uygulanacak adýmlar
+
+dotnet ef database drop --context SqlServerContext --project HerkesYazarOlsun.DataLayer -f
+-f veya --force onay sormadan veritabanýný siler.
+
+Bu þekilde doðrudan DB temizlenir ve bir sonraki adým olan yeni migration ve update iþlemi sorunsuz çalýþýr.
+
+sonra yukarýdaki gibi migration oluþtur ve güncelle
+
+mevcut migrationlarý silemene gerek yok
+

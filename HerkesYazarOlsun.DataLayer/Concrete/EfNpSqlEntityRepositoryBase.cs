@@ -19,7 +19,7 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
             get
             {
                 if (ctx == null)
-                    ctx = new HerkesYazaOlsunContext();  
+                    ctx = new PostgreSqlContext();  
                 return ctx;
             }
         }
@@ -78,6 +78,11 @@ namespace HerkesYazarOlsun.DataLayer.Concrete
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
             return _ctx.Set<TEntity>().AsNoTracking().FirstOrDefault(filter);
+        }
+
+        public TEntity GetTrackingYok(Expression<Func<TEntity, bool>> filter)
+        {
+            return _ctx.Set<TEntity>().FirstOrDefault(filter);
         }
 
         public GenericResult<TEntity> PagedList(Expression<Func<TEntity, bool>> filter = null, int pNumber = 0, int pSize = 10)

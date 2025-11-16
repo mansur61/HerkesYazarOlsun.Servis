@@ -62,6 +62,13 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0).Where(predicate);
         }
 
+        public IQueryable<T> GetAllQueryableNoTracking(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.AsNoTracking() // Tracking kapalı
+                         .Where(predicate)
+                         .Where(x => x.IS_DELETED == 0);
+        }
+
         public IQueryable<T> GetAllQueryable()
         {
             return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0);

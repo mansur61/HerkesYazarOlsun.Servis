@@ -1,26 +1,24 @@
 
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer;
-using HerkesYazarOlsun.DataLayer.Abstract; 
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using HerkesYazarOlsun.Servis.Controllers;
-using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HerkesYazarOlsun.Controllers
+namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class SponsorlarController : BaseApiController
     {
 
-        private ISponsorlarDal _spnsDal;
-        public SponsorlarController(  ISponsorlarDal spnsDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+        private ISponsorlarService _spnSrv;
+        public SponsorlarController(ISponsorlarService _spnSrv, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
             : base(userAccessor, unitOfWork, configuration)
         {
-            _spnsDal = spnsDal;
+           this._spnSrv = _spnSrv;
         }
          
          
@@ -34,7 +32,7 @@ namespace HerkesYazarOlsun.Controllers
             try
             {
 
-                spnsEntity = _spnsDal.Add(spnsEntity);
+                spnsEntity = _spnSrv.Add(spnsEntity);
 
                 result.State = MessageResultState.SUCCESS;
                 return result;
@@ -53,20 +51,18 @@ namespace HerkesYazarOlsun.Controllers
         [Route("GetSponsorlar")]
         public List<VM_SPONSORLAR> GetSponsorlar()
         {
-            var spnsList = _spnsDal.GetList().ToList();
-            var list = ObjectMapper.MapList(spnsList, new List<VM_SPONSORLAR>());
+            var spnsList = _spnSrv.GetSponsorlar();
 
-            return list;
+            return spnsList;
         }
 
         [HttpGet]
         [Route("GetSponsorlarById")]
         public VM_SPONSORLAR GetSponsorlarById(long id)
         {
-            var spns = _spnsDal.Get(p => p.ID == id);
-            var list = ObjectMapper.Map(spns, new VM_SPONSORLAR());
+            var spns = _spnSrv.GetSponsorlarById(id);
 
-            return list;
+            return spns;
         }
 
     }

@@ -3,7 +3,7 @@ using HerkesYazarOlsun.Model.Entity;
 
 namespace HerkesYazarOlsun.DataLayer.Abstract
 {
-    public interface ITaleplerDal : IEntityRepository<TALEPLER>
+    public interface ITaleplerDal : IEntityRepository<Talepler>
     {
     }
 }

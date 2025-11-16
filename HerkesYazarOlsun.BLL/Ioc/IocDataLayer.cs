@@ -18,6 +18,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
             service.AddScoped<IKartlarDal, KartlarDal>();
             service.AddScoped<IOdemeDal, OdemeDal>();
             service.AddScoped<IYayinAyarlariDal, YayinAyarlariDal>();
+            service.AddScoped<ICategoryYayinAyarlariDal, CategoryYayinAyarlariDal>();
             
             service.AddScoped<IAccountLoginDal, AccountLoginDal>();
             service.AddScoped<IBildirimlerDal, BildirimlerDal>();

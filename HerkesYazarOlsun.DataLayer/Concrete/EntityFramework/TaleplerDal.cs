@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Concrete.EntityFramework
 {
-    public class TaleplerDal : HybridEntityRepositoryBase<TALEPLER>, ITaleplerDal
+    public class TaleplerDal : HybridEntityRepositoryBase<Talepler>, ITaleplerDal
     {
         public TaleplerDal(
-         EfSqlEntityRepositoryBase<TALEPLER> sqlRepo,
-         EfNpSqlEntityRepositoryBase<TALEPLER> npgsqlRepo,
+         EfSqlEntityRepositoryBase<Talepler> sqlRepo,
+         EfNpSqlEntityRepositoryBase<Talepler> npgsqlRepo,
          IConfiguration config)
          : base(sqlRepo, npgsqlRepo, config)
         {

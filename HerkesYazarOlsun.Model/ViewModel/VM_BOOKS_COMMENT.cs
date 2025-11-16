@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HerkesYazarOlsun.Model.ViewModel
+﻿namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_BOOKS_COMMENT
     {
@@ -17,6 +11,6 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public long? LoginUserId { get; set; }
         public DateTime? CREATE_AT { get; set; }
         public long? ID { get; set; }
-        public int StarPuani { get; set; }
+        public int? StarPuani { get; set; }
     }
 }

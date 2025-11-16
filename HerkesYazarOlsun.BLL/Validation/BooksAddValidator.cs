@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Enums;
 using HerkesYazarOlsun.Model.ViewModel;
@@ -46,7 +45,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                 page.RuleFor(x => x.PageWrite)
                    .Must((parent, context) =>
                    {
-                       Books book = _bookservice.GetBooks(parent.BooksId);
+                       Books book = _bookservice.GetBooks(parent.BookId);
                        int minWordCount = book.CategoriId == (int)BookCategory.Siir
                            ? kitapSiirIseWordLenght
                            : pageLenght;
@@ -56,7 +55,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                    .WithMessage(context =>
                    {
 
-                       Books book = _bookservice.GetBooks(context.BooksId);
+                       Books book = _bookservice.GetBooks(context.BookId);
                        int minWordCount = book.CategoriId == (int)BookCategory.Siir
                            ? kitapSiirIseWordLenght
                            : pageLenght;

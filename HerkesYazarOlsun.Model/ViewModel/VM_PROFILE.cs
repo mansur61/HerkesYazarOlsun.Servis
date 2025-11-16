@@ -7,7 +7,8 @@
         public string? ProfilResimURl { get; set; }
         public string? ProfilResimBase64 { get; set; }
         public string? ProfilResimName { get; set; }
-        public long? LoginUserId { get; set; } 
+        public long? LoginUserId { get; set; }
+        public long?  UserId { get; set; }
         public string? ProfilArkaplanResmi { get; set; }
         public string? ProfilArkaplanRenkKodu { get; set; } 
 

@@ -1,28 +1,26 @@
-using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.Model.Utils;
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HerkesYazarOlsun.Controllers
+namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProfilController : ControllerBase
     {
-        private IProfilDal prflDal;
+        private IProfilService prflSrv;
 
-        public ProfilController(IProfilDal prflDal)
+        public ProfilController(IProfilService prflSrv)
         {
-            this.prflDal = prflDal;
+            this.prflSrv = prflSrv;
         }
 
         [HttpGet]
         [Route("GetProfilByLoginId")]
         public VM_PROFILE? GetProfilByLoginId(long loginId)
-        {            
-            var sonuc = prflDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
-            var vmProfil = ObjectMapper.Map(sonuc, new VM_PROFILE());
-            return vmProfil;
+        {
+            var sonuc = prflSrv.GetProfilByLoginId(loginId);
+            return sonuc;
         }
 
     }

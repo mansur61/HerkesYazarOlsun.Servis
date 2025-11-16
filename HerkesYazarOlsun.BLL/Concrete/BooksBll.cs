@@ -3,6 +3,7 @@ using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.ViewModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace HerkesYazarOlsun.BLL.Concrete
 {
@@ -34,12 +35,93 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public Books? GetBooks(long id)
         {
-            return _booksDal.GetAllQueryable(p => p.ID == id).FirstOrDefault();
+            
+            return _booksDal.GetAllQueryableNoTracking(p => p.ID == id).
+                Include(b => b.Yazar)
+                    .ThenInclude(c => c.Profil)
+                .Include(b => b.Categori)
+                    .ThenInclude(c => c.CategoryYayinAyarlari)
+                .Include(b => b.Categori)
+                .Include(b => b.YayinAyar)
+                .Include(b => b.BooksPageList)
+                .Include(b => b.BooksComments)
+                .Include(b => b.BooksStars)
+                .Include(b => b.FavoriBooks)
+                .Include(b => b.BooksDegerlendirme)
+                . FirstOrDefault();
+        }
+
+        public VM_Stars CalculateMaxStar(Books book)
+        {
+            var vM_BooksStars = new VM_Stars();
+            if (book == null || book.BooksStars == null || !book.BooksStars.Any())
+                return vM_BooksStars;
+
+            var groups = book.BooksStars
+                .GroupBy(s => s.StarPuani)
+                .Select(g => new { Star = g.Key, Count = g.Count() })
+                .ToList();
+
+            vM_BooksStars.BirStarToplam = groups.FirstOrDefault(g => g.Star == 1)?.Count ?? 0;
+            vM_BooksStars.IkiStarToplam = groups.FirstOrDefault(g => g.Star == 2)?.Count ?? 0;
+            vM_BooksStars.UcStarToplam = groups.FirstOrDefault(g => g.Star == 3)?.Count ?? 0;
+            vM_BooksStars.DortStarToplam = groups.FirstOrDefault(g => g.Star == 4)?.Count ?? 0;
+            vM_BooksStars.BesStarToplam = groups.FirstOrDefault(g => g.Star == 5)?.Count ?? 0;
+
+            var maxGroup = groups.OrderByDescending(g => g.Count).FirstOrDefault();
+            if (maxGroup != null)
+            {
+                vM_BooksStars.HangiStar = $"yildiz{maxGroup.Star}";
+                vM_BooksStars.EnFazlaSitar = maxGroup.Count;
+            }
+
+            return vM_BooksStars;
+        }
+
+        public VM_BOOK_ISTATISTIKLER CalculateBookIstatistic(Books bookEntity)
+        {
+            if(bookEntity == null)
+            {
+                return new VM_BOOK_ISTATISTIKLER();
+            }
+            var istatistik = new VM_BOOK_ISTATISTIKLER
+            {
+                ToplamYildiz = bookEntity.BooksStars?
+            .GroupBy(s => s.LoginUserId)
+            .Count() ?? 0,
+
+                ToplamBegeni = bookEntity.FavoriBooks?
+            .GroupBy(f => f.UserId)
+            .Count() ?? 0,
+
+                ToplamYorum = bookEntity.BooksComments?
+            .GroupBy(c => c.LoginUserId)
+            .Count() ?? 0,
+
+                ToplamDegerlendirme = bookEntity.BooksDegerlendirme?
+            .GroupBy(d => d.LoginUserId)
+            .Count() ?? 0
+            };
+
+            return istatistik;
         }
 
         public List<Books> GetBooksList()
         {
-            return _booksDal.GetAll();
+            var list = _booksDal
+                .GetAllQueryable()
+                .Include(b => b.Yazar)
+                    .ThenInclude(c => c.Profil)
+                .Include(b => b.Categori)
+                     .ThenInclude(c => c.CategoryYayinAyarlari)
+                .Include(b => b.YayinAyar)
+                .Include(b => b.BooksPageList)
+                .Include(b => b.BooksComments)
+                .Include(b => b.BooksStars)
+                .Include(b => b.FavoriBooks)
+                .Include(b => b.BooksDegerlendirme)
+                .ToList();
+            return list;
         }
 
         public Books PostSaveBook(Books book)
@@ -51,73 +133,11 @@ namespace HerkesYazarOlsun.BLL.Concrete
         {
             return _favoriBookDal.Add(fav, 0);
         }
-
-        public VM_BOOK_ISTATISTIKLER GetISTATISTIKLERBooksById(long id)
+        public List<FavoriBooks> GetFavoriBooksByuserId(long? userId)
         {
-            var istastk = new VM_BOOK_ISTATISTIKLER();
-
-            // Star
-            var starSonuc = _bookStarDal.GetList(book => book.BookaId == id)
-                                        .GroupBy(p => p.LoginUserId)
-                                        .ToList();
-            istastk.ToplamYildiz = starSonuc.Count;
-
-            // Favori
-            var favSonuc = _favoriBookDal.GetAllQueryable(book => book.BOOKS_ID == id)
-                                         .GroupBy(p => p.USER_ID)
-                                         .ToList();
-            istastk.ToplamBegeni = favSonuc.Count;
-
-            // Comment
-            var commentSonuc = _booksCommentDal.GetAllQueryable(book => book.BookId == id)
-                                               .GroupBy(p => p.LoginUserId)
-                                               .ToList();
-            istastk.ToplamYorum = commentSonuc.Count;
-
-            // Degerlendirme
-            var degerlendirmeSonuc = _booksDegerlendirmeDal.GetList(book => book.BookId == id)
-                                                            .GroupBy(p => p.LoginUserId)
-                                                            .ToList();
-            istastk.ToplamDegerlendirme = degerlendirmeSonuc.Count;
-
-            return istastk;
+            return _favoriBookDal.GetAllQueryableNoTracking(p => p.UserId == userId).ToList();
         }
-
-        public VM_Stars GetMaxStarBooksById(long id)
-        {
-            var keyValuePairs = new Dictionary<string, int>();
-            var vM_BooksStars = new VM_Stars();
-            var yildizlar = new List<int>();
-
-            for (int star = 1; star <= 5; star++)
-            {
-                int count = _bookStarDal.GetList(p => p.StarPuani == star && p.BookaId == id).Count();
-                yildizlar.Add(count);
-                keyValuePairs.Add($"yildiz{star}", count);
-
-                switch (star)
-                {
-                    case 1: vM_BooksStars.BirStarToplam = count; break;
-                    case 2: vM_BooksStars.IkiStarToplam = count; break;
-                    case 3: vM_BooksStars.UcStarToplam = count; break;
-                    case 4: vM_BooksStars.DortStarToplam = count; break;
-                    case 5: vM_BooksStars.BesStarToplam = count; break;
-                }
-            }
-
-            var max = yildizlar.Max();
-            foreach (var item in keyValuePairs)
-            {
-                if (item.Value == max)
-                {
-                    vM_BooksStars.HangiStar = item.Key;
-                    vM_BooksStars.EnFazlaSitar = item.Value;
-                    break;
-                }
-            }
-
-            return vM_BooksStars;
-        }
+        
 
         public Books UpdateBook(Books book)
         {

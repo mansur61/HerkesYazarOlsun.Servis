@@ -1,10 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.Model.ViewModel
 {
@@ -24,6 +18,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
 
         public long IS_DELETED { get; set; }
         public long KitapId { get; set; }
+        public string KitapIdENC { get; set; }
 
         public long SponsorId { get; set; }
         public long LoginUserId { get; set; }

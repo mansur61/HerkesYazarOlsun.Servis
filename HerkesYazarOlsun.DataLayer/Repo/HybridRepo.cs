@@ -38,6 +38,12 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         {
             return _repo.Update(entity, tcNo);
         }
+ 
+
+        public IQueryable<T> GetAllQueryableNoTracking(Expression<Func<T, bool>> predicate)
+        {
+            return _repo.GetAllQueryableNoTracking(predicate);
+        }
 
         public T Guncelle(T entity, string mail)
         {

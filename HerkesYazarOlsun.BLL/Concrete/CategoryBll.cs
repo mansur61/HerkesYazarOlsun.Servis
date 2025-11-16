@@ -1,6 +1,5 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 
 namespace HerkesYazarOlsun.BLL.Concrete

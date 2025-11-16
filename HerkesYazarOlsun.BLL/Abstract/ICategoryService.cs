@@ -1,9 +1,9 @@
-﻿using HerkesYazarOlsun.Model.Entity;
+﻿using HerkesYazarOlsun.Model.ViewModel;
+
 namespace HerkesYazarOlsun.BLL.Abstract
 {
-    public interface ICategoryService
+    public interface ICarouselService
     {
-         Category GetCategory(long id);
-        List<Category> GetCategories();
+        List<VM_CAROUSEL_DUYURU> GetDuyurular();
     }
 }

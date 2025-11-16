@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HerkesYazarOlsun.Model.ViewModel
+﻿namespace HerkesYazarOlsun.Model.ViewModel
 {
     public class VM_BOOKS_PAGES
     {
@@ -14,7 +8,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public string PageWriteBase64 { get; set; }
         public bool isWordPDF { get; set; } 
         // Kitap veritabanı id bilgisi
-        public long BooksId { get; set; }
+        public long BookId { get; set; }
     }
 
 }

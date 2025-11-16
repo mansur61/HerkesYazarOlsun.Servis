@@ -76,6 +76,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             }
             
             var book = ObjectMapper.Map(bookPages, new BooksPages());
+            book.BookId = bookPages.BookId;
             var getBookPages = _booksPagesService.PostSaveBooksPages(book);
             result.Result = getBookPages;
 
