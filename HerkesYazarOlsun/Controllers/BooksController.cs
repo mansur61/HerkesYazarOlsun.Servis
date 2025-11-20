@@ -465,5 +465,27 @@ namespace HerkesYazarOlsun.Servis.Controllers
             booksService.DeleteBook(kitapId); 
         }
 
+        [HttpGet]
+        [Route("DeleteBookById")]
+        public ServiceResult<bool> DeleteBookById(long kId)
+        {
+            var result = new ServiceResult<bool>();
+            try
+            {
+                int kitapId = Convert.ToInt32(kId);
+                result.Result = booksService.DeleteBookById(kitapId);
+                result.State = MessageResultState.SUCCESS;
+                result.Message = "Kitap başarıyla silindi.";
+
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Result = false;
+                result.State = MessageResultState.ERROR;
+            }
+            return result;
+        }
+
     }
 }
