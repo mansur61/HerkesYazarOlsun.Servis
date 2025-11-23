@@ -232,52 +232,59 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("TumKitaplar")]
         public List<VM_BOOKS> TumKitaplar(VM_ARAMA_INPUT arama)
         {
-            List<Books> bookList = bookList = booksService.GetBooksList(); 
+            // IQueryable ile başlıyoruz
+            IQueryable<Books> bookQuery = booksService.GetBooksList().AsQueryable();
+
             if (!string.IsNullOrEmpty(arama.KITAP_ADI))
             {
-                bookList = bookList.Where(p => p.Name.Contains(arama.KITAP_ADI!)).ToList();
+                string kitapAdi = arama.KITAP_ADI.Trim();
+                bookQuery = bookQuery.Where(p => p.Name.Contains(kitapAdi, StringComparison.OrdinalIgnoreCase));
             }
 
             if (arama.yazarIId.HasValue)
             {
-                bookList = bookList.Where(p => p.YazarId == arama.yazarIId.Value).ToList();
+                bookQuery = bookQuery.Where(p => p.YazarId == arama.yazarIId.Value);
             }
 
             if (arama.BitenKitaplar.HasValue)
             {
-                bookList = bookList.Where(p => p.TAMAMLANDIMI == arama.BitenKitaplar.Value).ToList();
+                bookQuery = bookQuery.Where(p => p.TAMAMLANDIMI == arama.BitenKitaplar.Value);
             }
 
             if (arama.DevamEdenKitaplar.HasValue)
             {
-                bookList = bookList.Where(p => p.TAMAMLANDIMI == !arama.DevamEdenKitaplar.Value).ToList();
+                bookQuery = bookQuery.Where(p => p.TAMAMLANDIMI != arama.DevamEdenKitaplar.Value);
             }
 
             if (arama.YayinlananKitaplar.HasValue)
             {
-                bookList = bookList.Where(p => p.YAYINDAMI == arama.YayinlananKitaplar.Value).ToList();
+                bookQuery = bookQuery.Where(p => p.YAYINDAMI == arama.YayinlananKitaplar.Value);
             }
 
             if (arama.FavoriKitaplar.HasValue)
             {
-                bookList = bookList.Where(p => p.FavoriBooks.Any()).ToList();
+                bookQuery = bookQuery.Where(p => p.FavoriBooks.Any());
             }
-             
+
+            // En sonunda listeye çeviriyoruz
+            var bookList = bookQuery.ToList();
+
+            // VM dönüşümü
             var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
 
             foreach (var item in vmBookList)
             {
-                var bookEntity = bookList.First(b => b.ID == item.ID);
+                var bookEntity = bookList.FirstOrDefault(b => b.ID == item.ID);
                 if (bookEntity == null) continue;
 
                 item.Stars = booksService.CalculateMaxStar(bookEntity);
-
                 item.iSTATISTIK = booksService.CalculateBookIstatistic(bookEntity);
             }
 
             return vmBookList;
         }
-       
+
+
         private async Task<VM_BOOKS> ModelIlgiliDosyalariDoldur(VM_BOOKS input, List<IFormFile> files)
         {
             foreach (var item in files)
