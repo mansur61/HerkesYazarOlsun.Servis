@@ -1,4 +1,4 @@
-
+ï»¿
 
 using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
@@ -83,7 +83,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 else
                 {
                     result.State = MessageResultState.WARNING;
-                    result.Message = "Bu þekilde mail adresi yok";
+                    result.Message = "Bu ÅŸekilde mail adresi yok";
                     return result;
                 }
 
@@ -91,7 +91,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             catch (Exception ex)
             {
                 result.State = MessageResultState.ERROR;
-                result.Message = "Güncelleme Baþarýsýz";
+                result.Message = "GÃ¼ncelleme BaÅŸarÄ±sÄ±z";
                 return result;
             }
             return result;
@@ -124,20 +124,20 @@ namespace HerkesYazarOlsun.Servis.Controllers
                 if (kayit != null)
                 {
                     result.State = MessageResultState.WARNING;
-                    result.Message = "Böyle bir kullanýcý var.";
+                    result.Message = "BÃ¶yle bir kullanÄ±cÄ± var.";
                     return result;
                 }
                 else
                 {
                     user = userService.Ekle(user, kisi.EMAIL ?? "");
-                    result.Message = "Kayýt Alýndý";
+                    result.Message = "KayÄ±t AlÄ±ndÄ±";
                 }
 
             }
             catch (Exception ex)
             {
                 result.State = MessageResultState.ERROR;
-                result.Message = "Kayýt Baþarýsýz";
+                result.Message = "KayÄ±t BaÅŸarÄ±sÄ±z";
                 return result;
             }
             return result;
@@ -193,7 +193,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             else
             {
 
-                result.Message = "Mail adresi yok,kayýt yaptýrýnýz.";
+                result.Message = "Mail adresi yok,kayÄ±t yaptÄ±rÄ±nÄ±z.";
                 result.State = MessageResultState.ERROR;
 
             }
@@ -221,7 +221,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
             vM_WriterStars.DortStarToplam = starsGrouped.FirstOrDefault(s => s.Star == 4)?.Count ?? 0;
             vM_WriterStars.BesStarToplam = starsGrouped.FirstOrDefault(s => s.Star == 5)?.Count ?? 0;
 
-            var maxStar = starsGrouped.OrderByDescending(s => s.Count).FirstOrDefault();
+            // â­ 1) Count DESC
+            // â­ 2) Count eÅŸit ise Star DESC
+            var maxStar = starsGrouped
+                .OrderByDescending(s => s.Count)
+                .ThenByDescending(s => s.Star)
+                .FirstOrDefault();
+
             if (maxStar != null)
             {
                 vM_WriterStars.HangiStar = $"yildiz{maxStar.Star}";
@@ -230,42 +236,49 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return vM_WriterStars;
         }
-
-
+         
 
         [HttpPost]
         [Route("GetKisiler")]
         public List<VM_USERS> GetKisiler(VM_ARAMA_INPUT arama)
         {
+            // KullanÄ±cÄ± listesini al
+            var getKisiler = userService.GetKullanicilar()?.AsQueryable();
 
-            var getKisiler = userService.GetKullanicilar();
-            if (!string.IsNullOrEmpty(arama.YAZAR_ADI))
+            // Yazar adÄ± aramasÄ± (null ve case-insensitive gÃ¼venli)
+            if (!string.IsNullOrWhiteSpace(arama.YAZAR_ADI))
             {
-                getKisiler = getKisiler.Where(p => p.NAME!.Contains(arama.YAZAR_ADI!)).ToList();
+                string aranan = arama.YAZAR_ADI.Trim();
+                getKisiler = getKisiler
+                    ?.Where(p => !string.IsNullOrEmpty(p.USERNAME) &&
+                                 p.USERNAME.Contains(aranan, StringComparison.OrdinalIgnoreCase));
             }
 
+            // Belirli yazar ID'si filtrelemesi
             if (arama.yazarIId.HasValue)
             {
-                getKisiler = getKisiler.Where(p => p.ID == arama.yazarIId).ToList();
+                getKisiler = getKisiler?.Where(p => p.ID == arama.yazarIId.Value);
             }
 
-            if (arama.FavoriYazarlar.HasValue)
+            // Sadece favori yazarlarÄ± filtrele
+            if (arama.FavoriYazarlar.HasValue && arama.FavoriYazarlar.Value)
             {
-                getKisiler = getKisiler.Where(p => p.FavoriYazarlarList.Any()).ToList();
+                getKisiler = getKisiler?.Where(p => p.FavoriYazarlarList != null && p.FavoriYazarlarList.Any());
             }
 
+            var vmUserList = (getKisiler ?? Enumerable.Empty<Users>())
+            .Select(u =>
+            {
+                var vmUser = VM_USERS.MapToVM(u);
+                vmUser.Stars = CalculateMaxStarFromMemory(u);
+                return vmUser;
+            })
+            .ToList();
 
-            var vmUserList = getKisiler
-             .Select(u =>
-             {
-                 var vmUser = VM_USERS.MapToVM(u);
-                 vmUser.Stars = CalculateMaxStarFromMemory(u);   // Zamanla inner join yapýsýna geç. pl/sql de
-                 return vmUser;
-             })
-             .ToList();
 
-            return vmUserList;
+            return vmUserList ?? new List<VM_USERS>();
         }
+
 
         [HttpPost]
         [Route("PostFavoriSaveWriter")]
@@ -385,7 +398,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             try
             {
 
-                var mevcutKayit = writerStarsService.Get(star.LoginUserId ?? 0, star.YazarId ?? 0);
+                var mevcutKayit = writerStarsService.GetTrackingYok(star.LoginUserId ?? 0, star.YazarId ?? 0);
                 if (mevcutKayit == null)
                 {
                     star = writerStarsService.Ekle(star, MAIL);
@@ -396,13 +409,13 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     writerStarsService.Guncelle(mevcutKayit, YETKILITCNO);
                 }
 
-
+                result.Message = "YÄ±ldÄ±z Verildi.";
                 result.State = MessageResultState.SUCCESS;
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex )
             {
-                result.Message = "";
+                result.Message = ex.Message;
                 result.State = MessageResultState.ERROR;
             }
 
@@ -449,7 +462,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     else
                     {
                         mevcutKayit.isFollow = (int)Takip.TakiptenCikar;
-                        result.Message = "Takipten Çýkýldý.";
+                        result.Message = "Takipten Ã‡Ä±kÄ±ldÄ±.";
                     }
 
                     followDal.Update(mevcutKayit);

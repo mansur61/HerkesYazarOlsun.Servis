@@ -461,8 +461,14 @@ namespace HerkesYazarOlsun.Servis.Controllers
         [Route("DeleteBook")]
         public void DeleteBook(Books book)
         {
-            int kitapId = Convert.ToInt32(book.ID);
-            booksService.DeleteBook(kitapId); 
+            try
+            {
+                int kitapId = Convert.ToInt32(book.ID);
+                booksService.DeleteBook(kitapId);
+            }
+            catch (Exception ex)
+            { 
+            }
         }
 
         [HttpGet]

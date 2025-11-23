@@ -17,15 +17,26 @@ namespace HerkesYazarOlsun.BLL.Concrete
             return starsDal.Add(ayar);  
         }
 
-        public WriterStars? Guncelle(WriterStars ayar, long tck)
+        public   void Guncelle(WriterStars ayar, long tck)
         {
-           return starsDal.Add(ayar);
+             starsDal.Update(ayar);
         }
-        public WriterStars? Get(long LoginUserId,long YazarId)
+        public WriterStars? GetTrackingYok(long LoginUserId,long YazarId)
+        {
+            var sonuc = starsDal.GetTrackingYok(p => p.LoginUserId == LoginUserId && p.YazarId == YazarId);
+            return sonuc;
+        }
+
+        public WriterStars? Get(long LoginUserId, long YazarId)
         {
             var sonuc = starsDal.Get(p => p.LoginUserId == LoginUserId && p.YazarId == YazarId);
             return sonuc;
         }
-        
+        public List<WriterStars> GetWriterStarsByuserId(long userId)
+        {
+            return starsDal.GetList(p => p.LoginUserId == userId).ToList();
+        }
+
+
     }
 }
