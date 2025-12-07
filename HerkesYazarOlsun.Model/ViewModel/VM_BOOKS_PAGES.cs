@@ -4,8 +4,9 @@
     {
         public long ID { get; set; }
         public string? PageWrite { get; set; }
-        public string? PageFoto { get; set; }
+        public List<string>? PageFotoList { get; set; }
         public string PageWriteBase64 { get; set; }
+        public string PageFoto { get; set; }
         public bool isWordPDF { get; set; } 
         // Kitap veritabanı id bilgisi
         public long BookId { get; set; }
