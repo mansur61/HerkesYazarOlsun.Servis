@@ -52,10 +52,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return getBookPagesList;
         }
+         
 
         [HttpPost]
         [Route("PostSaveBooksPages")]
-        public ServiceResult<BooksPages> PostSaveBooksPages(VM_BOOKS_PAGES bookPages)
+        public async Task<ServiceResult<BooksPages>> PostSaveBooksPages([FromForm] VM_BOOKS_PAGES bookPages)
         {
 
             ServiceResult<BooksPages> result = new ServiceResult<BooksPages>(state: MessageResultState.SUCCESS);
@@ -74,11 +75,25 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     return result;
                 }
             }
+
+            bookPages = await _booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(bookPages);
+            var booksPage = ObjectMapper.Map(bookPages, new BooksPages());
+            booksPage.BookId = bookPages.BookId;
+
+            try
+            {
+                var getBookPages = _booksPagesService.PostSaveBooksPages(booksPage);
+                result.Result = getBookPages;
+            }
+            catch (Exception ex)
+            {
+                result.State = MessageResultState.ERROR;
+                result.Message = ex.Message ;
+                await _booksPagesService.ModelIlgiliKitapSayfaDosyaSil(booksPage.PageFoto);
+
+                return result;
+            }
             
-            var book = ObjectMapper.Map(bookPages, new BooksPages());
-            book.BookId = bookPages.BookId;
-            var getBookPages = _booksPagesService.PostSaveBooksPages(book);
-            result.Result = getBookPages;
 
 
             return result;
@@ -86,9 +101,11 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("PostUpdateBooksPages")]
-        public ServiceResult PostUpdateBooksPages(VM_BOOKS_PAGES pages)
+        public async Task<ServiceResult> PostUpdateBooksPages(VM_BOOKS_PAGES pages)
         {
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
+            pages = await _booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(pages);
+
             var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
             if(guncellenecekSayfa == null)
             {

@@ -40,7 +40,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
             _ftpServerPath = $"{_ftpPortType}{_ftpServer}/httpdocs/Belgeler/";//public_html
         }
 
-        public async Task<ServiceResponse<VM_File_Result>> Upload(IFormFile file, bool isProfile = false)
+        public async Task<ServiceResponse<VM_File_Result>> Upload(IFormFile file, bool isProfile = false, bool isBookPage = false)
         {
             var sonuc = new ServiceResponse<VM_File_Result>(null) { IsSuccess = true };
 
@@ -54,7 +54,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
                     string extension = fileName.Split('.').Last();
 
                     var newFileName = Guid.NewGuid() + "." + extension;
-                    string filePath = SaveDosyaByteOnIslem(newFileName, bytes, isProfile);
+                    string filePath = SaveDosyaByteOnIslem(newFileName, bytes, isProfile,isBookPage);
 
                     var uploadResult = new VM_File_Result
                     {
@@ -278,11 +278,13 @@ namespace HerkesYazarOlsun.BLL.Concrete
             }
         }
 
-        public string SaveDosyaByteOnIslem(string url, byte[] fileContents, bool isProfile = false)
+        public string SaveDosyaByteOnIslem(string url, byte[] fileContents, bool isProfile = false, bool isBookPage = false)
         {
             string dizin = "";
             if (isProfile)
                 dizin = $"/Profile/";
+            else if (isBookPage)
+                dizin = $"/BookPages/";
             else
                 dizin = $"/{DateTime.Now.Year}/{DateTime.Now.Month}/{DateTime.Now.Day}/";
 
@@ -332,28 +334,46 @@ namespace HerkesYazarOlsun.BLL.Concrete
             }
         }
 
-        public void DeleteDosyaByte(string dosyaYolu)
+        public async Task DeleteDosyaByte(string dosyaYolu)
         {
             FtpWebRequest request;
             try
             {
-                dosyaYolu = dosyaYolu.StartsWith("/") ? dosyaYolu.Substring(1) : dosyaYolu;
-                string ftpPath = _ftpServerPath + dosyaYolu.Replace("//", "/");
+                // 1) Yolun başındaki / işaretini temizle
+                dosyaYolu = dosyaYolu.TrimStart('/');
+
+                // 2) FTP path sonunda slash yoksa ekle
+                string basePath = _ftpServerPath.EndsWith("/")
+                    ? _ftpServerPath
+                    : _ftpServerPath + "/";
+
+                // 3) Çift slash hatasını önle
+                string ftpPath = basePath + dosyaYolu;
+                ftpPath = ftpPath.Replace("//", "/"); // düzeltme
+
+                // Ancak protokol bozulmasın diye baştaki ftp:// kısmını geri ekliyoruz
+                if (!ftpPath.StartsWith("ftp://"))
+                    ftpPath = "ftp://" + ftpPath;
+
+                // 4) FTP isteği
                 request = (FtpWebRequest)WebRequest.Create(ftpPath);
                 request.Method = WebRequestMethods.Ftp.DeleteFile;
                 request.Credentials = new NetworkCredential(_ftpUSer, _ftpPWD);
                 request.UseBinary = true;
-                request.UsePassive = false;
+                request.UsePassive = true;   // ← EN ÖNEMLİ DÜZELTME
+                request.KeepAlive = false;
 
-                _ = (FtpWebResponse)request.GetResponse();
+                using var response = (FtpWebResponse)await request.GetResponseAsync();
             }
             catch (Exception ex)
             {
                 LogHelper.log("\\log\\FtpWebService.txt",
-                    "DeleteDosyaByte_" + dosyaYolu + ex.Message + "_____" +
-                    (ex.InnerException != null ? ex.InnerException.Message : string.Empty));
+                    "DeleteDosyaByte_" + dosyaYolu + " | " +
+                    ex.Message + " | " +
+                    (ex.InnerException != null ? ex.InnerException.Message : ""));
             }
         }
+
 
         private static string FtpParseDirectory(string destFilePath)
         {
