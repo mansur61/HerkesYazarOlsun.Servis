@@ -101,7 +101,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("PostUpdateBooksPages")]
-        public async Task<ServiceResult> PostUpdateBooksPages(VM_BOOKS_PAGES pages)
+        public async Task<ServiceResult> PostUpdateBooksPages([FromForm] VM_BOOKS_PAGES pages)
         {
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
             pages = await _booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(pages);
