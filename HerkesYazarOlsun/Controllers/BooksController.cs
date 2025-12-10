@@ -327,30 +327,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return input;
         }
-        //private async Task<VM_BOOKS_PAGES> ModelIlgiliKitapSayfaDosyalariDoldur(VM_BOOKS_PAGES? inputPage)
-        //{
-        //    foreach (var item in inputPage.PageFotoDosyalar)
-        //    {
-        //        using (var memoryStream = new MemoryStream())
-        //        {
-        //            await item.CopyToAsync(memoryStream);
-        //            byte[] fileBytes = memoryStream.ToArray();
-
-        //            // FTP'ye yükle
-        //            var uploadResult = await _ftpService.Upload(item, isProfile: false, isBookPage: true);
-        //            if (uploadResult.IsSuccess)
-        //                inputPage.PageFoto = uploadResult.Result.FileName;
-        //            else
-        //                _logger.LogWarning("kitap sayfa resim yüklenemedi: {FileName}",
-        //                    item.FileName + " Hata : " + uploadResult.Message);
-
-        //        }
-        //    }
-
-        //    return inputPage;
-        //}
-
-
+          
 
         [HttpPost]
         [Route("PostSaveBook")]
