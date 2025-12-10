@@ -2,6 +2,7 @@
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Microsoft.Extensions.Logging;
 
@@ -75,16 +76,16 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public BooksPages? PostUpdateBooksPages(VM_BOOKS_PAGES bookPageSayfa)
         {
-            var guncellenecekSayfa = GetBooksPages(bookPageSayfa.ID);
-            if (guncellenecekSayfa != null)
+            try
             {
-                guncellenecekSayfa!.PageWrite = bookPageSayfa.PageWrite;
+                var guncellenecekSayfa = ObjectMapper.Map(bookPageSayfa, new BooksPages());
                 return _booksPagesDal.Guncelle(guncellenecekSayfa, _userAccessor.MAIL);
             }
-            else
+            catch (Exception ex)
             {
                 return null;
             }
+             
         }
 
 

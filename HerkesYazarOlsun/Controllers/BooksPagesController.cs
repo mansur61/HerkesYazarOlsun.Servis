@@ -104,6 +104,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public async Task<ServiceResult> PostUpdateBooksPages([FromForm] VM_BOOKS_PAGES pages)
         {
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
+            pages.PageWriteBase64 = pages.PageFoto;
             pages = await _booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(pages);
 
             var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
