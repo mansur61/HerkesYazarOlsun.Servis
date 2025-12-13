@@ -343,7 +343,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
                
             }
 
-            if(VMbookDetay.BookPagesModel?.PageFotoDosyalar?.Count !=0)
+            if (VMbookDetay.BookPagesModel?.PageFotoDosyalar?.Any() == true)
             {
                 VMbookDetay.BookPagesModel = await booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(VMbookDetay.BookPagesModel);
             }
