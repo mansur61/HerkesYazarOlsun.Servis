@@ -47,6 +47,9 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public async Task<VM_BOOKS_PAGES> ModelIlgiliKitapSayfaDosyalariDoldur(VM_BOOKS_PAGES? inputPage)
         {
+            if (inputPage == null || inputPage.PageFotoDosyalar == null || !inputPage.PageFotoDosyalar.Any())
+                return inputPage;
+
             foreach (var item in inputPage.PageFotoDosyalar)
             {
                 using (var memoryStream = new MemoryStream())
@@ -67,7 +70,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
             return inputPage;
         }
-
+       
         public BooksPages PostSaveBooksPages(BooksPages book)
         {
 
