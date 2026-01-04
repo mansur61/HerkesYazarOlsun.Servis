@@ -148,5 +148,18 @@ namespace HerkesYazarOlsun.BLL.Concrete
         {
             _booksDal.Sil(bookId, _userAccessor.MAIL);
         }
+
+        public bool DeleteBookById(int bookId)
+        {
+            try
+            {
+                _booksDal.Sil(bookId, _userAccessor.MAIL);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

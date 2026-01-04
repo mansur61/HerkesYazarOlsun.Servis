@@ -59,6 +59,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
                 .Include(b => b.Profil)
                 .Include(b => b.FavoriYazarlarList)
                 .Include(b => b.WriterStarsLoginList)
+                .Include(b => b.WriterStarsYazarList)
                 .Include(b => b.WriterFollowLoginList)
                 .ToList();
 
@@ -103,7 +104,12 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
             foreach (var item in keyValuePairs)
             {
-                if (item.Value == max)
+                if(item.Value == 0)
+                {
+                    vM_WriterSatars.HangiStar = null;
+                    vM_WriterSatars.EnFazlaSitar = item.Value;
+                }
+                else if (item.Value == max)
                 {
                     vM_WriterSatars.HangiStar = item.Key;
                     vM_WriterSatars.EnFazlaSitar = item.Value;
