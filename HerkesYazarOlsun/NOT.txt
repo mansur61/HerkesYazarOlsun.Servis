@@ -1,45 +1,64 @@
 
---------- PostgreSQL Server için ------------- 
+--------- PostgreSQL Server iï¿½in ------------- 
 dotnet ef migrations add AddCarouselDuyuruRenk --project HerkesYazarOlsun.DataLayer
 
-ekleneni dbye yansýtmak için
+ekleneni dbye yansï¿½tmak iï¿½in
 
 dotnet ef database update --project HerkesYazarOlsun.DataLayer
 
-Son eklenen migration'ý kaldýrmak için
+Son eklenen migration'ï¿½ kaldï¿½rmak iï¿½in
 
 dotnet ef migrations remove
 
-Mevcut migration'larý görmek için:
+Mevcut migration'larï¿½ gï¿½rmek iï¿½in:
 dotnet ef migrations list
 
 
 
----------  SQL Server için -------------
-Bu komut, DataLayer/SqlServerMigrations içinde SQL Server için migrationlarý oluþturacaktýr.
+---------  SQL Server iï¿½in -------------
+Bu komut, DataLayer/SqlServerMigrations iï¿½inde SQL Server iï¿½in migrationlarï¿½ oluï¿½turacaktï¿½r.
 dotnet ef migrations add InitialMigration --context SqlServerContext --output-dir SqlServerMigrations --project HerkesYazarOlsun.DataLayer
 
-Migration'ý veritabanýna uygulamak için:
+Migration'ï¿½ veritabanï¿½na uygulamak iï¿½in:
 dotnet ef database update --context SqlServerContext --project HerkesYazarOlsun.DataLayer  
 
- Publish ederken Windows için doðru RID ile yap:
- dotnet publish -c Release -r win-x64 --self-contained false
+ Publish ederken Windows iï¿½in doï¿½ru RID ile yap:
+ dotnet publish -c Release -r win-x64 --self-contained true 
 
- DLL’ler nerede oluþuyor
- <ProjeKlasörü>\bin\Release\net8.0\win-x64\publish\
+ DLLï¿½ler nerede oluï¿½uyor
+ <ProjeKlasï¿½rï¿½>\bin\Release\net8.0\win-x64\publish\
+macte diretk tar -czvf ~/Desktop/site.tar.gz .
+ bunu tar ile desktpa zip Ã§Ä±kar
+
+âœ… Macâ€™te build / test iÃ§in DOÄžRU komut
+
+EÄŸer Macâ€™te Ã§alÄ±ÅŸtÄ±racaksan:
+
+dotnet publish -c Release
 
 
- eðer ki 
+veya spesifik runtime istiyorsan:
 
- örneðin BooksPages tablosunda olduðu gibi BooksID kolonu yok modelde ama snapshot modelde eski migration da halen daha var gözüküyorsa
-uygulanacak adýmlar
+dotnet publish -c Release -r osx-x64 --self-contained false
+
+
+(Apple Silicon ise ðŸ‘‡)
+
+dotnet publish -c Release -r osx-arm64 --self-contained false
+
+
+
+ eï¿½er ki 
+
+ ï¿½rneï¿½in BooksPages tablosunda olduï¿½u gibi BooksID kolonu yok modelde ama snapshot modelde eski migration da halen daha var gï¿½zï¿½kï¿½yorsa
+uygulanacak adï¿½mlar
 
 dotnet ef database drop --context SqlServerContext --project HerkesYazarOlsun.DataLayer -f
--f veya --force onay sormadan veritabanýný siler.
+-f veya --force onay sormadan veritabanï¿½nï¿½ siler.
 
-Bu þekilde doðrudan DB temizlenir ve bir sonraki adým olan yeni migration ve update iþlemi sorunsuz çalýþýr.
+Bu ï¿½ekilde doï¿½rudan DB temizlenir ve bir sonraki adï¿½m olan yeni migration ve update iï¿½lemi sorunsuz ï¿½alï¿½ï¿½ï¿½r.
 
-sonra yukarýdaki gibi migration oluþtur ve güncelle
+sonra yukarï¿½daki gibi migration oluï¿½tur ve gï¿½ncelle
 
-mevcut migrationlarý silemene gerek yok
+mevcut migrationlarï¿½ silemene gerek yok
 
