@@ -12,6 +12,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
         Task ModelIlgiliKitapSayfaDosyaSil(string dosyaYolu);
         BooksPages? GetBooksPages(long id);
         List<BooksPages> GetPagesByBooks(long bookID);
+        ServiceResult<bool> DeleteBookPageById(int sayfaId);
         BooksPages PostSaveBooksPages(BooksPages booksPages);
         BooksPages? PostUpdateBooksPages(VM_BOOKS_PAGES bookPageSayfa);
 
