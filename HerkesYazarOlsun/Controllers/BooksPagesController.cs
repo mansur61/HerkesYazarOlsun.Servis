@@ -114,5 +114,28 @@ namespace HerkesYazarOlsun.Servis.Controllers
             }
             return sonuc;
         }
+
+        [HttpGet]
+        [Route("DeleteBookPageById")]
+        public ServiceResult<bool> DeleteBookPageById(long sayfaId)
+        {
+            var result = new ServiceResult<bool>();
+            try
+            {
+                int kitapSayfaId = Convert.ToInt32(sayfaId);
+                result.Result = _booksPagesService.DeleteBookPageById(kitapSayfaId);
+                result.State = MessageResultState.SUCCESS;
+                result.Message = "Kitap sayfa başarıyla silindi.";
+
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Result = false;
+                result.State = MessageResultState.ERROR;
+            }
+            return result;
+        }
+
     }
 }

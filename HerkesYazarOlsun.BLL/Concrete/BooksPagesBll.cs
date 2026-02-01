@@ -33,27 +33,20 @@ namespace HerkesYazarOlsun.BLL.Concrete
             return _booksPagesDal.GetAllQueryableNoTracking(p => p.BookId == bookID).ToList();
 
         }
-        public ServiceResult<bool> DeleteBookPageById(int sayfaId)
+        
+        public bool DeleteBookPageById(int sayfaId)
         {
-            var result = new ServiceResult<bool>();
             try
             {
-                 _booksPagesDal.Sil(sayfaId, _userAccessor.MAIL); 
-                 result.Result = true;
-                result.State = MessageResultState.SUCCESS;
-                result.Message = "Kitap sayfa başarıyla silindi.";
-                return result;
+                _booksPagesDal.Sil(sayfaId, _userAccessor.MAIL);
+                return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-//                _logger.LogError(ex, "Error deleting book page with ID {BookPageId}", kitapSayfaId);
-                result.State = MessageResultState.ERROR;
-                result.Result = false;
-                result.Message = "Kitap sayfa silinirken bir hata oluştu.";
-                return result;
+                return false;
             }
         }
-        
+
         public List<BooksPages> GetBooksPagesList()
         {
             return _booksPagesDal.GetAll();
