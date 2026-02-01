@@ -107,11 +107,21 @@ namespace HerkesYazarOlsun.Servis.Controllers
             pages.PageWriteBase64 = pages.PageFoto;
             pages = await _booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(pages);
 
-            var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
-            if(guncellenecekSayfa == null)
+            try
             {
-                sonuc.State = MessageResultState.ERROR;
+                var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
+                if(guncellenecekSayfa == null)
+                {
+                    sonuc.State = MessageResultState.ERROR;
+                    sonuc.Message = "Kitap sayfa güncellenemedi.";
+                }
             }
+            catch (Exception ex)
+            {
+                 sonuc.State = MessageResultState.ERROR;
+                 sonuc.Message = ex.Message;
+            }
+            
             return sonuc;
         }
 

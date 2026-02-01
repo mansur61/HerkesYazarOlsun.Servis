@@ -93,16 +93,10 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public BooksPages? PostUpdateBooksPages(VM_BOOKS_PAGES bookPageSayfa)
         {
-            try
-            {
+             
                 var guncellenecekSayfa = ObjectMapper.Map(bookPageSayfa, new BooksPages());
                 return _booksPagesDal.Guncelle(guncellenecekSayfa, _userAccessor.MAIL);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-             
+ 
         }
 
 
