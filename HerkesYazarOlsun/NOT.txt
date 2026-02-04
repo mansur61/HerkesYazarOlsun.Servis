@@ -23,7 +23,7 @@ Migration'� veritaban�na uygulamak i�in:
 dotnet ef database update --context SqlServerContext --project HerkesYazarOlsun.DataLayer  
 
  Publish ederken Windows i�in do�ru RID ile yap:
- dotnet publish -c Release -r win-x64 --self-contained true 
+ dotnet publish -c Release -r win-x64 --self-contained false 
 
  DLL�ler nerede olu�uyor
  <ProjeKlas�r�>\bin\Release\net8.0\win-x64\publish\
