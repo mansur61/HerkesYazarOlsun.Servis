@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Logging ayarlar�
+// Logging ayarlar�
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 {
     builder.Logging.AddEventLog();
@@ -21,7 +21,7 @@ if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 else
 {
     builder.Logging.ClearProviders();
-    builder.Logging.AddConsole(); // Linux / Hosting ortam� i�in
+    builder.Logging.AddConsole(); // Linux / Hosting ortam� i�in
 }
  
 // Swagger
@@ -49,7 +49,7 @@ else
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 }
 
-// Repository ve servis kay�tlar�
+// Repository ve servis kay�tlar�
 builder.Services.AddScoped(typeof(SqlRepo<>));
 builder.Services.AddScoped(typeof(BaseSqlDbContext), typeof(SqlServerContext));
 
@@ -69,7 +69,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(HybridRepository<>));
 builder.Services.IoCDataAccessLayerRegister();
 builder.Services.IoCBusinessLogicLayerRegister();
 
-// Validator�lar
+// Validator�lar
 builder.Services.AddScoped<BookDegerlendirmeValidator>();
 builder.Services.AddScoped<BooksCommentValidator>();
 builder.Services.AddScoped<UsersValidator>();
@@ -95,8 +95,17 @@ DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.Ge
 
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();  
-
-
+/* CORS ayarlari
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("herkesyazarolsun", policy =>
+    {
+        policy.WithOrigins("https://herkesyazarolsun.com.tr")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+*/
 builder.Services.AddControllers()
     .AddJsonOptions(opt =>
     {
@@ -113,19 +122,29 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Path d�zeltme middleware
-app.Use((context, next) =>
+// Path duzeltme middleware
+app.Use(async (context, next) =>
 {
-    if (context.Request.Path.Value.StartsWith("//"))
+    if (!string.IsNullOrEmpty(context.Request.Path.Value) &&
+        context.Request.Path.Value.StartsWith("//"))
     {
-        context.Request.Path = new PathString(context.Request.Path.Value.Replace("//", "/"));
+        context.Request.Path = new PathString(
+            context.Request.Path.Value.Replace("//", "/"));
     }
-    return next();
+
+    await next();
 });
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// app.UseCors("herkesyazarolsun"); 
+// CORS = Cross-Origin Resource Sharing, Tarayıcı güvenlik mekanizmasıdır.
+// Browser güvenliğidir, Server güvenliği değil, Origin bazlı çalışır
+
+
 app.UseAuthorization();
 app.MapControllers();
 

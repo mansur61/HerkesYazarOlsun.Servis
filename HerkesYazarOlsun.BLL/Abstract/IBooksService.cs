@@ -8,6 +8,7 @@ namespace HerkesYazarOlsun.BLL.Abstract
     public interface IBooksService
     {
         List<Books> GetBooksList();
+        IQueryable<Books> GetBooksQueryable();
         VM_Stars CalculateMaxStar(Books book);
         VM_BOOK_ISTATISTIKLER CalculateBookIstatistic(Books bookEntity);
         Books GetBooks(long id);

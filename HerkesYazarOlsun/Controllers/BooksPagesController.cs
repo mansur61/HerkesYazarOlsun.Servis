@@ -107,12 +107,45 @@ namespace HerkesYazarOlsun.Servis.Controllers
             pages.PageWriteBase64 = pages.PageFoto;
             pages = await _booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(pages);
 
-            var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
-            if(guncellenecekSayfa == null)
+            try
             {
-                sonuc.State = MessageResultState.ERROR;
+                var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
+                if(guncellenecekSayfa == null)
+                {
+                    sonuc.State = MessageResultState.ERROR;
+                    sonuc.Message = "Kitap sayfa güncellenemedi.";
+                }
             }
+            catch (Exception ex)
+            {
+                 sonuc.State = MessageResultState.ERROR;
+                 sonuc.Message = ex.Message;
+            }
+            
             return sonuc;
         }
+
+        [HttpGet]
+        [Route("DeleteBookPageById")]
+        public ServiceResult<bool> DeleteBookPageById(long sayfaId)
+        {
+            var result = new ServiceResult<bool>();
+            try
+            {
+                int kitapSayfaId = Convert.ToInt32(sayfaId);
+                result.Result = _booksPagesService.DeleteBookPageById(kitapSayfaId);
+                result.State = MessageResultState.SUCCESS;
+                result.Message = "Kitap sayfa başarıyla silindi.";
+
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Result = false;
+                result.State = MessageResultState.ERROR;
+            }
+            return result;
+        }
+
     }
 }

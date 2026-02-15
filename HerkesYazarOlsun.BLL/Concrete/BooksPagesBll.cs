@@ -33,6 +33,20 @@ namespace HerkesYazarOlsun.BLL.Concrete
             return _booksPagesDal.GetAllQueryableNoTracking(p => p.BookId == bookID).ToList();
 
         }
+        
+        public bool DeleteBookPageById(int sayfaId)
+        {
+            try
+            {
+                _booksPagesDal.Sil(sayfaId, _userAccessor.MAIL);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public List<BooksPages> GetBooksPagesList()
         {
             return _booksPagesDal.GetAll();
@@ -79,16 +93,10 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public BooksPages? PostUpdateBooksPages(VM_BOOKS_PAGES bookPageSayfa)
         {
-            try
-            {
+             
                 var guncellenecekSayfa = ObjectMapper.Map(bookPageSayfa, new BooksPages());
                 return _booksPagesDal.Guncelle(guncellenecekSayfa, _userAccessor.MAIL);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-             
+ 
         }
 
 
