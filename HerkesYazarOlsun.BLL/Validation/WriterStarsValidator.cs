@@ -1,35 +1,33 @@
 ﻿using FluentValidation;
-using HerkesYazarOlsun.BusinessLayer.Factory;
-using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.BLL.Validation
 {
     public class WriterStarsValidator : AbstractValidator<WriterStars>
     {
-        public WriterStarsValidator()
-        {
-            //RuleFor(x => x).Must(BaskaTelNoVarmi).WithMessage("Güncelleme Yapıldı");
+        private IWriterStarsService wrtStarsService;
+        public WriterStarsValidator(IWriterStarsService wrtStarsService)
+        { 
+           // this.wrtStarsService = wrtStarsService; 
+           // RuleFor(x => x)
+           //.Must(NotDuplicateStar)
+           //.WithMessage("İlgili Kullanıcıya Daha önce Yıldız Verdiniz."); 
         }
-
-        private bool BaskaTelNoVarmi(WriterStars star)
+        private bool NotDuplicateStar(WriterStars model)
         {
-            IWriterStarsDal yazarDal = InstanceFactory.GetInstance<IWriterStarsDal>();
-            var sonuc = yazarDal.GetList(p => p.LoginUserId == star.LoginUserId && p.YazarId == star.YazarId).ToList();
-            if (sonuc.Any())
+            if (!model.LoginUserId.HasValue)
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return !wrtStarsService.GetWriterStarsByuserId(model.LoginUserId.Value).Any(x =>
+                x.LoginUserId == model.LoginUserId &&
+                x.YazarId == model.YazarId &&
+                x.ID != model.ID // Güncellemede aynı kaydı hariç tut
+            );
         }
+
     }
 
 }

@@ -3,7 +3,7 @@ using HerkesYazarOlsun.Model.Entity;
 
 namespace HerkesYazarOlsun.DataLayer.Abstract
 {
-    public interface IBooksDal : IRepo<Books>
+    public interface IBooksDal : IRepo<Books> 
     {
     }
 }

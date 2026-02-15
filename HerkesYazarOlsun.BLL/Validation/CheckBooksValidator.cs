@@ -1,12 +1,8 @@
 ﻿using FluentValidation;
 using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Enums;
-using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using System.Drawing;
-using System.Net;
 
 namespace HerkesYazarOlsun.BLL.Validation
 {
@@ -20,14 +16,14 @@ namespace HerkesYazarOlsun.BLL.Validation
         private const int pageLenght = 1800;
         private const int pageWordLenght = 200;
         private const int kitapSiirIseWordLenght = 50;
+         
+        public CheckBooksValidator(IBooksPagesService booksPagesService, IBooksService bookservice, ICategoryService categoryService)
+        { 
 
-
-        public CheckBooksValidator()
-        {
             var validationMessages = new List<string>();
-            _booksPagesService = InstanceFactory.GetInstance<IBooksPagesService>();
-            _bookservice = InstanceFactory.GetInstance<IBooksService>();
-            _categoryService = InstanceFactory.GetInstance<ICategoryService>();
+            _booksPagesService = booksPagesService;
+            _bookservice = bookservice;
+            _categoryService = categoryService;
 
             RuleForEach(x => x.BooksPageList)
             .ChildRules(page =>
@@ -41,7 +37,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                 page.RuleFor(x => x.PageWrite)
                     .Must((parent, context) =>
                     {
-                        var book = _bookservice.GetBooks(parent.BooksId);
+                        var book = _bookservice.GetBooks(parent.BookId);
                         int minWordCount = book.CategoriId == (int)BookCategory.Siir
                             ? kitapSiirIseWordLenght
                             : pageLenght;
@@ -51,7 +47,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                     })
                     .WithMessage((parent, context) =>
                     {
-                        var book = _bookservice.GetBooks(parent.BooksId);
+                        var book = _bookservice.GetBooks(parent.BookId);
                         int minWordCount = book.CategoriId == (int)BookCategory.Siir
                             ? kitapSiirIseWordLenght
                             : pageLenght;
@@ -61,7 +57,7 @@ namespace HerkesYazarOlsun.BLL.Validation
             });
 
             // Kitabın en az 50 sayfa olması gerektiğini kontrol ediyoruz
-            RuleFor(x => x.ID)
+            RuleFor(x => x.ID ?? 0)
                 .Must(HasMinimumPageCount)
                 .WithMessage("Kitap en az 50 ve üzeri sayfadan fazla olmalıdır");
 
@@ -69,7 +65,7 @@ namespace HerkesYazarOlsun.BLL.Validation
             RuleFor(x => x.ID)
             .Must(bookId =>
             {
-                Books book = _bookservice.GetBooks(bookId);
+                Books book = _bookservice.GetBooks(bookId ?? 0);
                 int minWordCount = 0;
                 if (book.CategoriId == (int)BookCategory.Siir)
                 {
@@ -80,7 +76,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                     minWordCount = pageLenght;
                 }
 
-                var insufficientPageIndex = GetInsufficientPageIndex(bookId, minWordCount);
+                var insufficientPageIndex = GetInsufficientPageIndex(bookId ?? 0, minWordCount);
                 return insufficientPageIndex == null;
             })
             .WithMessage(x =>
@@ -95,15 +91,15 @@ namespace HerkesYazarOlsun.BLL.Validation
                     minWordCount = pageLenght;
                 }
 
-                var insufficientPageIndex = GetInsufficientPageIndex(x.ID, minWordCount);
+                var insufficientPageIndex = GetInsufficientPageIndex(x.ID ?? 0, minWordCount);
                 return insufficientPageIndex != null
                     ? $"Yetersiz karakter sayısına sahip ilgili sayfalar: {string.Join(", ", insufficientPageIndex)}"
                     : string.Empty;
             });
-
+           
         }
 
-        private bool HasMinimumPageCount(long bookId)
+        private bool HasMinimumPageCount(int bookId)
         {
             int pageCount = _booksPagesService.GetPagesByBooks(bookId).Count();
             return pageCount >= 50;

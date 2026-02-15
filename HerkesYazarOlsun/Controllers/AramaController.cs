@@ -1,33 +1,30 @@
 
 using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BusinessLayer.Factory;
-using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HerkesYazarOlsun.Controllers
+namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AramaController : ControllerBase
     {
         private IBooksService booksService;
+        private IUsersService usersService;
 
-        public AramaController(IBooksService _booksService)
+        public AramaController(IBooksService _booksService, IUsersService _usersService)
         {
             booksService = _booksService;
+            usersService = _usersService;
         }
 
         [HttpPost]
         [Route("TumAramalar")]
         public VM_ARAMA_SONUC TumAramalar(VM_ARAMA_INPUT arama)
-        {
-            IBooksDal bookDal = InstanceFactory.GetInstance<IBooksDal>();
-            IUsersDal userDal = InstanceFactory.GetInstance<IUsersDal>();
-            var bookList =  bookDal.GetAll();
+        { 
+            var bookList = booksService.GetBooksList();
 
             if (arama.kategoriId.HasValue)
             {
@@ -70,7 +67,7 @@ namespace HerkesYazarOlsun.Controllers
             {
                 List<long> yazarIdler = new List<long>();
                 List<Books> kitaplar = new List<Books>();
-                var kullanicilar =  userDal.GetAllQueryable(p => p.NAME.Contains(arama.YAZAR_ADI)).ToList();
+                var kullanicilar = usersService.GetKullanicilar().Where(p => p.NAME.Contains(arama.YAZAR_ADI)).ToList();
                 foreach (var item in kullanicilar)
                 {
                     yazarIdler.Add(item.ID);
@@ -107,15 +104,20 @@ namespace HerkesYazarOlsun.Controllers
 
             VM_ARAMA_SONUC sonuc = new VM_ARAMA_SONUC();
             sonuc.vmBook = new VM_BOOKS(); 
-            sonuc.vmBook.BooksList = bookList;
-
+             
             var vmBookList = ObjectMapper.MapList(bookList, new List<VM_BOOKS>());
+          
+
             foreach (var item in vmBookList)
             {
-                item.Stars = booksService.GetMaxStarBooksById(item.ID);
+                var bookEntity = bookList.First(b => b.ID == item.ID);
+                if (bookEntity == null) continue;
+
+                item.Stars = booksService.CalculateMaxStar(bookEntity);
+
+                //item.iSTATISTIK = booksService.CalculateBookIstatistic(bookEntity);
             }
-            sonuc.vmBook.VMBooksList = new List<VM_BOOKS>();
-            sonuc.vmBook.VMBooksList = vmBookList;
+            sonuc.vmBookList = vmBookList; 
             return sonuc;
         }
 

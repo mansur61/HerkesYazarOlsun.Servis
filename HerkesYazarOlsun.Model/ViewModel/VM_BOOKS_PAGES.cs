@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace HerkesYazarOlsun.Model.ViewModel
 {
@@ -10,11 +6,13 @@ namespace HerkesYazarOlsun.Model.ViewModel
     {
         public long ID { get; set; }
         public string? PageWrite { get; set; }
+        public List<string>? PageFotoList { get; set; }
+        public List<IFormFile>? PageFotoDosyalar { get; set; }
+        public string? PageWriteBase64 { get; set; }
         public string? PageFoto { get; set; }
-        public string PageWriteBase64 { get; set; }
         public bool isWordPDF { get; set; } 
         // Kitap veritabanı id bilgisi
-        public long BooksId { get; set; }
+        public long BookId { get; set; }
     }
 
 }

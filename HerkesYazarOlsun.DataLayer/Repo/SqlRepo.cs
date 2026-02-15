@@ -1,11 +1,11 @@
 ﻿using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore; 
 using System.Linq.Expressions;
 
 namespace HerkesYazarOlsun.DataLayer.Repo
 {
-    public class SqlRepo<T> : IRepo<T> where T : NewBaseEntity
+    public class SqlRepo<T> : IRepo<T> , IIncludeRepo<T>  where T : NewBaseEntity
     {
         private readonly BaseSqlDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
@@ -15,7 +15,17 @@ namespace HerkesYazarOlsun.DataLayer.Repo
             _dbContext = dbContext;
             _dbSet = dbContext.Set<T>();
         }
+        public List<T> GetAllWithIncludes(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0);
 
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return query.ToList();
+        }
         public List<T> GetAll() => _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0).ToList();
 
         public T Get(long id) => _dbSet.AsNoTracking().FirstOrDefault(x => x.ID == id && x.IS_DELETED == 0);
@@ -38,12 +48,21 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         }
         public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>> predicate)
         {
-            return _dbSet.AsNoTracking().Where(predicate).Where(x => x.IS_DELETED == 0);
+            return _dbSet.Where(predicate)
+                         .Where(x => x.IS_DELETED == 0); // Tracking açık
         }
+
+        public IQueryable<T> GetAllQueryableNoTracking(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.AsNoTracking() // Tracking kapalı
+                         .Where(predicate)
+                         .Where(x => x.IS_DELETED == 0);
+        }
+
 
         public IQueryable<T> GetAllQueryable()
         {
-            return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0);
+            return _dbSet.AsNoTracking().Where(x => x.IS_DELETED == 0); // Tracking açık
         }
 
         public T Ekle(T entity, string mail)
@@ -86,14 +105,14 @@ namespace HerkesYazarOlsun.DataLayer.Repo
 
         public void Sil(int id, string mail)
         {
-            var entity = _dbSet.Find(id);
+            var entity = _dbSet.Find((long)id);
             if (entity == null || entity.IS_DELETED == 1)
                 throw new Exception("Entity not found or already deleted.");
 
             entity.IS_DELETED = 1;
             entity.USER_MODIFIED_MAIL = mail;
             entity.MODIFIED_AT = DateTime.Now;
-
+            //_dbContext.Remove(entity);
             _dbContext.SaveChanges();
         }
 

@@ -3,9 +3,11 @@
 namespace HerkesYazarOlsun.Model.Entity
 {
     [Table(name: "Category")]
-    public class Category : BaseEntity
+    public class Category : IEntity
     {
-        public int BooksId { get; set; }
-        public string Name { get; set; }
+        public int? ID { get; set; }
+        public string Name { get; set; }         
+        public CategoryYayinAyarlari? CategoryYayinAyarlari { get; set; }
+
     }
 }

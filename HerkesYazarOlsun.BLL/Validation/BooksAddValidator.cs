@@ -1,9 +1,7 @@
 ﻿using FluentValidation;
 using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Enums;
-using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 
 namespace HerkesYazarOlsun.BLL.Validation
@@ -15,18 +13,27 @@ namespace HerkesYazarOlsun.BLL.Validation
         private const int kitapSiirIseWordLenght = 50;
 
         private IBooksService _bookservice;
-        public BooksAddValidator()
+        public BooksAddValidator(IBooksService bookservice)
         {
-            _bookservice = InstanceFactory.GetInstance<IBooksService>();
+            _bookservice = bookservice;
 
-            RuleFor(x => x.ARKAKAPAKFOTO).Empty().WithMessage("Arka Kapak Fotoğrafı boş olamaz");
-            RuleFor(x => x.ONKAPAKFOTO).Empty().WithMessage("Ön Kapak Fotoğrafı boş olamaz");
+            RuleFor(x => x.ARKAKAPAKFOTO)
+                    .NotEmpty().WithMessage("Arka Kapak Fotoğrafı boş olamaz");
 
-            RuleFor(x => x.ONSOZ).Empty().WithMessage("Önsöz boş olamaz");
-            RuleFor(x => x.Name).Empty().WithMessage("Kitap Adı boş olamaz");
-            RuleFor(x => x.YazarId).Empty().WithMessage("Yazar Bilgisi Alınamadı"); 
+            RuleFor(x => x.ONKAPAKFOTO)
+                .NotEmpty().WithMessage("Ön Kapak Fotoğrafı boş olamaz");
 
-            RuleFor(x => x.CategoriId).Empty().WithMessage("Kitap  kategorisi boş olamaz");
+            RuleFor(x => x.ONSOZ)
+                .NotEmpty().WithMessage("Önsöz boş olamaz");
+
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage("Kitap Adı boş olamaz");
+
+            RuleFor(x => x.YazarId)
+                .NotEmpty().WithMessage("Yazar Bilgisi Alınamadı");
+
+            RuleFor(x => x.CategoriId)
+                .NotEmpty().WithMessage("Kitap kategorisi boş olamaz");
 
             RuleForEach(x => x.BooksPageList)
             .ChildRules(page =>
@@ -38,7 +45,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                 page.RuleFor(x => x.PageWrite)
                    .Must((parent, context) =>
                    {
-                       Books book = _bookservice.GetBooks(parent.BooksId);
+                       Books book = _bookservice.GetBooks(parent.BookId);
                        int minWordCount = book.CategoriId == (int)BookCategory.Siir
                            ? kitapSiirIseWordLenght
                            : pageLenght;
@@ -48,7 +55,7 @@ namespace HerkesYazarOlsun.BLL.Validation
                    .WithMessage(context =>
                    {
 
-                       Books book = _bookservice.GetBooks(context.BooksId);
+                       Books book = _bookservice.GetBooks(context.BookId);
                        int minWordCount = book.CategoriId == (int)BookCategory.Siir
                            ? kitapSiirIseWordLenght
                            : pageLenght;

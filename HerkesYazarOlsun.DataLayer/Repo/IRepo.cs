@@ -8,6 +8,9 @@ namespace HerkesYazarOlsun.DataLayer.Repo
         List<T> GetAll();
         IQueryable<T> GetAllQueryable(Expression<Func<T, bool>> predicate);
         IQueryable<T> GetAllQueryable();
+
+        IQueryable<T> GetAllQueryableNoTracking(Expression<Func<T, bool>> predicate);
+
         T Get(long id);
         T Add(T entity, long tcNo);
         T Ekle(T entity, string mail);

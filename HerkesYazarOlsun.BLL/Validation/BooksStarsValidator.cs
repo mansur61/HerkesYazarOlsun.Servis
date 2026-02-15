@@ -1,34 +1,28 @@
 ﻿using FluentValidation;
-using HerkesYazarOlsun.BusinessLayer.Factory;
-using HerkesYazarOlsun.DataLayer.Abstract;
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.Model.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.BLL.Validation
 {
     public class BooksStarsValidator : AbstractValidator<BooksStars>
     {
-        public BooksStarsValidator()
+        private IBooksStarsService booksStarsService;
+        public BooksStarsValidator(IBooksStarsService booksStarsService)
         {
+            this.booksStarsService = booksStarsService;
             //RuleFor(x => x).Must(BaskaTelNoVarmi).WithMessage("Güncelleme Yapıldı"); 'Güncelleme Yapıldı' şekilde validtör kullanma
+            RuleFor(x => x)
+           .Must(NotDuplicateStar)
+           .WithMessage("Aynı kullanıcı bu kitabı daha önce puanlamış.");
         }
 
-        private bool BaskaTelNoVarmi(BooksStars star)
+        private bool NotDuplicateStar(BooksStars model)
         {
-            IBooksStarsDal yazarDal = InstanceFactory.GetInstance<IBooksStarsDal>();
-            var sonuc = yazarDal.GetList(p => p.LoginUserId == star.LoginUserId && p.BookaId == star.BookaId).ToList();
-            if (sonuc.Any())
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return !booksStarsService.GetBooksStarsByuserId(model.LoginUserId).Any(x =>
+                x.LoginUserId == model.LoginUserId &&
+                x.BookId == model.BookId &&
+                x.ID != model.ID // Güncellemede aynı kaydı hariç tut
+            );
         }
     }
 

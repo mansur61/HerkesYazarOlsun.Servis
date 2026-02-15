@@ -1,25 +1,36 @@
 ﻿using HerkesYazarOlsun.BLL.Ioc;
+using Microsoft.Extensions.DependencyInjection;
 using Ninject;
 
 namespace HerkesYazarOlsun.BusinessLayer.Factory
 {
-    public class InstanceFactory
+    public class ScopedService<T> : IDisposable where T : class
     {
-        public static IServiceProvider Provider { get; set; }
-        private static IKernel _kernel = null;
+        private readonly IServiceScope _scope;
+        public T Service { get; }
 
-        public static T GetInstance<T>()
+        public ScopedService(IServiceProvider provider)
         {
-            return Provider.Get<T>();
+            _scope = provider.CreateScope();
+            Service = _scope.ServiceProvider.GetRequiredService<T>();
         }
 
-        //public static IKernel GetKernel()
-        //{
-        //    if (_kernel == null)
-        //    {
-        //        _kernel = new StandardKernel(new MainModule());
-        //    }
-        //    return _kernel;
-        //}
+        public void Dispose()
+        {
+            _scope.Dispose();
+        }
+    }
+ 
+    public static class InstanceFactory
+    {
+        public static IServiceProvider Provider { get; set; }
+
+        /// <summary>
+        /// Scoped servisi al ve güvenli şekilde kullan
+        /// </summary>
+        public static ScopedService<T> GetInstance<T>() where T : class
+        {
+            return new ScopedService<T>(Provider);
+        }
     }
 }

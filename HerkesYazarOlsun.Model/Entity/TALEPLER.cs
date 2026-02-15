@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HerkesYazarOlsun.Model.Entity
 {
-    [Table(name: "TALEPLER")]
-    public class TALEPLER : NewBaseEntity
+    [Table(name: "Talepler")]
+    public class Talepler : NewBaseEntity
     {
         public string EMAIL { get; set; }
         public string? ADISOYADI { get; set; }

@@ -3,6 +3,7 @@ using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.DataLayer.Repository;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace HerkesYazarOlsun.DataLayer
@@ -10,7 +11,8 @@ namespace HerkesYazarOlsun.DataLayer
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly DbContext _dbContext;
-         
+        private IDbContextTransaction _transaction;
+
         private readonly Dictionary<Type, object> _repositories = new(); 
 
         public UnitOfWork(IConfiguration configuration)  
@@ -27,17 +29,18 @@ namespace HerkesYazarOlsun.DataLayer
             }
             else if (dbType == "Postgre")
             {
-                var options = new DbContextOptionsBuilder<HerkesYazaOlsunContext>()
+                var options = new DbContextOptionsBuilder<PostgreSqlContext>()
                     .UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"))
                     .Options;
 
-                _dbContext = new HerkesYazaOlsunContext();
+                _dbContext = new PostgreSqlContext();
             }
             else
             {
                 throw new NotSupportedException($"Unsupported DbType: {dbType}");
             }
-        } 
+        }
+        
         public IRepository<T> GetRepository<T>() where T : BaseEntity
         {
             if (_repositories.ContainsKey(typeof(T)))
@@ -49,9 +52,9 @@ namespace HerkesYazarOlsun.DataLayer
             {
                 repo = new RepositorySql<T>((SqlServerContext)_dbContext);
             }
-            else if (_dbContext is HerkesYazaOlsunContext)
+            else if (_dbContext is PostgreSqlContext)
             {
-                repo = new RepositoryNpgsql<T>((HerkesYazaOlsunContext)_dbContext);
+                repo = new RepositoryNpgsql<T>((PostgreSqlContext)_dbContext);
             }
             else
             {
@@ -80,14 +83,7 @@ namespace HerkesYazarOlsun.DataLayer
         {
             return _dbContext.Database.ExecuteSqlRaw(sql);
         }
-
-        // Transaction örnekleri (gerektiğinde implement et)
-        public void OpenTransaction()
-        {
-            // Örnek: _dbContext.Database.BeginTransaction();
-            throw new NotImplementedException();
-        }
-
+  
         public void CloseTransaction()
         {
             // Örnek: Commit ya da Rollback işlemleri burada yapılır.
@@ -108,7 +104,7 @@ namespace HerkesYazarOlsun.DataLayer
                 _disposed = true;
             }
         }
-
+         
         public void Dispose()
         {
             Dispose(true);
@@ -119,6 +115,104 @@ namespace HerkesYazarOlsun.DataLayer
         {
             throw new NotImplementedException();
         }
+
+        public void CommitTransaction()
+        {
+            _transaction?.Commit();
+            _transaction?.Dispose();
+            _transaction = null;
+        }
+
+        public void RollbackTransaction()
+        {
+            _transaction?.Rollback();
+            _transaction?.Dispose();
+            _transaction = null;
+        }
+        public void OpenTransaction()
+        {
+            if (_transaction == null)
+                _transaction = _dbContext.Database.BeginTransaction();
+        }
+
+        public T GetWriteRepositoryWithBaseEntity<T>(T entity) where T : BaseEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            _dbContext.Add(entity);
+            return entity;
+            // SaveChanges çağrısı ayrı yapılacak (_unitOfWork.Save())
+        }
+       
+        public T GetWriteUpdateRepositoryWithBaseEntity<T>(T entity) where T : BaseEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var entry = _dbContext.Entry(entity);
+
+            if (entry.State == EntityState.Detached)
+            {
+                // önce context içinde bu ID var mı kontrol et
+                var trackedEntity = _dbContext.Set<T>().Local
+                    .FirstOrDefault(e => e.ID == entity.ID);
+
+                if (trackedEntity != null)
+                {
+                    // gelen değerleri tracked entity'e map et
+                    _dbContext.Entry(trackedEntity).CurrentValues.SetValues(entity);
+                    return trackedEntity;
+                }
+
+                // değilse attach et
+                _dbContext.Attach(entity);
+            }
+
+            entry.State = EntityState.Modified;
+            return entity;
+        }
+
+
+        public T GetWriteRepositoryWithNewBaseEntity<T>(T entity) where T : NewBaseEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+              _dbContext.Add(entity);
+            return entity;
+            // SaveChanges çağrısı ayrı yapılacak (_unitOfWork.Save())
+        }
+
+        public T GetWriteUpdateRepositoryWithNewBaseEntity<T>(T entity) where T : NewBaseEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var entry = _dbContext.Entry(entity);
+
+            if (entry.State == EntityState.Detached)
+            {
+                // önce context içinde bu ID var mı kontrol et
+                var trackedEntity = _dbContext.Set<T>().Local
+                    .FirstOrDefault(e => e.ID == entity.ID);
+
+                if (trackedEntity != null)
+                {
+                    // gelen değerleri tracked entity'e map et
+                    _dbContext.Entry(trackedEntity).CurrentValues.SetValues(entity);
+                    return trackedEntity;
+                }
+
+                // değilse attach et
+                _dbContext.Attach(entity);
+            }
+
+            entry.State = EntityState.Modified;
+            return entity;
+        }
+
+
         #endregion
     }
 

@@ -14,13 +14,14 @@ namespace HerkesYazarOlsun.Servis.Controllers
     public class BooksPagesController : BaseApiController
     {
         private IBooksPagesService _booksPagesService;
-       
+        private BooksPagesAddValidator _booksPagesAddValidator;
+
         public BooksPagesController(IBooksPagesService booksPagesService, IUserAccessor userAccessor, 
-            IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+            IUnitOfWork unitOfWork, IHttpContextAccessor configuration, BooksPagesAddValidator booksPagesAddValidator)
             : base(userAccessor, unitOfWork, configuration)
         {
             _booksPagesService = booksPagesService;
-           
+            _booksPagesAddValidator = booksPagesAddValidator;
         }
 
         [HttpGet]
@@ -51,18 +52,18 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             return getBookPagesList;
         }
+         
 
         [HttpPost]
         [Route("PostSaveBooksPages")]
-        public ServiceResult<BooksPages> PostSaveBooksPages(VM_BOOKS_PAGES bookPages)
+        public async Task<ServiceResult<BooksPages>> PostSaveBooksPages([FromForm] VM_BOOKS_PAGES bookPages)
         {
 
             ServiceResult<BooksPages> result = new ServiceResult<BooksPages>(state: MessageResultState.SUCCESS);
 
             if (!bookPages.isWordPDF) // bu durumu ve validasyoları kitap ekleme durumnu pdf veya word değilse yap
-            {
-                BooksPagesAddValidator validationRules = new BooksPagesAddValidator();
-                var sonuc = validationRules.Validate(bookPages);
+            { 
+                var sonuc = _booksPagesAddValidator.Validate(bookPages);
 
                 if (!sonuc!.IsValid)
                 {
@@ -74,10 +75,25 @@ namespace HerkesYazarOlsun.Servis.Controllers
                     return result;
                 }
             }
+
+            bookPages = await _booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(bookPages);
+            var booksPage = ObjectMapper.Map(bookPages, new BooksPages());
+            booksPage.BookId = bookPages.BookId;
+
+            try
+            {
+                var getBookPages = _booksPagesService.PostSaveBooksPages(booksPage);
+                result.Result = getBookPages;
+            }
+            catch (Exception ex)
+            {
+                result.State = MessageResultState.ERROR;
+                result.Message = ex.Message ;
+                await _booksPagesService.ModelIlgiliKitapSayfaDosyaSil(booksPage.PageFoto);
+
+                return result;
+            }
             
-            var book = ObjectMapper.Map(bookPages, new BooksPages());
-            var getBookPages = _booksPagesService.PostSaveBooksPages(book);
-            result.Result = getBookPages;
 
 
             return result;
@@ -85,15 +101,51 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("PostUpdateBooksPages")]
-        public ServiceResult PostUpdateBooksPages(VM_BOOKS_PAGES pages)
+        public async Task<ServiceResult> PostUpdateBooksPages([FromForm] VM_BOOKS_PAGES pages)
         {
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
-            var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
-            if(guncellenecekSayfa == null)
+            pages.PageWriteBase64 = pages.PageFoto;
+            pages = await _booksPagesService.ModelIlgiliKitapSayfaDosyalariDoldur(pages);
+
+            try
             {
-                sonuc.State = MessageResultState.ERROR;
+                var guncellenecekSayfa =  _booksPagesService.PostUpdateBooksPages(pages);
+                if(guncellenecekSayfa == null)
+                {
+                    sonuc.State = MessageResultState.ERROR;
+                    sonuc.Message = "Kitap sayfa güncellenemedi.";
+                }
             }
+            catch (Exception ex)
+            {
+                 sonuc.State = MessageResultState.ERROR;
+                 sonuc.Message = ex.Message;
+            }
+            
             return sonuc;
         }
+
+        [HttpGet]
+        [Route("DeleteBookPageById")]
+        public ServiceResult<bool> DeleteBookPageById(long sayfaId)
+        {
+            var result = new ServiceResult<bool>();
+            try
+            {
+                int kitapSayfaId = Convert.ToInt32(sayfaId);
+                result.Result = _booksPagesService.DeleteBookPageById(kitapSayfaId);
+                result.State = MessageResultState.SUCCESS;
+                result.Message = "Kitap sayfa başarıyla silindi.";
+
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Result = false;
+                result.State = MessageResultState.ERROR;
+            }
+            return result;
+        }
+
     }
 }

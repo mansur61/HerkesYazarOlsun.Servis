@@ -1,31 +1,45 @@
-
 using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.BLL.Validation;
-using HerkesYazarOlsun.BusinessLayer.Factory;
 using HerkesYazarOlsun.DataLayer;
-using HerkesYazarOlsun.DataLayer.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using HerkesYazarOlsun.Servis.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HerkesYazarOlsun.Controllers
+namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class SettingsController : BaseApiController
     {
-       
-        private IAyarlarDal ayrDal;
-        private IYayinAyarlariDal yayrDal;
-        public SettingsController(IAyarlarDal ayrDal, IYayinAyarlariDal _yayrDal, IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration)
+
+        private IAyarlarService ayrSrv;
+        private IUsersService usersSrv;
+        private IYayinAyarlariService yayrSrv;
+        private IUsersDetailsService UsersDetailsService;
+        private IBildirimlerService bildirimlerService;
+        private IProfilService profilSrv;
+        private readonly ILogger<SettingsController> _logger;
+        private IFtpService _ftpService;
+        private AyarlarValidator _ayarlarValidator;
+        private IUnitOfWork _unitOfWork;
+        public SettingsController(IAyarlarService ayrSrv, IYayinAyarlariService yayrSrv, IFtpService ftpService, IProfilService profilSrv,
+            IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration, ILogger<SettingsController> logger,
+            AyarlarValidator ayarlarValidator, IUsersService usersSrv, IUsersDetailsService usersDetailsService, IBildirimlerService bildirimlerService)
             : base(userAccessor, unitOfWork, configuration)
         {
-            this.ayrDal = ayrDal;
-            yayrDal = _yayrDal;
+            this.ayrSrv = ayrSrv;
+            this.yayrSrv = yayrSrv;
+            _logger = logger;
+            _ftpService = ftpService;
+            _ayarlarValidator = ayarlarValidator;
+            this.profilSrv = profilSrv;
+            this.usersSrv = usersSrv;
+            UsersDetailsService = usersDetailsService;
+            this.bildirimlerService = bildirimlerService;
+
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -33,129 +47,177 @@ namespace HerkesYazarOlsun.Controllers
         [Route("GetAyarlarByLoginId")]
         public Ayarlar? GetProfilByLoginId(long loginId)
         {
-            var sonuc = ayrDal.GetAllQueryable(p => p.LoginUserId == loginId).SingleOrDefault();
+            var sonuc = ayrSrv.GetProfilByLoginId(loginId);
             return sonuc;
         }
 
         [HttpGet]
         [Route("GetYyainAyarlari")]
-        public YayinAyarlari? GetYayinAyarlari()
+        public List<YayinAyarlari>? GetYayinAyarlari()
         {
-            var sonuc = yayrDal.GetList().SingleOrDefault();
+            var sonuc = yayrSrv.GetYayinAyarlari();
             return sonuc;
+        }
+
+        [HttpGet]
+        [Route("GetYayinAyarlariByBookId")]
+        public YayinAyarlari? GetYayinAyarlariByBookId(long id)
+        {
+            var sonuc = yayrSrv.GetYayinAyarlariByBookId(id);
+            return sonuc;
+        }
+
+        private async Task<VM_AYARLAR> ModelIlgiliDosyalariDoldur(VM_AYARLAR input)
+        {
+            foreach (var item in input.dosyalar)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await item.CopyToAsync(memoryStream);
+                    byte[] fileBytes = memoryStream.ToArray();
+                     
+                    if (!string.IsNullOrEmpty(input.Profile.ProfilResimName) && input.Profile.ProfilResimName == item.FileName)
+                    {
+                        input.Profile.ProfilResimBase64 = Convert.ToBase64String(fileBytes);
+                        input.Profile.ProfilResimURl = "";
+                        // FTP'ye yükle
+                        var uploadResult = await _ftpService.Upload(item, true);
+                        if (uploadResult.IsSuccess)
+                            input.Profile.ProfilResimURl = uploadResult.Result.FileName;
+                        else
+                            _logger.LogWarning("Dosya yüklenemedi: {FileName}", item.FileName + " Hata : " + uploadResult.Message);
+                    }
+
+                }
+            }
+
+            return input;
         }
 
 
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
-        public ServiceResult SaveOrUpdateAyarlar(VM_AYARLAR ayarlar)
+        public async Task<ServiceResult> SaveOrUpdateAyarlar([FromForm] VM_AYARLAR ayarlar)
         {
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-           
-            IAyarlarDal ayarDal = InstanceFactory.GetInstance<IAyarlarDal>();
-            IBildirimlerDal bildrmlerDal = InstanceFactory.GetInstance<IBildirimlerDal>();
-            IUsersDetailsDal usrDtlsDal = InstanceFactory.GetInstance<IUsersDetailsDal>();
-            IProfilDal prfDal = InstanceFactory.GetInstance<IProfilDal>();
-            IUsersDal usrDal = InstanceFactory.GetInstance<IUsersDal>();
+            ServiceResult result = new ServiceResult(state:MessageResultState.SUCCESS);
 
-            AyarlarValidator validationRules = new AyarlarValidator();
-            var sonuc = validationRules.Validate(ayarlar);
+            if (ayarlar.dosyalar != null && ayarlar.dosyalar.Count > 0)
+                ayarlar = await ModelIlgiliDosyalariDoldur(ayarlar);
 
-            if (!sonuc!.IsValid)
+            var validate = _ayarlarValidator.Validate(ayarlar);
+            if (!validate.IsValid)
             {
-                foreach (var item in sonuc.Errors)
-                {
-                    result.Message += item.ErrorMessage + ",";
-                }
+                result.Message = string.Join(",", validate.Errors.Select(x => x.ErrorMessage));
                 result.State = MessageResultState.WARNING;
                 return result;
             }
 
             try
             {
-                using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
+                _unitOfWork.OpenTransaction();
+
+                // -----------------------------
+                // 1) USERS
+                // -----------------------------
+                var usrKayit = usersSrv.Get(ayarlar.LoginUserId);
+                if (usrKayit == null)
                 {
-                    //user 
-                    var usrKayit = ctx.Users.Where(p => p.ID == ayarlar.LoginUserId).FirstOrDefault();
-                    if (usrKayit == null)
-                    {
-                        usrKayit = usrDal.Ekle(ayarlar.User, MAIL);
-
-                    }
-                    else
-                    {
-                        ctx.Users.Update(usrKayit);
-                        ctx.SaveChanges();
-                    }
-
-                    //user details
-                    var usrDetlsKayit = ctx.UsersDetails.Where(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
-                    if (usrDetlsKayit == null)
-                    {
-                        usrDetlsKayit =  usrDtlsDal.Ekle(ayarlar.UserDetail, MAIL);
-
-                    }
-                    else
-                    {
-                        ctx.UsersDetails.Update(usrDetlsKayit);
-                        ctx.SaveChanges();                       
-                    }
-                    //profil
-                    var prflKayit = ctx.Profil.Where(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
-                    if (prflKayit == null)
-                    {
-                        prflKayit =  prfDal.Ekle(ayarlar.Profile, MAIL);
-
-                    }
-                    else
-                    {
-                        ctx.Profil.Update(prflKayit);
-                        ctx.SaveChanges();
-                    }
-
-                    //bildirimler
-                    var bldrmlrKayit = ctx.Bildirimler.Where(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
-                    if (bldrmlrKayit == null)
-                    {
-                        bldrmlrKayit = bildrmlerDal.Ekle(ayarlar.Bildirim, MAIL);
-
-                    }
-                    else
-                    {
-                        ctx.Bildirimler.Update(bldrmlrKayit);
-                        ctx.SaveChanges();
-                    }
-
-                    var ayrKayit = ctx.Ayarlar.Where(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
-                    if (ayrKayit == null)
-                    {
-                        ayrKayit = ayarDal.Ekle(new Ayarlar() 
-                        { UserDetailID = usrDetlsKayit.ID, ProfileID = prflKayit.ID, BildirimID = bldrmlrKayit.ID, LoginUserId = ayarlar.LoginUserId}, MAIL);
-                        
-                    }
-                    else
-                    {
-                        ayrKayit.isDegisiklik = 1;
-                        ctx.Ayarlar.Update(ayrKayit);                       
-                        ctx.SaveChanges();
-                        //ayrKayit = ctx.Ayarlar.Where(p => p.LoginUserId == ayarlar.LoginUserId).FirstOrDefault();
-                    }
-
-                    result.Result = ayrKayit;
+                    usrKayit = _unitOfWork.GetWriteRepositoryWithNewBaseEntity(ayarlar.User);
                 }
+                else
+                {
+                    var guncelData = ObjectMapper.Map(ayarlar.User, usrKayit);
+                    _unitOfWork.GetWriteUpdateRepositoryWithNewBaseEntity(guncelData);
+                }
+
+                // -----------------------------
+                // 2) USER DETAILS
+                // -----------------------------
+                var usrDetay = UsersDetailsService.Get(ayarlar.LoginUserId);
+                if (usrDetay == null)
+                {
+                    usrDetay = _unitOfWork.GetWriteRepositoryWithNewBaseEntity(ayarlar.UserDetail);
+                }
+                else
+                {
+                    var guncelData = ObjectMapper.Map(ayarlar.UserDetail, usrDetay);
+                    _unitOfWork.GetWriteUpdateRepositoryWithNewBaseEntity(guncelData);
+                }
+
+                // -----------------------------
+                // 3) PROFIL
+                // -----------------------------
+                var profil = profilSrv.Get(ayarlar.LoginUserId);
+                if (profil == null)
+                {
+                    var prf = ObjectMapper.Map(ayarlar.Profile, new Profil());
+                    prf.UserId = ayarlar.LoginUserId;
+
+                    profil = _unitOfWork.GetWriteRepositoryWithNewBaseEntity(prf);
+                }
+                else
+                { 
+                    profil.ProfilResimBase64 = ayarlar.Profile.ProfilResimBase64 ?? profil.ProfilResimBase64;
+                    profil.ProfilResimURl = ayarlar.Profile.ProfilResimURl ?? profil.ProfilResimURl;
+                    profil.ProfilArkaplanResmi = ayarlar.Profile.ProfilArkaplanResmi ?? profil.ProfilArkaplanResmi;
+                    profil.ProfilArkaplanRenkKodu = ayarlar.Profile.ProfilArkaplanRenkKodu ?? profil.ProfilArkaplanRenkKodu;
+                    
+                    _unitOfWork.GetWriteUpdateRepositoryWithNewBaseEntity(profil);
+                }
+
+                // -----------------------------
+                // 4) BILDIRIMLER
+                // -----------------------------
+                var bildirim = bildirimlerService.Get(ayarlar.LoginUserId);
+                if (bildirim == null)
+                {
+                    bildirim = _unitOfWork.GetWriteRepositoryWithNewBaseEntity(ayarlar.Bildirim);
+                }
+                else
+                {
+                    var guncelData = ObjectMapper.Map(ayarlar.Bildirim, bildirim);
+                    _unitOfWork.GetWriteUpdateRepositoryWithNewBaseEntity(guncelData);
+                }
+
+                // -----------------------------
+                // 5) AYARLAR TABLOSU
+                // -----------------------------
+                var ayarKayit = ayrSrv.GetAyar(ayarlar.LoginUserId);
+
+                if (ayarKayit == null)
+                {
+                    var yeniAyar = new Ayarlar
+                    {
+                        UserDetailID = usrDetay.ID,
+                        ProfileID = profil.ID,
+                        BildirimID = bildirim.ID,
+                        LoginUserId = ayarlar.LoginUserId
+                    };
+
+                    ayarKayit = _unitOfWork.GetWriteRepositoryWithNewBaseEntity(yeniAyar);
+                }
+                else
+                {
+                    ayarKayit.isDegisiklik = 1;
+                    _unitOfWork.GetWriteUpdateRepositoryWithNewBaseEntity(ayarKayit);
+                }
+
+                result.Result = ayarKayit;
                 result.Message = "Deðiþiklikler kaydedilmiþtir.";
                 result.State = MessageResultState.SUCCESS;
+
+                _unitOfWork.CommitTransaction();
+                _unitOfWork.Save();
+
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                result.Message = "Deðiþiklikler Kaydedilmemiþtir.";
+                _unitOfWork.RollbackTransaction();
+                result.Message = ex.Message;
                 result.State = MessageResultState.ERROR;
+                return result;
             }
-
-
-           
-            return result;
         }
 
     }

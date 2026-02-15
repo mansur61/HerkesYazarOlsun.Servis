@@ -18,12 +18,36 @@ namespace HerkesYazarOlsun.BLL.Ioc
         /// <param name="service">The service.</param>
         public static void IoCBusinessLogicLayerRegister(this IServiceCollection service)
         {
-            service.AddTransient<IUsersService, UsersBll>();
-            service.AddTransient<ICategoryService, CategoryBll>();
-            service.AddTransient<IUserAccessor, HttpUserAccessor>();
-            service.AddTransient<IHttpContextAccessor, HttpContextAccessor>();         
-            service.AddTransient<IBooksService, BooksBll>();
-            service.AddTransient< IBooksPagesService, BooksPagesBll>();
+            service.AddScoped<IUsersService, UsersBll>();
+            service.AddScoped<ICategoryService, CategoryBll>();
+            service.AddScoped<IUserAccessor, HttpUserAccessor>();
+            service.AddScoped<IHttpContextAccessor, HttpContextAccessor>();         
+            service.AddScoped<IBooksService, BooksBll>();
+            service.AddScoped<IBooksPagesService, BooksPagesBll>();
+            service.AddScoped<ICarouselService, CarouselBll>();
+            service.AddScoped<IKartlarService, KartlarBll>();
+            service.AddScoped<IOdemeService, OdemeBll>();
+            service.AddScoped<IOdemeSponsorlariService, OdemeSponsorlariBll>();
+            service.AddScoped<IProfilService, ProfilBll>();
+            service.AddScoped<IAyarlarService, AyarlarBll>();
+            service.AddScoped<IYayinAyarlariService, YayinAyarlariBll>();
+            service.AddScoped<IUsersDetailsService, UsersDetailsBll>();         
+            service.AddScoped<IFtpService, FtpWebService>();
+            service.AddScoped<IBildirimlerService, BildirimlerBll>();
+            service.AddScoped<ISponsorlarService, SponsorlarBll>();
+            service.AddScoped<ITaleplerService, TaleplerBll>();
+            service.AddScoped<IAccountLoginService, AccountLoginBll>();
+            service.AddScoped<IWriterFollowService, WriterFollowBll>();
+            service.AddScoped<IFavoriYazarlarService, FavYazarBll>();
+            service.AddScoped<IWriterStarsService, WriterStarsBll>();
+            service.AddScoped<IBooksStarsService, BooksStarsBll>();
+            service.AddScoped<IBooksDegerlendirmeService, BooksDegerlendirmeBll>();
+            service.AddScoped<IBooksCommentService, BooksCommentBl>();
+            service.AddScoped<ICategoryYayinAyarlariService, CategoryYayinAyarlariBll>();
+
+            
+
+
         }
 
         public static T GetService<T>(IServiceProvider serviceProvider)

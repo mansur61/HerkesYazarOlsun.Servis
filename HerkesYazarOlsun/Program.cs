@@ -1,26 +1,36 @@
 using HerkesYazarOlsun.BLL.Ioc;
+using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
+using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.DataLayer.Concrete;
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.DataLayer.Repository;
-using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.Utils;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// IHttpContextAccessor servis olarak ekleniyor:
-builder.Services.AddHttpContextAccessor();
-
-
+// Logging ayarlar�
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+    builder.Logging.AddEventLog();
+}
+else
+{
+    builder.Logging.ClearProviders();
+    builder.Logging.AddConsole(); // Linux / Hosting ortam� i�in
+}
+ 
 // Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var configuration = builder.Configuration;
-var dbType = configuration["DbType"]; 
+var dbType = configuration["DbType"];
 
 if (dbType == "Sql")
 {
@@ -31,21 +41,20 @@ if (dbType == "Sql")
 }
 else
 {
-    builder.Services.AddDbContext<HerkesYazaOlsunContext>((serviceProvider, options) =>
+    builder.Services.AddDbContext<PostgreSqlContext>((serviceProvider, options) =>
     {
-        options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunDb"));
+        options.UseNpgsql(configuration.GetConnectionString("HerkesYazarOlsunPostgreDb"));
     });
+
+    AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 }
 
-
-
-
-// Repository ve servis kay�tlar�
+// Repository ve servis kay�tlar�
 builder.Services.AddScoped(typeof(SqlRepo<>));
 builder.Services.AddScoped(typeof(BaseSqlDbContext), typeof(SqlServerContext));
 
 builder.Services.AddScoped(typeof(NpgsqlRepo<>));
-builder.Services.AddScoped(typeof(BaseNpSqlDbContext), typeof(HerkesYazaOlsunContext));
+builder.Services.AddScoped(typeof(BaseNpSqlDbContext), typeof(PostgreSqlContext));
 
 builder.Services.AddScoped(typeof(EfSqlEntityRepositoryBase<>));
 builder.Services.AddScoped(typeof(EfNpSqlEntityRepositoryBase<>));
@@ -60,66 +69,83 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(HybridRepository<>));
 builder.Services.IoCDataAccessLayerRegister();
 builder.Services.IoCBusinessLogicLayerRegister();
 
-InstanceFactory.Provider = builder.Services.BuildServiceProvider();
+// Validator�lar
+builder.Services.AddScoped<BookDegerlendirmeValidator>();
+builder.Services.AddScoped<BooksCommentValidator>();
+builder.Services.AddScoped<UsersValidator>();
+builder.Services.AddScoped<CheckBooksValidator>();
+builder.Services.AddScoped<EmailValidator>();
+builder.Services.AddScoped<BooksAddValidator>();
+builder.Services.AddScoped<SmsValidator>();
+builder.Services.AddScoped<BooksStarsValidator>();
+builder.Services.AddScoped<BooksPagesAddValidator>();
+builder.Services.AddScoped<AyarlarValidator>();
 
+builder.Services.AddScoped<OdemeSponsorlariValidator>();
+builder.Services.AddScoped<BooksPagesAddValidator>();
+builder.Services.AddScoped<WriterFollowValidator>();
+builder.Services.AddScoped<WriterStarsValidator>();
+builder.Services.AddScoped<FavoriYazarlarValidator>();
+
+// DbSettings
 DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
 DbSettings.HerkesYazarOlsunDbSQL = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb");
 DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDbTest");
 DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
 
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();  
+/* CORS ayarlari
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("herkesyazarolsun", policy =>
+    {
+        policy.WithOrigins("https://herkesyazarolsun.com.tr")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+*/
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;//Preserve
+        opt.JsonSerializerOptions.WriteIndented = true;
+    });
 
 var app = builder.Build();
 
-// Middleware ve routing ayarlar�
-
+InstanceFactory.Provider = app.Services;
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.Use((context, next) =>
+// Path duzeltme middleware
+app.Use(async (context, next) =>
 {
-    if (context.Request.Path.Value.StartsWith("//"))
+    if (!string.IsNullOrEmpty(context.Request.Path.Value) &&
+        context.Request.Path.Value.StartsWith("//"))
     {
-        context.Request.Path = new PathString(context.Request.Path.Value.Replace("//", "/"));
+        context.Request.Path = new PathString(
+            context.Request.Path.Value.Replace("//", "/"));
     }
-    return next();
+
+    await next();
 });
 
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-});
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
 
+// app.UseCors("herkesyazarolsun"); 
+// CORS = Cross-Origin Resource Sharing, Tarayıcı güvenlik mekanizmasıdır.
+// Browser güvenliğidir, Server güvenliği değil, Origin bazlı çalışır
+
+
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-void ConfigureDb<TContext>(IServiceCollection services, IConfiguration configuration)
-    where TContext : DbContext
-{
-    services.AddDbContext<TContext>((sp, options) =>
-    {
-        var dbType = configuration["DbType"];
-
-        if (dbType == "Sql")
-        {
-            options.UseSqlServer(configuration.GetConnectionString($"{typeof(TContext).Name}SqlDb"));
-        }
-        else
-        {
-            options.UseNpgsql(configuration.GetConnectionString($"{typeof(TContext).Name}Db"));
-        }
-    });
-}

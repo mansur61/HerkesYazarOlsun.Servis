@@ -1,27 +1,26 @@
 ﻿using HerkesYazarOlsun.BLL.Abstract;
-using HerkesYazarOlsun.DataLayer.Context;
+using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
+
 namespace HerkesYazarOlsun.BLL.Concrete
 {
     public class CategoryBll : ICategoryService
     {
+        private ICategoryDal categoryDal;   
+        public CategoryBll(ICategoryDal _categoryDal)
+        {
+            categoryDal = _categoryDal;
+        }
+
+        public List<Category> GetCategories()
+        {             
+            return categoryDal.GetList().ToList();             
+        }
+
         public Category GetCategory(long id)
-        {
-            Category cat = new Category();
-            using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-            {
-                cat = ctx.Category.Where(p => p.ID == id).FirstOrDefault();
-            }
-            return cat;
+        {          
+            return categoryDal.Get(p => p.ID == id);            
         }
-        public Category GetCategoryById(long kitapId)
-        {
-            Category cat = new Category();
-            using (HerkesYazaOlsunContext ctx = new HerkesYazaOlsunContext())
-            {
-                cat = ctx.Category.Where(p => p.BooksId == kitapId).FirstOrDefault();
-            }
-            return cat;
-        }
+
     }
 }

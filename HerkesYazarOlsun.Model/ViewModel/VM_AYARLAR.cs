@@ -2,7 +2,6 @@
 
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HerkesYazarOlsun.Model.ViewModel
 {
@@ -16,7 +15,7 @@ namespace HerkesYazarOlsun.Model.ViewModel
         public long ProfileId { get; set; }
         public long BildirimId { get; set; }
         public  UsersDetails UserDetail { get; set; }
-        public  Profil Profile { get; set; }
+        public  VM_PROFILE Profile { get; set; }
         public Users User { get; set; }
         public Bildirimler Bildirim { get; set; }
     }
