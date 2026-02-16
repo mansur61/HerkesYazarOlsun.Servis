@@ -47,16 +47,16 @@ jobs:
       # --------------------
       # Restore / Build / Test
       # --------------------
-      - run: dotnet restore HerkesYazarOlsun/HerkesYazarOlsun.Servis.csproj
-      - run: dotnet build HerkesYazarOlsun/HerkesYazarOlsun.Servis.csproj -c Release --no-restore
-      - run: dotnet test HerkesYazarOlsun/HerkesYazarOlsun.Servis.csproj -c Release --no-build
+      - run: dotnet restore HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj
+      - run: dotnet build HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj -c Release --no-restore
+      - run: dotnet test HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj -c Release --no-build
 
       # --------------------
       # Publish (Sadece test ve main)
       # --------------------
       - name: Publish
         if: github.ref_name == 'test' || github.ref_name == 'main'
-        run: dotnet publish HerkesYazarOlsun/HerkesYazarOlsun.Servis.csproj -c Release -o publish
+        run: dotnet publish HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj -c Release -o publish
 
       # --------------------
       # TEST DEPLOY
