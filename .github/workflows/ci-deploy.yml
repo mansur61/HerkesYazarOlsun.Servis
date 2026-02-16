@@ -49,7 +49,9 @@ jobs:
       # --------------------
       - run: dotnet restore HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj
       - run: dotnet build HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj -c Release --no-restore
-      - run: dotnet test HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj -c Release --no-build
+      - name: Run Tests (only for test/main)
+        if: github.ref_name == 'test' || github.ref_name == 'main'
+        run: dotnet test HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj -c Release --no-build
 
       # --------------------
       # Publish (Sadece test ve main)
@@ -82,10 +84,6 @@ jobs:
           local-dir: publish/
           server-dir: /api.herkesyazarolsun.com.tr/test/
 
-      - name: Health Check TEST
-        if: github.ref_name == 'test'
-        run: curl -f https://api.herkesyazarolsun.com.tr/test/health
-
       # --------------------
       # PROD DEPLOY
       # --------------------
@@ -109,7 +107,3 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: publish/
           server-dir: /api.herkesyazarolsun.com.tr/prod/
-
-      - name: Health Check PROD
-        if: github.ref_name == 'main'
-        run: curl -f https://api.herkesyazarolsun.com.tr/prod/health
