@@ -34,11 +34,10 @@
     <PackageReference Include="Npgsql" Version="9.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
-  </ItemGroup>
+    <PackageReference Include="HerkesYazarOlsun.Model" Version="1.0.0" />
 
-  <ItemGroup>
-    <ProjectReference Include="..\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
   </ItemGroup>
+ 
 <!---publish sırasında appsettings.json çaıkşmayı önlemek için eklendi.-->
   <ItemGroup>
     <None Update="appsettings.json">

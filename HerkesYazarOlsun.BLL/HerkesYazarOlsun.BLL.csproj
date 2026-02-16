@@ -14,11 +14,13 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
     <PackageReference Include="Ninject" Version="3.3.6" />
-    <ProjectReference Include="..\HerkesYazarOlsun.DataLayer\HerkesYazarOlsun.DataLayer.csproj" />
-
-    <ProjectReference Include="..\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
+    <PackageReference Include="HerkesYazarOlsun.Model" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup> 
+    <ProjectReference Include="..\HerkesYazarOlsun.DataLayer\HerkesYazarOlsun.DataLayer.csproj" />
+    <!--<ProjectReference Include="..\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />-->  
+  </ItemGroup>
 
 
 

@@ -14,11 +14,11 @@
     <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="Rotativa.AspNetCore" Version="1.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="HerkesYazarOlsun.Model" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HerkesYazarOlsun.BLL\HerkesYazarOlsun.BLL.csproj" />
-    <ProjectReference Include="..\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
+    <ProjectReference Include="..\HerkesYazarOlsun.BLL\HerkesYazarOlsun.BLL.csproj" />    
   </ItemGroup>
 
   <ItemGroup>
