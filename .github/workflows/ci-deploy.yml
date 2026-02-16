@@ -62,17 +62,7 @@ jobs:
 
       # --------------------
       # TEST DEPLOY
-      # --------------------
-      - name: Backup TEST
-        if: github.ref_name == 'test'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: publish/
-          server-dir: /api.herkesyazarolsun.com.tr/test/
-          dangerous-clean-slate: true
+      # -------------------
 
       - name: Deploy TEST
         if: github.ref_name == 'test'
@@ -86,17 +76,7 @@ jobs:
 
       # --------------------
       # PROD DEPLOY
-      # --------------------
-      - name: Backup PROD
-        if: github.ref_name == 'main'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: publish/
-          server-dir: /api.herkesyazarolsun.com.tr/prod/
-          dangerous-clean-slate: true
+      # -------------------
 
       - name: Deploy PROD
         if: github.ref_name == 'main'
