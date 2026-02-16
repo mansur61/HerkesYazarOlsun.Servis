@@ -3,7 +3,11 @@ name: Publish Model Package
 on:
   push:
     branches:
-      - development
+      - herkesyazarolsun.model.package
+
+  pull_request:
+    branches:
+      - herkesyazarolsun.model.package
 
 jobs:
   publish:
