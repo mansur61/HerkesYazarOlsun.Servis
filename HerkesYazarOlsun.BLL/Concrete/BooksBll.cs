@@ -123,6 +123,22 @@ namespace HerkesYazarOlsun.BLL.Concrete
                 .ToList();
             return list;
         }
+        public IQueryable<Books> GetBooksQueryable()
+        {
+            return _booksDal
+                .GetAllQueryable()
+                .Include(b => b.Yazar)
+                    .ThenInclude(c => c.Profil)
+                .Include(b => b.Categori)
+                    .ThenInclude(c => c.CategoryYayinAyarlari)
+                .Include(b => b.YayinAyar)
+                .Include(b => b.BooksPageList)
+                .Include(b => b.BooksComments)
+                .Include(b => b.BooksStars)
+                .Include(b => b.FavoriBooks)
+                .Include(b => b.BooksDegerlendirme);
+        }
+
 
         public Books PostSaveBook(Books book)
         {

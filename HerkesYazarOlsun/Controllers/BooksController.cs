@@ -233,7 +233,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
         public List<VM_BOOKS> TumKitaplar(VM_ARAMA_INPUT arama)
         {
             // IQueryable ile başlıyoruz
-            IQueryable<Books> bookQuery = booksService.GetBooksList().AsQueryable();
+            IQueryable<Books> bookQuery = booksService.GetBooksQueryable();
 
             if (!string.IsNullOrEmpty(arama.KITAP_ADI))
             {
@@ -243,7 +243,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             if (arama.yazarIId.HasValue)
             {
-                bookQuery = bookQuery.Where(p => p.YazarId == arama.yazarIId.Value);
+                bookQuery = bookQuery.Where(p => p.Yazar.ID == arama.yazarIId.Value);
             }
 
             if (arama.BitenKitaplar.HasValue)
@@ -260,7 +260,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             {
                 bookQuery = bookQuery.Where(p => p.YAYINDAMI == arama.YayinlananKitaplar.Value);
             }
-
+            //var bookList2 = bookQuery.ToList(); //-> test için
             if (arama.FavoriKitaplar.HasValue)
             {
                 bookQuery = bookQuery.Where(p => p.FavoriBooks.Any());

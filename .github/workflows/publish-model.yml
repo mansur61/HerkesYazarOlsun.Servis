@@ -1,0 +1,35 @@
+name: Publish Model Package
+
+on:
+  push:
+    branches:
+      - herkesyazarolsun.model.package
+
+  pull_request:
+    branches:
+      - herkesyazarolsun.model.package
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write   # publish için gerekli
+
+    steps:
+      # Checkout repo
+      - uses: actions/checkout@v4
+
+      # Setup .NET
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Pack Model
+      - name: Pack
+        run: dotnet pack HerkesYazarOlsun.Model/HerkesYazarOlsun.Model.csproj -c Release -o ./nupkg
+
+      # Publish to GitHub Packages
+      - name: Publish
+        run: dotnet nuget push ./nupkg/*.nupkg --source https://nuget.pkg.github.com/mansur61/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
