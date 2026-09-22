@@ -33,13 +33,15 @@ namespace HerkesYazarOlsun.Servis.Controllers
         private WriterStarsValidator _writerStarsValidator;
         private FavoriYazarlarValidator _favYazarValidato;
         private IWriterStarsService writerStarsService;
+        private readonly IRefreshTokenService _refreshTokenService;
 
         private BooksStarsValidator _booksStarsValidator;
         public UsersController(ILogger<UsersController> logger, IUsersService _userService,
             IUserAccessor userAccessor, IUnitOfWork unitOfWork, IHttpContextAccessor configuration,
             EmailValidator emailValidator, UsersValidator usersValidator, WriterFollowValidator writerFollowValidator,
             WriterStarsValidator writerStarsValidator, IAccountLoginService accountLoginService, IWriterFollowService writerFollowService,
-            IFavoriYazarlarService favoriYazarlarService, IWriterStarsService writerStarsService, FavoriYazarlarValidator favYazarValidato)
+            IFavoriYazarlarService favoriYazarlarService, IWriterStarsService writerStarsService, FavoriYazarlarValidator favYazarValidato,
+            IRefreshTokenService refreshTokenService)
             : base(userAccessor, unitOfWork, configuration)
         {
             _logger = logger;
@@ -53,6 +55,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
             _favoriYazarlarService = favoriYazarlarService;
             this.writerStarsService = writerStarsService;
             _favYazarValidato = favYazarValidato;
+            _refreshTokenService = refreshTokenService;
         }
 
 
@@ -505,20 +508,102 @@ namespace HerkesYazarOlsun.Servis.Controllers
             if (user == null)
                 return Unauthorized(new { message = "Bu e-posta ile kayıtlı kullanıcı bulunamadı." });
 
-            var token   = jwtService.GenerateToken(user);
+            var accessToken = jwtService.GenerateToken(user);
+            var refreshTokenValue = jwtService.GenerateRefreshToken();
             var expires = DateTime.UtcNow.AddMinutes(1440);
 
-            return Ok(new
+            var refreshToken = new RefreshToken
             {
-                token,
-                expiresAt = expires,
-                user = new
+                UserId = user.ID,
+                Token = refreshTokenValue,
+                ExpiresAt = DateTime.UtcNow.AddDays(30),
+                CreatedAt = DateTime.UtcNow,
+                RevokedAt = null,
+                USER_CREATED_ID = user.ID,
+                CREATE_AT = DateTime.UtcNow,
+                OLUSTURAN_EMAIL = user.EMAIL,
+                IS_DELETED = 0
+            };
+
+            var activeTokens = _refreshTokenService.GetActiveByUserId(user.ID);
+            foreach (var activeToken in activeTokens)
+            {
+                activeToken.RevokedAt = DateTime.UtcNow;
+                activeToken.MODIFIED_AT = DateTime.UtcNow;
+                activeToken.USER_MODIFIED_ID = user.ID;
+                activeToken.USER_MODIFIED_MAIL = user.EMAIL;
+                _refreshTokenService.Guncelle(activeToken, user.ID);
+            }
+
+            _refreshTokenService.Ekle(refreshToken, user.EMAIL);
+
+            return Ok(new VM_TOKEN_RESPONSE
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshTokenValue,
+                ExpiresAt = expires,
+                User = new
                 {
-                    id       = user.ID,
-                    email    = user.EMAIL,
+                    id = user.ID,
+                    email = user.EMAIL,
                     username = user.USERNAME,
-                    adi      = user.NAME,
-                    soyadi   = user.SURNAME
+                    adi = user.NAME,
+                    soyadi = user.SURNAME
+                }
+            });
+        }
+
+        [HttpPost]
+        [Route("RefreshToken")]
+        [AllowAnonymous]
+        public IActionResult RefreshToken([FromBody] VM_REFRESH_TOKEN_REQUEST request, [FromServices] JwtTokenService jwtService)
+        {
+            if (string.IsNullOrWhiteSpace(request?.RefreshToken))
+                return BadRequest(new { message = "Refresh token boş olamaz." });
+
+            var storedToken = _refreshTokenService.GetByToken(request.RefreshToken.Trim());
+            if (storedToken == null || !storedToken.IsActive)
+                return Unauthorized(new { message = "Refresh token geçersiz veya süresi dolmuş." });
+
+            var user = userService.Get(storedToken.UserId);
+            if (user == null)
+                return Unauthorized(new { message = "Kullanıcı bulunamadı." });
+
+            storedToken.RevokedAt = DateTime.UtcNow;
+            storedToken.MODIFIED_AT = DateTime.UtcNow;
+            storedToken.USER_MODIFIED_ID = user.ID;
+            storedToken.USER_MODIFIED_MAIL = user.EMAIL;
+            _refreshTokenService.Guncelle(storedToken, user.ID);
+
+            var newAccessToken = jwtService.GenerateToken(user);
+            var newRefreshTokenValue = jwtService.GenerateRefreshToken();
+            var newRefreshToken = new RefreshToken
+            {
+                UserId = user.ID,
+                Token = newRefreshTokenValue,
+                ExpiresAt = DateTime.UtcNow.AddDays(30),
+                CreatedAt = DateTime.UtcNow,
+                RevokedAt = null,
+                USER_CREATED_ID = user.ID,
+                CREATE_AT = DateTime.UtcNow,
+                OLUSTURAN_EMAIL = user.EMAIL,
+                IS_DELETED = 0
+            };
+
+            _refreshTokenService.Ekle(newRefreshToken, user.EMAIL);
+
+            return Ok(new VM_TOKEN_RESPONSE
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshTokenValue,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(1440),
+                User = new
+                {
+                    id = user.ID,
+                    email = user.EMAIL,
+                    username = user.USERNAME,
+                    adi = user.NAME,
+                    soyadi = user.SURNAME
                 }
             });
         }

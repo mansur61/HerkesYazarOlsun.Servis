@@ -50,6 +50,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
 
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
 
         /// <summary>

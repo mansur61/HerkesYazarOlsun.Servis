@@ -143,10 +143,14 @@ builder.Services.AddScoped<WriterStarsValidator>();
 builder.Services.AddScoped<FavoriYazarlarValidator>();
 
 // DbSettings
-DbSettings.HerkesYazarOlsunDbContext = builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
-DbSettings.HerkesYazarOlsunDbSQL = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb");
-DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDbTest");
-DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
+var selectedDbConnection = dbType == "Sql"
+    ? builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb")
+    : builder.Configuration.GetConnectionString("HerkesYazarOlsunPostgreDb") ?? builder.Configuration.GetConnectionString("HerkesYazarOlsunDb");
+
+DbSettings.HerkesYazarOlsunDbContext = selectedDbConnection ?? builder.Configuration.GetConnectionString("HerkesYazarOlsunDb") ?? "";
+DbSettings.HerkesYazarOlsunDbSQL = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDb") ?? "";
+DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString("HerkesYazarOlsunSQLDbTest") ?? "";
+DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication") ?? "";
 
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

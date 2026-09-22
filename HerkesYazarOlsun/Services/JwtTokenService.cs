@@ -2,6 +2,7 @@ using HerkesYazarOlsun.Model.Entity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace HerkesYazarOlsun.Servis.Services
@@ -13,6 +14,12 @@ namespace HerkesYazarOlsun.Servis.Services
         public JwtTokenService(IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomBytes = RandomNumberGenerator.GetBytes(64);
+            return Convert.ToBase64String(randomBytes);
         }
 
         public string GenerateToken(Users user)
@@ -49,6 +56,13 @@ namespace HerkesYazarOlsun.Servis.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public (string AccessToken, string RefreshToken) GenerateTokenPair(Users user)
+        {
+            var accessToken = GenerateToken(user);
+            var refreshToken = GenerateRefreshToken();
+            return (accessToken, refreshToken);
         }
     }
 }
