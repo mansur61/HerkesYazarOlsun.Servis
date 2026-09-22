@@ -77,6 +77,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.HasDefaultSchema("dbo");
 
             modelBuilder.ApplyConfiguration(new UsersConfiguration());
             modelBuilder.ApplyConfiguration(new WriterFollowConfiguration());

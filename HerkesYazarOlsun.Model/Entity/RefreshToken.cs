@@ -6,7 +6,7 @@ namespace HerkesYazarOlsun.Model.Entity
     /// <summary>
     /// Kullanıcıya ait refresh token kaydı. DB'de tutulur.
     /// </summary>
-    [Table("RefreshTokens")]
+    [Table("RefreshTokens", Schema = "dbo")]
     public class RefreshToken : NewBaseEntity
     {
         public long   UserId     { get; set; }
