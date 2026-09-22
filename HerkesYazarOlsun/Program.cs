@@ -6,9 +6,14 @@ using HerkesYazarOlsun.DataLayer.Concrete;
 using HerkesYazarOlsun.DataLayer.Context;
 using HerkesYazarOlsun.DataLayer.Repo;
 using HerkesYazarOlsun.DataLayer.Repository;
+using HerkesYazarOlsun.Servis.Services;
 using HerkesYazarOlsun.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,10 +29,60 @@ else
     builder.Logging.AddConsole(); // Linux / Hosting ortam� i�in
 }
  
-// Swagger
+// Swagger — Bearer token desteğiyle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "HerkesYazarOlsun API", Version = "v1" });
+
+    // Swagger'a Bearer auth butonu ekle
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name         = "Authorization",
+        Type         = SecuritySchemeType.Http,
+        Scheme       = "Bearer",
+        BearerFormat = "JWT",
+        In           = ParameterLocation.Header,
+        Description  = "JWT token girin. Örnek: Bearer {token}"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+// JWT ayarları
+var jwtSection = builder.Configuration.GetSection("JwtSettings");
+var secretKey  = jwtSection["SecretKey"]!;
+var issuer     = jwtSection["Issuer"]!;
+var audience   = jwtSection["Audience"]!;
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer           = true,
+        ValidateAudience         = true,
+        ValidateLifetime         = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer              = issuer,
+        ValidAudience            = audience,
+        IssuerSigningKey         = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        ClockSkew                = TimeSpan.Zero
+    };
+});
 
 var configuration = builder.Configuration;
 var dbType = configuration["DbType"];
@@ -94,7 +149,8 @@ DbSettings.HerkesYazarOlsunSQLDbTest = builder.Configuration.GetConnectionString
 DbSettings.HerkesYazarOlsunDbSQLWindowsAuthentication = builder.Configuration.GetConnectionString("HerkesYazarOlsunDbSQLWindowsAuthentication");
 
 
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();  
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<JwtTokenService>();
 /* CORS ayarlari
 builder.Services.AddCors(options =>
 {
@@ -141,10 +197,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 // app.UseCors("herkesyazarolsun"); 
-// CORS = Cross-Origin Resource Sharing, Tarayıcı güvenlik mekanizmasıdır.
-// Browser güvenliğidir, Server güvenliği değil, Origin bazlı çalışır
-
-
+app.UseAuthentication(); // JWT doğrulama
 app.UseAuthorization();
 app.MapControllers();
 

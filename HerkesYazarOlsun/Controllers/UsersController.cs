@@ -10,12 +10,15 @@ using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Enums;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Servis.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : BaseApiController
     {
 
@@ -153,6 +156,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetKisiById")]
+        [AllowAnonymous]
         public Users? GetKisiById(long id)
         {
             var getKisi = userService.Get(id);
@@ -161,6 +165,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetKisiByUsername")]
+        [AllowAnonymous]
         public Users? GetKisiByUsername(string username)
         {
             var getKisi = userService.GetUserrName(username);
@@ -169,6 +174,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetKisiByMail")]
+        [AllowAnonymous]
         public ServiceResult<Users> GetKisiByMail(string mail)
         {
             ServiceResult<Users> result = new ServiceResult<Users>(state: MessageResultState.SUCCESS);
@@ -240,6 +246,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("GetKisiler")]
+        [AllowAnonymous]
         public List<VM_USERS> GetKisiler(VM_ARAMA_INPUT arama)
         {
             // Kullanıcı listesini al
@@ -480,6 +487,40 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
             result.Result = follow;
             return result;
+        }
+
+        /// <summary>
+        /// Email ile giriş yap ve JWT token al.
+        /// </summary>
+        [HttpPost]
+        [Route("Login")]
+        [AllowAnonymous]
+        public IActionResult Login([FromBody] VM_LOGIN login, [FromServices] JwtTokenService jwtService)
+        {
+            if (string.IsNullOrWhiteSpace(login?.email))
+                return BadRequest(new { message = "Email boş olamaz." });
+
+            var user = userService.GetMail(login.email.Trim());
+
+            if (user == null)
+                return Unauthorized(new { message = "Bu e-posta ile kayıtlı kullanıcı bulunamadı." });
+
+            var token   = jwtService.GenerateToken(user);
+            var expires = DateTime.UtcNow.AddMinutes(1440);
+
+            return Ok(new
+            {
+                token,
+                expiresAt = expires,
+                user = new
+                {
+                    id       = user.ID,
+                    email    = user.EMAIL,
+                    username = user.USERNAME,
+                    adi      = user.NAME,
+                    soyadi   = user.SURNAME
+                }
+            });
         }
 
     }

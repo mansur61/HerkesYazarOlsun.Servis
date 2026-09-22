@@ -7,12 +7,14 @@ using HerkesYazarOlsun.DataLayer;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Servis.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // Tüm endpoint'ler token ister; okuma olanlar aşağıda [AllowAnonymous] ile açıldı
     public class BooksController : BaseApiController
     {
         private IBooksService booksService;
@@ -51,6 +53,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetBooks")]
+        [AllowAnonymous]
         public VM_BOOKS GetBooks(long id)
         {
             var getBook = booksService.GetBooks(id);
@@ -64,6 +67,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetCategories")]
+        [AllowAnonymous]
         public List<VM_CATEGORI> GetCategories()
         {
             var cats = _categoryService.GetCategories();
@@ -73,6 +77,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetBooksList")]
+        [AllowAnonymous]
         public VM_BOOKS_DETAIL GetBooksList()
         {
             VM_BOOKS_DETAIL vmBookDetay = new VM_BOOKS_DETAIL();
@@ -207,6 +212,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetDegerlendirmelerBooksById")]
+        [AllowAnonymous]
         public List<VM_BOOKS_DEGERLENDIRME> GetDegerlendirmelerBooksById(long kitapId)
         {
             IBooksDegerlendirmeService booksDegerlendirmeDal = InstanceFactory.GetInstance<IBooksDegerlendirmeService>().Service;
@@ -218,6 +224,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpGet]
         [Route("GetCommenstBooksById")]
+        [AllowAnonymous]
         public List<VM_BOOKS_COMMENT> GetCommenstBooksById(long kitapId)
         {
             IBooksCommentService booksCommentDal = InstanceFactory.GetInstance<IBooksCommentService>().Service;
@@ -230,6 +237,7 @@ namespace HerkesYazarOlsun.Servis.Controllers
 
         [HttpPost]
         [Route("TumKitaplar")]
+        [AllowAnonymous]
         public List<VM_BOOKS> TumKitaplar(VM_ARAMA_INPUT arama)
         {
             // IQueryable ile başlıyoruz
