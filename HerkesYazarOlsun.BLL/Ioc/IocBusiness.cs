@@ -37,6 +37,7 @@ namespace HerkesYazarOlsun.BLL.Ioc
             service.AddScoped<ISponsorlarService, SponsorlarBll>();
             service.AddScoped<ITaleplerService, TaleplerBll>();
             service.AddScoped<IAccountLoginService, AccountLoginBll>();
+            service.AddScoped<IRefreshTokenService, RefreshTokenBll>();
             service.AddScoped<IWriterFollowService, WriterFollowBll>();
             service.AddScoped<IFavoriYazarlarService, FavYazarBll>();
             service.AddScoped<IWriterStarsService, WriterStarsBll>();
