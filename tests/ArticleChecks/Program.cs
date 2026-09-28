@@ -42,7 +42,7 @@ MemoryStream MakePdf(string content)
 }
 using var pdf = MakePdf("BT /F1 12 Tf 40 700 Td (Article PDF text) Tj ET");
 pdf.Position = 0;
-Check(MakaleDocumentReader.Read(pdf, ".pdf").Contains("Article PDF text"), "PDF text");
+Check(MakaleDocumentReader.Read(pdf, ".pdf") == "", "PDF preserved without lossy text extraction");
 foreach (var extension in new[] { ".pdf", ".docx" })
 {
     bool rejected = false;
@@ -52,9 +52,7 @@ foreach (var extension in new[] { ".pdf", ".docx" })
 }
 using var emptyPdf = MakePdf("");
 emptyPdf.Position = 0;
-bool emptyRejected = false;
-try { MakaleDocumentReader.Read(emptyPdf, ".pdf"); } catch (InvalidDataException) { emptyRejected = true; }
-Check(emptyRejected, "Reject PDF without readable text");
+Check(MakaleDocumentReader.Read(emptyPdf, ".pdf") == "", "Accept valid PDF without selectable text");
 using var db = new SqlServerContext(new DbContextOptionsBuilder<SqlServerContext>().UseSqlServer("Server=localhost;Database=unused;Trusted_Connection=True;TrustServerCertificate=True").Options);
 var controller = new MakalelerController(db) { ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() } };
 Check((await controller.List(page: 0)).Result is BadRequestResult, "Reject invalid pagination");
@@ -83,4 +81,6 @@ try
     }
 }
 finally { Directory.SetCurrentDirectory(originalDirectory); }
+Check(HerkesYazarOlsun.Portal.Helpers.BookPagination.Total(34) == 38, "Reader total includes four extra pages");
+Check(HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(34) == 39, "Continue writing is reader total plus one");
 Console.WriteLine($"{checks} checks passed.");

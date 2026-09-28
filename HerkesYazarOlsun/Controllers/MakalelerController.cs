@@ -28,6 +28,27 @@ public class MakalelerController(DbContext db) : ControllerBase
         var article = await db.Set<Makale>().AsNoTracking().SingleOrDefaultAsync(x => x.Id == id && (x.YayinTarihi != null || x.YazarId == AuthorId), ct);
         return article == null ? NotFound() : Ok(article);
     }
+    [HttpGet("{id:guid}/belge")]
+    public async Task<IActionResult> Document(Guid id, CancellationToken ct)
+    {
+        var article = await db.Set<Makale>().AsNoTracking().SingleOrDefaultAsync(x => x.Id == id && (x.YayinTarihi != null || x.YazarId == AuthorId), ct);
+        if (article == null) return NotFound();
+        var bytes = await db.Set<MakaleBelge>().AsNoTracking().Where(x => x.Id == id).Select(x => x.Icerik).SingleOrDefaultAsync(ct);
+        if (bytes == null) return NotFound();
+        Response.Headers.CacheControl = "private, no-store";
+        return File(bytes, article.Uzanti == ".pdf" ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document", enableRangeProcessing: true);
+    }
+    [Authorize, HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        if (AuthorId <= 0) return Forbid();
+        var article = await db.Set<Makale>().SingleOrDefaultAsync(x => x.Id == id, ct);
+        if (article == null) return NotFound();
+        if (article.YazarId != AuthorId) return Forbid();
+        db.Remove(article); // The original document is removed by the database cascade.
+        await db.SaveChangesAsync(ct);
+        return NoContent();
+    }
     [Authorize, HttpPost, RequestSizeLimit(22 * 1024 * 1024), EnableRateLimiting("article-upload")]
     public async Task<IActionResult> Create([FromForm] string baslik, IFormFile dosya, CancellationToken ct)
     {

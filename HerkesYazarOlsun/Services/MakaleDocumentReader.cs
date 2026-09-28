@@ -26,16 +26,19 @@ public static class MakaleDocumentReader
                 using var reader = new PdfReader(stream);
                 reader.SetCloseStream(false);
                 using var document = new PdfDocument(reader);
-                if (document.GetNumberOfPages() > 200) throw new InvalidDataException("Too many pages.");
-                text = string.Join("\n\n", Enumerable.Range(1, document.GetNumberOfPages())
-                    .Select(i => PdfTextExtractor.GetTextFromPage(document.GetPage(i))));
+                if (reader.IsEncrypted()) throw new InvalidDataException("Encrypted PDF is not supported.");
+                if (document.GetNumberOfPages() < 1 || document.GetNumberOfPages() > 200)
+                    throw new InvalidDataException("PDF page count is invalid.");
+                // PDFs are kept and rendered verbatim, including tables and scanned pages.
+                for (var page = 1; page <= document.GetNumberOfPages(); page++) document.GetPage(page);
+                return "";
             }
             if (string.IsNullOrWhiteSpace(text) || text.Length > 1000000)
                 throw new InvalidDataException("No readable text or text too long.");
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            throw new InvalidDataException("Dosya okunamadı. Metin içeren, şifresiz Word (.docx) veya PDF yükleyin. PDF en fazla 200 sayfa olabilir.", ex);
+            throw new InvalidDataException("Dosya okunamadı. Geçerli, şifresiz Word (.docx) veya PDF yükleyin. PDF en fazla 200 sayfa olabilir.", ex);
         }
         return text;
     }
