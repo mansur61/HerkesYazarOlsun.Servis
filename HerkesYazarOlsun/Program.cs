@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.RateLimiting;
 using HerkesYazarOlsun.BLL.Ioc;
 using HerkesYazarOlsun.BLL.Validation;
 using HerkesYazarOlsun.BusinessLayer.Factory;
@@ -17,6 +18,12 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<DbContext>(sp => builder.Configuration["DbType"] == "Sql"
+    ? sp.GetRequiredService<SqlServerContext>() : sp.GetRequiredService<PostgreSqlContext>());
+builder.Services.AddRateLimiter(options => {
+    options.RejectionStatusCode = 429;
+    options.AddConcurrencyLimiter("article-upload", limiter => { limiter.PermitLimit = 2; limiter.QueueLimit = 0; });
+});
 
 // Logging ayarlar�
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -203,6 +210,7 @@ app.UseRouting();
 // app.UseCors("herkesyazarolsun"); 
 app.UseAuthentication(); // JWT doğrulama
 app.UseAuthorization();
+app.UseRateLimiter();
 app.MapControllers();
 
 app.Run();

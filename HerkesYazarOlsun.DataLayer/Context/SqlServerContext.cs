@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -77,6 +77,7 @@ namespace HerkesYazarOlsun.DataLayer.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ConfigureMakaleler();
             modelBuilder.HasDefaultSchema("dbo");
 
             modelBuilder.ApplyConfiguration(new UsersConfiguration());

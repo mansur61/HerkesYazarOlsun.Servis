@@ -1,4 +1,4 @@
-﻿
+
 using Dapper;
 using HerkesYazarOlsun.Model.Entity;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +15,14 @@ namespace HerkesYazarOlsun.DataLayer.Context
             string baglanti = ConnectionConncet.GetPostgreSqlConnect();
             optionsBuilder.UseNpgsql(baglanti);
 
-            return new PostgreSqlContext();
+            return new PostgreSqlContext(optionsBuilder.Options);
         }
     }
 
     public class PostgreSqlContext : BaseNpSqlDbContext
-    { 
+    {
+        public PostgreSqlContext() { }
+        public PostgreSqlContext(DbContextOptions<PostgreSqlContext> options) : base(options) { }
         public virtual DbSet<Favoriler> Favoriler { get; set; }
         public virtual DbSet<CarouselDuyuru> CarouselDuyuru { get; set; }
 
@@ -59,13 +61,8 @@ namespace HerkesYazarOlsun.DataLayer.Context
         /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string baglanti =
-                ConnectionConncet.GetPostgreSqlConnect();
-            optionsBuilder.UseNpgsql(baglanti);
-
-            // ConnectionConncet.GetPostgreSqlConnect();
-            //optionsBuilder.UseNpgsql(baglanti);
-            //"Host=localhost;Port=5432;Database=HERKESYAZAROLSUN;User Id=postgres;Password=12345;Integrated Security=true;Pooling=true;";
+            if (!optionsBuilder.IsConfigured)
+                optionsBuilder.UseNpgsql(ConnectionConncet.GetPostgreSqlConnect());
 
         }
 
@@ -75,7 +72,8 @@ namespace HerkesYazarOlsun.DataLayer.Context
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);           
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ConfigureMakaleler();
 
             modelBuilder.ApplyConfiguration(new UsersConfiguration());
             modelBuilder.ApplyConfiguration(new WriterFollowConfiguration());
