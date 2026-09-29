@@ -38,7 +38,7 @@ public class MakalelerController(DbContext db) : ControllerBase
         Response.Headers.CacheControl = "private, no-store";
         return File(bytes, article.Uzanti == ".pdf" ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document", enableRangeProcessing: true);
     }
-    [Authorize, HttpDelete("{id:guid}")]
+    [Authorize, HttpDelete("{id:guid}"), HttpPost("{id:guid}/sil")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         if (AuthorId <= 0) return Forbid();

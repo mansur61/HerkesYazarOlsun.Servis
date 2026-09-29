@@ -83,4 +83,20 @@ try
 finally { Directory.SetCurrentDirectory(originalDirectory); }
 Check(HerkesYazarOlsun.Portal.Helpers.BookPagination.Total(34) == 38, "Reader total includes four extra pages");
 Check(HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(34) == 39, "Continue writing is reader total plus one");
+using (var memory = new SqlServerContext(new DbContextOptionsBuilder<SqlServerContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options))
+{
+    var owned = new Makale { YazarId = 42, Baslik = "Owner article", Metin = "test" };
+    memory.Add(owned);
+    memory.Add(new MakaleBelge { Id = owned.Id, Icerik = [1, 2, 3] });
+    await memory.SaveChangesAsync();
+    var endpoint = new MakalelerController(memory) { ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() } };
+    Check(await endpoint.Delete(owned.Id, default) is ForbidResult, "Anonymous cannot delete article");
+    endpoint.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("user_id", "7")], "test"));
+    Check(await endpoint.Delete(owned.Id, default) is ForbidResult, "Other author cannot delete article");
+    Check(await memory.Set<Makale>().AnyAsync(x => x.Id == owned.Id), "Unauthorized deletion preserves article");
+    endpoint.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("user_id", "42")], "test"));
+    Check(await endpoint.Delete(owned.Id, default) is NoContentResult, "Authenticated author deletes own article");
+    Check(!await memory.Set<Makale>().AnyAsync(x => x.Id == owned.Id), "Deleted article absent from listing");
+    Check(!await memory.Set<MakaleBelge>().AnyAsync(x => x.Id == owned.Id), "Deleted article document removed");
+}
 Console.WriteLine($"{checks} checks passed.");

@@ -1,4 +1,4 @@
-﻿using HerkesYazarOlsun.BLL.Abstract;
+using HerkesYazarOlsun.BLL.Abstract;
 using HerkesYazarOlsun.BLL.Accessor;
 using HerkesYazarOlsun.DataLayer.Abstract;
 using HerkesYazarOlsun.Model.Entity;
@@ -30,7 +30,7 @@ namespace HerkesYazarOlsun.BLL.Concrete
 
         public List<BooksPages> GetPagesByBooks(long bookID)
         {
-            return _booksPagesDal.GetAllQueryableNoTracking(p => p.BookId == bookID).ToList();
+            return _booksPagesDal.GetAllQueryableNoTracking(p => p.BookId == bookID).OrderBy(p => p.ID).ToList();
 
         }
         
