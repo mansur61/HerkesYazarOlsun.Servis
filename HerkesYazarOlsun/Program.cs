@@ -20,6 +20,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<DbContext>(sp => builder.Configuration["DbType"] == "Sql"
     ? sp.GetRequiredService<SqlServerContext>() : sp.GetRequiredService<PostgreSqlContext>());
+builder.Services.AddScoped<IMakalelerService, MakalelerService>();
 builder.Services.AddRateLimiter(options => {
     options.RejectionStatusCode = 429;
     options.AddConcurrencyLimiter("article-upload", limiter => { limiter.PermitLimit = 2; limiter.QueueLimit = 0; });

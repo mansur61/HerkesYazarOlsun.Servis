@@ -54,7 +54,7 @@ using var emptyPdf = MakePdf("");
 emptyPdf.Position = 0;
 Check(MakaleDocumentReader.Read(emptyPdf, ".pdf") == "", "Accept valid PDF without selectable text");
 using var db = new SqlServerContext(new DbContextOptionsBuilder<SqlServerContext>().UseSqlServer("Server=localhost;Database=unused;Trusted_Connection=True;TrustServerCertificate=True").Options);
-var controller = new MakalelerController(db) { ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() } };
+var controller = new MakalelerController(new MakalelerService(db)) { ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() } };
 Check((await controller.List(page: 0)).Result is BadRequestResult, "Reject invalid pagination");
 Check((await controller.List(author: 1, drafts: true)).Result is ForbidResult, "Anonymous cannot list drafts");
 controller.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("user_id", "2")], "test"));
