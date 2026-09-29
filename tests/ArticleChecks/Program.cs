@@ -89,7 +89,7 @@ using (var memory = new SqlServerContext(new DbContextOptionsBuilder<SqlServerCo
     memory.Add(owned);
     memory.Add(new MakaleBelge { Id = owned.Id, Icerik = [1, 2, 3] });
     await memory.SaveChangesAsync();
-    var endpoint = new MakalelerController(memory) { ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() } };
+    var endpoint = new MakalelerController(new MakalelerService(memory)) { ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() } };
     Check(await endpoint.Delete(owned.Id, default) is ForbidResult, "Anonymous cannot delete article");
     endpoint.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("user_id", "7")], "test"));
     Check(await endpoint.Delete(owned.Id, default) is ForbidResult, "Other author cannot delete article");
